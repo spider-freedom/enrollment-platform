@@ -26,62 +26,25 @@ public record ActivityVO(
         String workflowKey,
         Long creatorId,
         String creatorName,
+        Integer isBanner,
         LocalDateTime createTime,
         LocalDateTime updateTime
 ) {
     public static ActivityVO from(Activity activity) {
-        return new ActivityVO(
-                activity.getId(),
-                activity.getTitle(),
-                activity.getDescription(),
-                activity.getType(),
-                activity.getStatus(),
-                activity.getTargetAudience(),
-                activity.getStartTime(),
-                activity.getEndTime(),
-                activity.getEnrollStart(),
-                activity.getEnrollEnd(),
-                activity.getLocation(),
-                activity.getMaxStudents(),
-                activity.getMaxTeachers(),
-                activity.getMaxPerSchool(),
-                activity.getBannerUrl(),
-                activity.getBannerLink(),
-                activity.getGroupRule(),
-                activity.getRankRule(),
-                activity.getWorkflowKey(),
-                activity.getCreatorId(),
-                null,
-                activity.getCreateTime(),
-                activity.getUpdateTime()
-        );
+        return from(activity, null);
     }
 
     public static ActivityVO from(Activity activity, String creatorName) {
         return new ActivityVO(
-                activity.getId(),
-                activity.getTitle(),
-                activity.getDescription(),
-                activity.getType(),
-                activity.getStatus(),
-                activity.getTargetAudience(),
-                activity.getStartTime(),
-                activity.getEndTime(),
-                activity.getEnrollStart(),
-                activity.getEnrollEnd(),
-                activity.getLocation(),
-                activity.getMaxStudents(),
-                activity.getMaxTeachers(),
-                activity.getMaxPerSchool(),
-                activity.getBannerUrl(),
-                activity.getBannerLink(),
-                activity.getGroupRule(),
-                activity.getRankRule(),
-                activity.getWorkflowKey(),
-                activity.getCreatorId(),
-                creatorName,
-                activity.getCreateTime(),
-                activity.getUpdateTime()
+                activity.getId(), activity.getTitle(), activity.getDescription(),
+                activity.getType(), activity.getStatus(), activity.getTargetAudience(),
+                activity.getStartTime(), activity.getEndTime(),
+                activity.getEnrollStart(), activity.getEnrollEnd(),
+                activity.getLocation(), activity.getMaxStudents(), activity.getMaxTeachers(),
+                activity.getMaxPerSchool(), activity.getBannerUrl(), activity.getBannerLink(),
+                activity.getGroupRule(), activity.getRankRule(), activity.getWorkflowKey(),
+                activity.getCreatorId(), creatorName, activity.getIsBanner(),
+                activity.getCreateTime(), activity.getUpdateTime()
         );
     }
 }

@@ -82,20 +82,17 @@
         stripe
         class="activity-table"
       >
-        <el-table-column prop="title" label="活动标题" min-width="140" show-overflow-tooltip />
-        <el-table-column label="类型" width="80" align="center">
+        <el-table-column prop="title" label="活动标题" min-width="160" show-overflow-tooltip />
+        <el-table-column label="类型" width="70" align="center">
           <template #default="{ row }">
             <el-tag :type="typeTagColor(row.type)" effect="plain" size="small">{{ typeLabel(row.type) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="活动日期" width="170">
-          <template #default="{ row }">{{ formatDate(row.startTime) }} ~ {{ formatDate(row.endTime) }}</template>
+        <el-table-column label="活动日期" width="140" align="center">
+          <template #default="{ row }">{{ formatDate(row.startTime) }}</template>
         </el-table-column>
-        <el-table-column label="报名/名额" width="110" align="center">
-          <template #default="{ row }">{{ row.currentStudents ?? 0 }} / {{ row.maxStudents ?? 0 }}</template>
-        </el-table-column>
-        <el-table-column label="对象" width="70" align="center">
-          <template #default="{ row }">{{ audienceLabel(row.targetAudience) }}</template>
+        <el-table-column label="报名" width="90" align="center">
+          <template #default="{ row }">{{ row.currentStudents ?? 0 }}/{{ row.maxStudents ?? 0 }}</template>
         </el-table-column>
         <el-table-column label="审批" width="90">
           <template #default="{ row }">
@@ -106,9 +103,6 @@
           <template #default="{ row }">
             <el-tag :type="statusTagColor(row.status)" size="small">{{ statusLabel(row.status) }}</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column label="创建人" width="70" show-overflow-tooltip>
-          <template #default="{ row }">{{ row.creatorName || '-' }}</template>
         </el-table-column>
         <el-table-column label="操作" width="200" fixed="right" align="center">
           <template #default="{ row }">

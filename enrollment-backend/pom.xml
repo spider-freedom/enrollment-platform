@@ -19,7 +19,6 @@
         <java.version>17</java.version>
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <langchain4j.version>0.35.0</langchain4j.version>
-        <flowable.version>7.0.1</flowable.version>
         <hutool.version>5.8.28</hutool.version>
         <knife4j.version>4.5.0</knife4j.version>
     </properties>
@@ -38,9 +37,6 @@
         <dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><scope>runtime</scope></dependency>
         <dependency><groupId>com.baomidou</groupId><artifactId>mybatis-plus-spring-boot3-starter</artifactId><version>${mybatis-plus.version}</version></dependency>
         <!-- jsqlparser included in mybatis-plus-boot-starter -->
-
-        <!-- Flowable Workflow -->
-        <dependency><groupId>org.flowable</groupId><artifactId>flowable-spring-boot-starter</artifactId><version>${flowable.version}</version></dependency>
 
         <!-- LangChain4j AI -->
         <dependency><groupId>dev.langchain4j</groupId><artifactId>langchain4j-spring-boot-starter</artifactId><version>${langchain4j.version}</version></dependency>

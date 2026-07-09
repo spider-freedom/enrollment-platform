@@ -431,8 +431,8 @@ async function handleSaveDraft() {
       ElMessage.success('草稿已保存')
     }
     router.push('/school/activities')
-  } catch {
-    ElMessage.warning('保存草稿失败，请稍后重试')
+  } catch (e: any) {
+    ElMessage.error(e?.response?.data?.message || '保存失败')
   } finally {
     submitting.value = false
   }
@@ -453,8 +453,8 @@ async function handlePublish() {
       ElMessage.success('活动发布成功！')
     }
     router.push('/school/activities')
-  } catch {
-    ElMessage.error('操作失败，请稍后重试')
+  } catch (e: any) {
+    ElMessage.error(e?.response?.data?.message || '操作失败')
   } finally {
     submitting.value = false
   }

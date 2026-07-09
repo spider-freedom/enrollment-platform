@@ -93,6 +93,14 @@ public class ActivityService {
         return doPageQuery(query, wrapper);
     }
 
+    public List<ActivityVO> getBanners() {
+        LambdaQueryWrapper<Activity> w = new LambdaQueryWrapper<>();
+        w.eq(Activity::getIsBanner, 1);
+        w.and(w2 -> w2.eq(Activity::getStatus, "PUBLISHED").or().eq(Activity::getStatus, "ONGOING"));
+        w.orderByAsc(Activity::getId);
+        return activityMapper.selectList(w).stream().map(a -> ActivityVO.from(a, null)).toList();
+    }
+
     public void deleteActivity(Long id) {
         Activity activity = activityMapper.selectById(id);
         if (activity == null) {

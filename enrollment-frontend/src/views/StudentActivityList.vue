@@ -8,7 +8,7 @@
       arrow="always"
     >
       <el-carousel-item v-for="(b, i) in banners" :key="i">
-        <div class="banner" :style="{ background: b.color }">
+        <div class="banner" :style="{ background: b.color }" @click="b.id ? $router.push('/student/activities/' + b.id) : null" style="cursor:pointer">
           <div class="banner-content">
             <h2>{{ b.title }}</h2>
             <p>{{ b.subtitle }}</p>
@@ -148,23 +148,17 @@ import { Search, Calendar, Location } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import type { Activity } from '@/types'
 
-const banners = [
-  {
-    title: '欢迎报考新疆大学',
-    subtitle: '百年名校，筑梦未来',
-    color: 'linear-gradient(135deg, #1a56db 0%, #4f46e5 50%, #7c3aed 100%)',
-  },
-  {
-    title: '2026年招生宣传活动',
-    subtitle: '全面了解专业设置与招生政策',
-    color: 'linear-gradient(135deg, #059669 0%, #0d9488 50%, #06b6d4 100%)',
-  },
-  {
-    title: '校园开放日等你来',
-    subtitle: '亲临校园，感受学术氛围',
-    color: 'linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #f59e0b 100%)',
-  },
-]
+const bannerGradients = ['linear-gradient(135deg, #1a56db, #6366f1)', 'linear-gradient(135deg, #10b981, #059669)', 'linear-gradient(135deg, #f59e0b, #d97706)', 'linear-gradient(135deg, #6366f1, #8b5cf6)', 'linear-gradient(135deg, #ef4444, #dc2626)']
+const banners = ref<any[]>([])
+
+async function fetchBanners() {
+  try {
+    const res: any = await activityApi.getBanners()
+    banners.value = (res?.data || res || []).map((a: any, i: number) => ({
+      id: a.id, title: a.title, subtitle: a.description?.substring(0, 50) || '', color: bannerGradients[i % 5]
+    }))
+  } catch { banners.value = [] }
+}
 
 const activityTypes = [
   { label: '宣讲会', value: '宣讲会' },
@@ -302,6 +296,7 @@ function handlePageChange(newPage: number) {
 
 onMounted(() => {
   fetchActivities()
+  fetchBanners()
 })
 </script>
 

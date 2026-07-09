@@ -3,6 +3,8 @@ package com.xju.enrollment.modules.activity.controller;
 import com.xju.enrollment.common.ApiResponse;
 import com.xju.enrollment.common.ExcelExportUtil;
 import com.xju.enrollment.common.PageResult;
+import com.xju.enrollment.modules.activity.dto.ActivityVO;
+import java.util.List;
 import com.xju.enrollment.modules.activity.dto.ActivityListQuery;
 import com.xju.enrollment.modules.activity.dto.ActivityRequest;
 import com.xju.enrollment.modules.activity.dto.ActivityVO;
@@ -66,6 +68,11 @@ public class ActivityController {
     public ApiResponse<PageResult<ActivityVO>> listForSchool(ActivityListQuery query) {
         PageResult<ActivityVO> result = activityService.listForSchool(query);
         return ApiResponse.ok(result);
+    }
+
+        @GetMapping("/banners")
+    public ApiResponse<List<ActivityVO>> getBanners() {
+        return ApiResponse.ok(activityService.getBanners());
     }
 
     @GetMapping("/export")

@@ -22,6 +22,7 @@ export const activityApi = {
   listCollege: (params: any) => request.get('/activity/list/college', { params }),
   listSchool: (params: any) => request.get('/activity/list/school', { params }),
   getById: (id: number) => request.get(`/activity/${id}`),
+  getBanners: () => request.get('/activity/banners'),
   create: (data: any) => request.post('/activity/create', data),
   update: (id: number, data: any) => request.put(`/activity/update/${id}`, data),
   delete: (id: number) => request.delete(`/activity/delete/${id}`),

@@ -55,6 +55,8 @@ public class Activity {
 
     private String bannerLink;
 
+    private Integer isBanner;
+
     private String groupRule;
 
     private String rankRule;

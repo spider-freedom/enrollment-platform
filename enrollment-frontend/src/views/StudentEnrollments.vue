@@ -133,7 +133,10 @@ async function fetchEnrollments() {
     })
 
     // Handle different response shapes
-    if (res?.data?.records) {
+    if (res?.data?.list) {
+      list.value = res.data.list
+      total.value = res.data.total || 0
+    } else if (res?.data?.records) {
       list.value = res.data.records
       total.value = res.data.total || 0
     } else if (res?.records) {

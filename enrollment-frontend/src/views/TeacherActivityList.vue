@@ -139,7 +139,10 @@ async function fetchActivities() {
     if (filterType.value) params.type = filterType.value
 
     const res: any = await activityApi.listTeacher(params)
-    if (res?.data?.records) {
+    if (res?.data?.list) {
+      activities.value = res.data.list
+      total.value = res.data.total || 0
+    } else if (res?.data?.records) {
       activities.value = res.data.records
       total.value = res.data.total || 0
     } else if (res?.records) {

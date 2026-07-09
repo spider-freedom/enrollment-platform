@@ -67,18 +67,11 @@
         shadow="hover"
         @click="$router.push(`/student/activities/${a.id}`)"
       >
-        <div class="card-image">
-          <img
-            :src="a.bannerUrl || 'https://placehold.co/400x180?text=' + encodeURIComponent(a.title?.substring(0, 6) || 'Activity')"
-            :alt="a.title"
-          />
+        <div class="card-image" :class="'gradient-' + (a.id % 5)">
+          <div class="card-emoji">{{ getActivityEmoji(a) }}</div>
           <div class="card-type-badge">
-            <el-tag
-              :type="a.type === '线上直播' ? '' : 'primary'"
-              size="small"
-              effect="dark"
-            >
-              {{ a.type }}
+            <el-tag :type="a.type === 'ONLINE' ? 'success' : 'primary'" size="small" effect="dark">
+              {{ a.type === 'ONLINE' ? '线上' : a.type === 'OFFLINE' ? '线下' : a.type }}
             </el-tag>
           </div>
         </div>
@@ -203,6 +196,19 @@ function statusTagType(status: string): string {
     '已截止': 'danger',
   }
   return map[status] || 'info'
+}
+
+function getActivityEmoji(a: any): string {
+  const title = a.title || ''
+  if (title.includes('直播') || title.includes('线上')) return '📡'
+  if (title.includes('校园') || title.includes('开放日')) return '🏫'
+  if (title.includes('夏令营') || title.includes('暑期')) return '⛺'
+  if (title.includes('高考') || title.includes('志愿')) return '📝'
+  if (title.includes('南疆') || title.includes('北疆')) return '🗺️'
+  if (title.includes('短视频') || title.includes('征集')) return '🎬'
+  if (title.includes('总结') || title.includes('表彰')) return '🏆'
+  if (title.includes('回访') || title.includes('母校')) return '🎓'
+  return a.type === 'ONLINE' ? '💻' : '📍'
 }
 
 function buildTypeParam(): string | undefined {
@@ -377,13 +383,16 @@ onMounted(() => {
   position: relative;
   height: 180px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.card-image.gradient-0 { background: linear-gradient(135deg, #1a56db, #6366f1); }
+.card-image.gradient-1 { background: linear-gradient(135deg, #10b981, #059669); }
+.card-image.gradient-2 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.card-image.gradient-3 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.card-image.gradient-4 { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.card-emoji { font-size: 56px; }
 
 .card-type-badge {
   position: absolute;

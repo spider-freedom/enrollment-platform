@@ -56,11 +56,9 @@
             shadow="hover"
             @click="goDetail(a.id)"
           >
-            <img
-              :src="a.bannerUrl || 'https://placehold.co/400x160?text=活动封面'"
-              class="card-banner"
-              alt="活动封面"
-            />
+            <div class="card-banner" :class="'gradient-' + (a.id % 5)">
+              <span class="card-emoji">{{ getEmoji(a) }}</span>
+            </div>
             <div class="card-body">
               <h3 class="card-title">{{ a.title }}</h3>
               <p class="card-desc">{{ a.description?.substring(0, 80) }}{{ a.description?.length > 80 ? '...' : '' }}</p>
@@ -129,6 +127,19 @@ function tagType(type: string): string {
     '咨询会': 'info',
   }
   return map[type] || ''
+}
+
+function getEmoji(a: any): string {
+  const t = a.title || ''
+  if (t.includes('直播')||t.includes('线上')) return '📡'
+  if (t.includes('校园')||t.includes('开放日')) return '🏫'
+  if (t.includes('夏令营')||t.includes('暑期')) return '⛺'
+  if (t.includes('高考')||t.includes('志愿')) return '📝'
+  if (t.includes('南疆')||t.includes('北疆')) return '🗺️'
+  if (t.includes('短视频')||t.includes('征集')) return '🎬'
+  if (t.includes('总结')||t.includes('表彰')) return '🏆'
+  if (t.includes('回访')||t.includes('母校')) return '🎓'
+  return a.type === 'ONLINE' ? '💻' : '📍'
 }
 
 async function fetchActivities() {
@@ -257,10 +268,14 @@ onMounted(() => {
 }
 
 .card-banner {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
+  width: 100%; height: 160px; display: flex; align-items: center; justify-content: center;
 }
+.card-banner.gradient-0 { background: linear-gradient(135deg,#1a56db,#6366f1); }
+.card-banner.gradient-1 { background: linear-gradient(135deg,#10b981,#059669); }
+.card-banner.gradient-2 { background: linear-gradient(135deg,#f59e0b,#d97706); }
+.card-banner.gradient-3 { background: linear-gradient(135deg,#6366f1,#8b5cf6); }
+.card-banner.gradient-4 { background: linear-gradient(135deg,#ef4444,#dc2626); }
+.card-emoji { font-size: 52px; }
 
 .card-body {
   padding: 16px;

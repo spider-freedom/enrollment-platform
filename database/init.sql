@@ -133,20 +133,6 @@ CREATE TABLE feedback_attachment (
     FOREIGN KEY (feedback_id) REFERENCES feedback(id) ON DELETE CASCADE
 ) COMMENT '反馈附件表';
 
--- 消息通知表
-CREATE TABLE notification (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id BIGINT NOT NULL COMMENT '接收人ID',
-    title VARCHAR(200) NOT NULL COMMENT '通知标题',
-    content VARCHAR(500) COMMENT '通知内容',
-    type VARCHAR(20) NOT NULL COMMENT 'APPROVAL/FEEDBACK/SYSTEM',
-    is_read TINYINT DEFAULT 0 COMMENT '0=未读 1=已读',
-    related_id BIGINT COMMENT '关联业务ID',
-    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_user (user_id),
-    INDEX idx_read (is_read)
-) COMMENT '消息通知表';
-
 -- ============================================================
 -- 初始数据
 -- ============================================================
@@ -191,10 +177,3 @@ INSERT INTO feedback (activity_id, user_id, user_role, content, rating, contact,
 (1, 4, 'TEACHER', '作为带队教师，整体流程顺畅。建议下次增加更多的宣传物料，比如学校宣传视频播放在宣讲开始前。', 4, '13900002222', '计算机科学与技术学院', 'SUBMITTED', NULL, NULL, NULL, '2026-01-26 14:00:00'),
 (1, 2, 'STUDENT', '活动整体不错，但现场组织有些混乱，部分学校的对接不够及时。希望下次能提前与学校做好沟通。', 3, '13800002222', '计算机科学与技术学院', 'REPLIED', '感谢您的反馈！我们会在下次活动中加强校方对接工作，提前一周与各学校确认宣讲安排。', 6, '2026-01-28 09:00:00', '2026-01-27 16:30:00');
 
-INSERT INTO notification (user_id, title, content, type, is_read, related_id, create_time) VALUES
-(1, '报名审核通过', '您报名的"2026年寒假招生宣传活动"已通过审核，请按时参加。', 'APPROVAL', 1, 1, '2026-01-06 10:00:00'),
-(2, '报名提交成功', '您的报名已成功提交，请等待学院管理员审核。', 'SYSTEM', 0, 2, '2026-01-05 15:10:00'),
-(3, '报名提交成功', '您报名的"2026年寒假招生宣传活动"已提交，正在等待学院管理员审核。', 'SYSTEM', 0, 4, '2026-01-06 11:05:00'),
-(4, '报名审核通过', '您报名的"2026年寒假招生宣传活动"已通过审核。', 'APPROVAL', 1, 3, '2026-01-04 09:30:00'),
-(5, '新的待审批报名', '古丽娜尔·阿不都提交了"2026年寒假招生宣传活动"的报名申请，请及时处理。', 'APPROVAL', 0, 2, '2026-01-05 15:15:00'),
-(7, '报名被驳回', '您报名的"2026年寒假招生宣传活动"已被驳回，原因：名额已满。', 'APPROVAL', 0, 5, '2026-01-07 10:00:00');

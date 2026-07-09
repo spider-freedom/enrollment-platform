@@ -63,7 +63,7 @@ const router = createRouter({
         { path: 'activities/create', name: 'SchoolActivityCreate', component: () => import('@/views/SchoolActivityCreate.vue') },
         { path: 'approvals', name: 'SchoolApprovals', component: () => import('@/views/SchoolApprovalList.vue') },
         { path: 'feedbacks', name: 'SchoolFeedbacks', component: () => import('@/views/SchoolFeedbackList.vue') },
-        { path: 'audit', name: 'SchoolAuditLog', component: () => import('@/views/AuditLogView.vue') },
+        { path: 'users', name: 'SchoolUsers', component: () => import('@/views/SchoolUserManagement.vue') },
         { path: 'profile', name: 'SchoolProfile', component: () => import('@/views/ProfileView.vue') },
       ],
     },

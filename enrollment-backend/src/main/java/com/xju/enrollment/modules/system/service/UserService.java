@@ -255,4 +255,45 @@ public class UserService {
         result.put("fail", fail);
         return result;
     }
+
+    public List<User> listAll() {
+        return userMapper.selectList(null);
+    }
+
+    public void promoteToRole(Long userId, String role) {
+        User user = userMapper.selectById(userId);
+        if (user == null) throw new BusinessException("用户不存在");
+        if (!"COLLEGE_ADMIN".equals(role) && !"SCHOOL_ADMIN".equals(role))
+            throw new BusinessException("无效的角色");
+        user.setRole(role);
+        userMapper.updateById(user);
+    }
+
+    public void demoteToTeacher(Long userId) {
+        User user = userMapper.selectById(userId);
+        if (user == null) throw new BusinessException("用户不存在");
+        user.setRole("TEACHER");
+        userMapper.updateById(user);
+    }
+
+    public void setUserStatus(Long userId, String status) {
+        User user = userMapper.selectById(userId);
+        if (user == null) throw new BusinessException("用户不存在");
+        user.setStatus(status);
+        userMapper.updateById(user);
+    }
+
+    public void resetPasswordByAdmin(Long userId) {
+        User user = userMapper.selectById(userId);
+        if (user == null) throw new BusinessException("用户不存在");
+        user.setPassword(passwordEncoder.encode("123456"));
+        userMapper.updateById(user);
+    }
+
+    public void softDeleteUser(Long userId) {
+        User user = userMapper.selectById(userId);
+        if (user == null) throw new BusinessException("用户不存在");
+        user.setStatus("DISABLED");
+        userMapper.updateById(user);
+    }
 }

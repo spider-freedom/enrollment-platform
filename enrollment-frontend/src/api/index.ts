@@ -91,7 +91,13 @@ export const aiApi = {
   approvalSuggest: (data: any) => request.post('/ai/approval/suggest', data),
 }
 
-// Audit
-export const auditApi = {
-  list: (params?: any) => request.get('/audit/list', { params }),
+// School User
+export const schoolUserApi = {
+  listAll: (params: any) => request.get('/school/users/list', { params }),
+  promoteToCollegeAdmin: (id: number) => request.post(`/school/users/${id}/promote-college`),
+  promoteToSchoolAdmin: (id: number) => request.post(`/school/users/${id}/promote-school`),
+  demoteToTeacher: (id: number) => request.post(`/school/users/${id}/demote`),
+  toggleStatus: (id: number, status: string) => request.post(`/school/users/${id}/status`, { status }),
+  resetPassword: (id: number) => request.post(`/school/users/${id}/reset-password`),
+  deleteUser: (id: number) => request.delete(`/school/users/${id}`),
 }

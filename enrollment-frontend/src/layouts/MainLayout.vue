@@ -61,7 +61,7 @@
 import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { Bell, ArrowDown, List, Checked, EditPen, User, DataAnalysis, Plus, Management, Clock } from '@element-plus/icons-vue'
+import { Bell, ArrowDown, List, Checked, EditPen, User, DataAnalysis, Plus, Management } from '@element-plus/icons-vue'
 
 const store = useUserStore()
 const router = useRouter()
@@ -122,7 +122,7 @@ const roleMenuMap: Record<string, { path: string; label: string; icon: any }[]> 
     { path: '/school/activities/create', label: '创建活动', icon: Plus },
     { path: '/school/approvals', label: '报名审批', icon: Checked },
     { path: '/school/feedbacks', label: '反馈管理', icon: EditPen },
-    { path: '/school/audit', label: '操作日志', icon: Clock },
+    { path: '/school/users', label: '用户管理', icon: User },
     { path: '/school/profile', label: '个人主页', icon: User },
   ],
 }

@@ -34,9 +34,9 @@
       <el-alert v-if="errorMsg" :title="errorMsg" type="error" show-icon closable style="margin-bottom:16px" @close="errorMsg=''" />
 
       <el-table :data="filteredList" v-loading="loading" border stripe>
-        <el-table-column prop="username" label="用户名" width="120" />
-        <el-table-column prop="name" label="姓名" width="120" />
-        <el-table-column label="角色" width="110">
+        <el-table-column prop="username" label="用户名" width="110" />
+        <el-table-column prop="name" label="姓名" width="80" />
+        <el-table-column label="角色" width="100">
           <template #default="{ row }">
             <el-tag v-if="isSchoolAdmin(row.role)" type="danger" size="small">学校管理员</el-tag>
             <el-tag v-else-if="isCollegeAdmin(row.role)" type="warning" size="small">学院管理员</el-tag>
@@ -45,19 +45,13 @@
             <el-tag v-else size="small">{{ row.role }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="collegeName" label="学院" width="140" show-overflow-tooltip>
+        <el-table-column prop="collegeName" label="学院" width="130" show-overflow-tooltip>
           <template #default="{ row }">{{ row.collegeName || '-' }}</template>
         </el-table-column>
-        <el-table-column prop="major" label="专业" width="120" show-overflow-tooltip>
-          <template #default="{ row }">{{ row.major || '-' }}</template>
-        </el-table-column>
-        <el-table-column prop="grade" label="年级" width="80">
-          <template #default="{ row }">{{ row.grade || '-' }}</template>
-        </el-table-column>
-        <el-table-column prop="email" label="邮箱" min-width="160" show-overflow-tooltip>
+        <el-table-column prop="email" label="邮箱" min-width="140" show-overflow-tooltip>
           <template #default="{ row }">{{ row.email || '-' }}</template>
         </el-table-column>
-        <el-table-column label="状态" width="100" align="center">
+        <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
             <el-switch
               :model-value="(row.status||'').toUpperCase() === 'ACTIVE'"
@@ -69,20 +63,19 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" width="160">
+        <el-table-column label="创建时间" width="150">
           <template #default="{ row }">{{ formatTime(row.createTime || row.create_time) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column label="权限设置" width="100" fixed="right">
           <template #default="{ row }">
             <el-dropdown trigger="click" @command="(cmd: string) => handleCommand(cmd, row)">
-              <el-button size="small" type="primary" link>操作 ▾</el-button>
+              <el-button size="small" type="primary" link>设置 ▾</el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item v-if="isTeacher(row.role)" command="promoteCollege">提升为学院管理员</el-dropdown-item>
-                  <el-dropdown-item v-if="isTeacher(row.role)" command="promoteSchool">提升为学校管理员</el-dropdown-item>
-                  <el-dropdown-item v-if="isCollegeAdmin(row.role)" command="promoteSchool">提升为学校管理员</el-dropdown-item>
-                  <el-dropdown-item v-if="isCollegeAdmin(row.role)" command="demote">降为教师</el-dropdown-item>
-                  <el-dropdown-item v-if="isSchoolAdmin(row.role)" command="demote">降为教师</el-dropdown-item>
+                  <el-dropdown-item v-if="isTeacher(row.role)" command="promoteCollege">设为学院管理员</el-dropdown-item>
+                  <el-dropdown-item v-if="isTeacher(row.role)" command="promoteSchool">设为学校管理员</el-dropdown-item>
+                  <el-dropdown-item v-if="isCollegeAdmin(row.role)" command="promoteSchool">设为学校管理员</el-dropdown-item>
+                  <el-dropdown-item v-if="isCollegeAdmin(row.role) || isSchoolAdmin(row.role)" command="demote" divided>降为教师</el-dropdown-item>
                   <el-dropdown-item command="resetPassword">重置密码</el-dropdown-item>
                   <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
                 </el-dropdown-menu>

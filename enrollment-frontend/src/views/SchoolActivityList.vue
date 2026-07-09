@@ -82,62 +82,40 @@
         stripe
         class="activity-table"
       >
-        <el-table-column prop="id" label="ID" width="70" align="center" />
-        <el-table-column prop="title" label="活动标题" min-width="180" show-overflow-tooltip />
-        <el-table-column label="类型" width="110" align="center">
+        <el-table-column prop="title" label="活动标题" min-width="140" show-overflow-tooltip />
+        <el-table-column label="类型" width="80" align="center">
           <template #default="{ row }">
-            <el-tag :type="typeTagColor(row.type)" effect="plain" size="small">
-              {{ typeLabel(row.type) }}
-            </el-tag>
+            <el-tag :type="typeTagColor(row.type)" effect="plain" size="small">{{ typeLabel(row.type) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="活动日期" width="200">
+        <el-table-column label="活动日期" width="170">
+          <template #default="{ row }">{{ formatDate(row.startTime) }} ~ {{ formatDate(row.endTime) }}</template>
+        </el-table-column>
+        <el-table-column label="报名/名额" width="110" align="center">
+          <template #default="{ row }">{{ row.currentStudents ?? 0 }} / {{ row.maxStudents ?? 0 }}</template>
+        </el-table-column>
+        <el-table-column label="对象" width="70" align="center">
+          <template #default="{ row }">{{ audienceLabel(row.targetAudience) }}</template>
+        </el-table-column>
+        <el-table-column label="审批" width="90">
           <template #default="{ row }">
-            <div class="date-cell">
-              <span class="date-label">开始:</span>{{ formatDate(row.startTime) }}
-            </div>
-            <div class="date-cell">
-              <span class="date-label">结束:</span>{{ formatDate(row.endTime) }}
-            </div>
+            <el-tag type="info" effect="plain" size="small">{{ workflowLabel(row.workflowKey) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="报名/名额" width="150" align="center">
+        <el-table-column label="状态" width="80" align="center">
           <template #default="{ row }">
-            <span :class="{ 'full-text': row.currentStudents >= row.maxStudents }">
-              {{ row.currentStudents ?? 0 }} / {{ row.maxStudents ?? 0 }}
-            </span>
+            <el-tag :type="statusTagColor(row.status)" size="small">{{ statusLabel(row.status) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="招生对象" width="100" align="center">
-          <template #default="{ row }">
-            {{ audienceLabel(row.targetAudience) }}
-          </template>
+        <el-table-column label="创建人" width="70" show-overflow-tooltip>
+          <template #default="{ row }">{{ row.creatorName || '-' }}</template>
         </el-table-column>
-        <el-table-column label="审批流程" width="140">
-          <template #default="{ row }">
-            <el-tag type="info" effect="plain" size="small">
-              {{ workflowLabel(row.workflowKey) }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态" width="100" align="center">
-          <template #default="{ row }">
-            <el-tag :type="statusTagColor(row.status)" size="small">
-              {{ statusLabel(row.status) }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建人" width="100" show-overflow-tooltip>
-          <template #default="{ row }">
-            {{ row.creatorName || '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="轮播" width="70" align="center">
+        <el-table-column label="轮播" width="60" align="center">
           <template #default="{ row }">
             <el-switch :model-value="row.isBanner === 1" size="small" @change="(v:boolean) => toggleBanner(row, v)" />
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160" fixed="right" align="center">
+        <el-table-column label="操作" width="140" fixed="right" align="center">
           <template #default="{ row }">
             <el-button size="small" type="primary" link @click="handleEdit(row)">编辑</el-button>
             <el-button size="small" link @click="handleView(row)">查看</el-button>

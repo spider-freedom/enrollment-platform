@@ -229,8 +229,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="跳转链接URL">
-              <el-input v-model="form.linkUrl" placeholder="请输入点击后跳转的链接（选填）" />
+            <el-form-item label="设为轮播展示">
+              <el-switch v-model="form.isBanner" active-text="是" inactive-text="否" inline-prompt />
+              <div style="font-size:12px;color:#999;margin-top:4px">开启后该活动将在首页轮播图中展示</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -306,6 +307,7 @@ const form = reactive({
   maxPerSchool: 50,
   workflowKey: 'college_school_approval',
   bannerUrl: '',
+  isBanner: false,
   linkUrl: '',
   customFields: [] as CustomField[],
 })
@@ -381,6 +383,7 @@ async function loadActivity(id: number) {
       form.maxPerSchool = data.maxPerSchool ?? 50
       form.workflowKey = data.workflowKey || 'college_school_approval'
       form.bannerUrl = data.bannerUrl || ''
+      form.isBanner = data.isBanner === 1 || data.isBanner === true
       form.linkUrl = data.linkUrl || ''
       form.customFields = data.customFields || []
     }
@@ -409,6 +412,7 @@ function buildPayload(status: string) {
     maxPerSchool: form.maxPerSchool,
     workflowKey: form.workflowKey,
     bannerUrl: form.bannerUrl,
+    isBanner: form.isBanner ? 1 : 0,
     linkUrl: form.linkUrl,
     customFields: form.customFields,
     status,

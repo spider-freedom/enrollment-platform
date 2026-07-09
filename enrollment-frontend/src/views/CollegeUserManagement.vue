@@ -63,12 +63,19 @@
         <el-table-column label="创建时间" width="160">
           <template #default="{ row }">{{ formatTime(row.createTime || row.create_time) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="260" fixed="right">
+        <el-table-column label="操作" width="100" fixed="right">
           <template #default="{ row }">
-            <el-button v-if="isTeacher(row.role)" type="warning" size="small" @click="handlePromote(row)" plain>提升为学院管理员</el-button>
-            <el-button v-if="isCollegeAdmin(row.role)" type="primary" size="small" @click="handleDemote(row)" plain>降为教师</el-button>
-            <el-button size="small" @click="handleResetPassword(row)" plain>重置密码</el-button>
-            <el-button type="danger" size="small" @click="handleDelete(row)" plain>删除</el-button>
+            <el-dropdown trigger="click" @command="(cmd: string) => handleCommand(cmd, row)">
+              <el-button size="small" type="primary" link>操作 ▾</el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-if="isTeacher(row.role)" command="promote">提升为学院管理员</el-dropdown-item>
+                  <el-dropdown-item v-if="isCollegeAdmin(row.role)" command="demote">降为教师</el-dropdown-item>
+                  <el-dropdown-item command="resetPassword">重置密码</el-dropdown-item>
+                  <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -181,6 +188,15 @@ async function handleResetPassword(row: any) {
     ElMessage.success(`密码已重置为 123456`)
   } catch (err: any) {
     if (err !== 'cancel') ElMessage.error(err?.response?.data?.message || '操作失败')
+  }
+}
+
+function handleCommand(cmd: string, row: any) {
+  switch (cmd) {
+    case 'promote': handlePromote(row); break
+    case 'demote': handleDemote(row); break
+    case 'resetPassword': handleResetPassword(row); break
+    case 'delete': handleDelete(row); break
   }
 }
 

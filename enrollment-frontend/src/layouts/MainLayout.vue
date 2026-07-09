@@ -2,6 +2,7 @@
   <el-container class="main-layout">
     <el-header class="header">
       <div class="header-left">
+        <span class="header-logo">🏫</span>
         <h2>新疆大学招生宣传报名平台</h2>
       </div>
       <div class="header-right">
@@ -37,12 +38,17 @@
     </el-header>
     <el-container>
       <el-aside width="220px">
+        <div class="sidebar-brand">
+          <span class="sidebar-logo">🏫</span>
+          <span class="sidebar-title">XJU</span>
+        </div>
         <el-menu :default-active="activeMenu" router :ellipsis="false">
           <el-menu-item v-for="item in menuItems" :key="item.path" :index="item.path">
             <el-icon><component :is="item.icon" /></el-icon>
             <span>{{ item.label }}</span>
           </el-menu-item>
         </el-menu>
+        <div class="sidebar-footer">© 2026 新疆大学</div>
       </el-aside>
       <el-main>
         <router-view />
@@ -136,11 +142,138 @@ onMounted(() => { unreadCount.value = 3 })
 
 <style scoped>
 .main-layout { height: 100vh; }
-.header { display: flex; align-items: center; justify-content: space-between; background: #1a3a5c; color: #fff; padding: 0 24px; }
-.header-left h2 { font-size: 18px; margin: 0; }
-.header-right { display: flex; align-items: center; gap: 16px; }
-.user-name { color: rgba(255,255,255,.85); font-size: 13px; }
-.el-aside { background: #f5f7fa; border-right: 1px solid #e4e7ed; }
-.el-menu { border-right: none; height: 100%; }
-.el-main { background: #f0f2f5; padding: 20px; }
+
+/* ========== Header ========== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 50%, #1a56db 100%);
+  color: #fff;
+  padding: 0 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+  position: relative;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.header-logo {
+  font-size: 26px;
+  line-height: 1;
+}
+.header-left h2 {
+  font-size: 18px;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.user-name {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+}
+
+/* ========== Sidebar ========== */
+.el-aside {
+  background: #f8f9fb;
+  border-right: 1px solid #e8eaed;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid #e8eaed;
+}
+.sidebar-logo {
+  font-size: 28px;
+  line-height: 1;
+}
+.sidebar-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a3a6b;
+  letter-spacing: 1px;
+}
+.sidebar-footer {
+  margin-top: auto;
+  padding: 14px 20px;
+  font-size: 11px;
+  color: #9ca3af;
+  border-top: 1px solid #e8eaed;
+  text-align: center;
+}
+
+.el-menu {
+  border-right: none;
+  flex: 1;
+  background: transparent;
+}
+.el-menu .el-menu-item {
+  margin: 2px 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.el-menu .el-menu-item:hover {
+  background: #e8ecf4 !important;
+  color: #1a56db;
+}
+.el-menu .el-menu-item.is-active {
+  background: linear-gradient(135deg, #1a56db, #2563eb) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(26, 86, 219, 0.25);
+}
+
+/* ========== Main Content ========== */
+.el-main {
+  background: #f5f7fa;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(26, 86, 219, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(26, 86, 219, 0.02) 0%, transparent 50%);
+  padding: 24px;
+}
+
+/* ========== Global overrides (unscoped) ========== */
+</style>
+
+<style>
+/* Better card shadows and rounded corners for all el-card children in main */
+.el-main .el-card {
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.el-main .el-card.is-always-shadow:hover,
+.el-main .el-card.is-hover-shadow:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Table header styling */
+.el-main .el-table th.el-table__cell {
+  background: #f1f5f9;
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Button consistent radius */
+.el-main .el-button {
+  border-radius: 8px;
+}
+
+/* Input / Select consistent radius */
+.el-main .el-input__wrapper,
+.el-main .el-select .el-input__wrapper {
+  border-radius: 8px;
+}
 </style>

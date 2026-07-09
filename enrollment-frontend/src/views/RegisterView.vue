@@ -1,6 +1,8 @@
 <template>
   <div class="register-page">
     <div class="register-card">
+      <div class="register-accent-bar" />
+      <div class="register-logo">🏫</div>
       <h1 class="register-title">注册账号</h1>
       <p class="register-sub">新疆大学 · 招生宣传报名平台</p>
       <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
@@ -172,8 +174,73 @@ async function handleRegister() {
 </script>
 
 <style scoped>
-.register-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f1d3d, #1a3a6b 40%, #1a56db 100%); padding: 20px; }
-.register-card { background: #fff; border-radius: 16px; padding: 36px 32px; width: 520px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
-.register-title { font-size: 22px; text-align: center; margin-bottom: 4px; }
-.register-sub { text-align: center; color: #999; font-size: 13px; margin-bottom: 24px; }
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #060e1f 0%, #0f1d3d 30%, #13294b 50%, #1a3a6b 70%, #1a56db 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+}
+.register-page::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(26, 86, 219, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 60% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 40% 30%, rgba(139, 92, 246, 0.06) 0%, transparent 35%);
+  animation: bg-drift-reg 20s ease-in-out infinite;
+}
+@keyframes bg-drift-reg {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(2%, 1%) rotate(1deg); }
+  66% { transform: translate(-1%, -2%) rotate(-1deg); }
+}
+.register-card {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 0;
+  width: 520px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  animation: card-in-reg 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes card-in-reg {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.register-accent-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #1a56db, #3b82f6, #60a5fa);
+}
+.register-logo {
+  font-size: 42px;
+  text-align: center;
+  margin-top: 28px;
+  line-height: 1;
+}
+.register-title {
+  font-size: 22px;
+  text-align: center;
+  margin: 10px 0 4px;
+  font-weight: 700;
+  color: #1f2937;
+}
+.register-sub {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+  margin-bottom: 22px;
+}
+.register-card .el-form {
+  padding: 0 32px 28px;
+}
 </style>

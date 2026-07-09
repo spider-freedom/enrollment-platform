@@ -19,53 +19,53 @@
       <!-- 统计卡片 -->
       <el-row :gutter="16" class="stat-row">
         <el-col :span="6">
-          <el-card class="stat-card" shadow="hover" :style="{ borderTop: '3px solid #1a56db' }">
+          <el-card class="stat-card stat-card-blue" shadow="hover">
             <div class="stat-card-inner">
               <div class="stat-icon stat-icon-blue">
                 <el-icon :size="28"><Document /></el-icon>
               </div>
               <div class="stat-content">
-                <h1>{{ stats.totalActivities }}</h1>
-                <p>活动总数 <span style="color:#10b981;font-size:12px">↑ 12%</span></p>
+                <h1 class="stat-number">{{ animatedStats.totalActivities }}</h1>
+                <p>活动总数 <span class="stat-badge up">↑ 12%</span></p>
               </div>
             </div>
           </el-card>
         </el-col>
         <el-col :span="6">
-          <el-card class="stat-card" shadow="hover" :style="{ borderTop: '3px solid #16a34a' }">
+          <el-card class="stat-card stat-card-green" shadow="hover">
             <div class="stat-card-inner">
               <div class="stat-icon stat-icon-green">
                 <el-icon :size="28"><UserFilled /></el-icon>
               </div>
               <div class="stat-content">
-                <h1>{{ stats.totalEnrollments }}</h1>
-                <p>报名总数 <span style="color:#10b981;font-size:12px">↑ 23%</span></p>
+                <h1 class="stat-number">{{ animatedStats.totalEnrollments }}</h1>
+                <p>报名总数 <span class="stat-badge up">↑ 23%</span></p>
               </div>
             </div>
           </el-card>
         </el-col>
         <el-col :span="6">
-          <el-card class="stat-card" shadow="hover" :style="{ borderTop: '3px solid #ea580c' }">
+          <el-card class="stat-card stat-card-orange" shadow="hover">
             <div class="stat-card-inner">
               <div class="stat-icon stat-icon-orange">
                 <el-icon :size="28"><CircleCheckFilled /></el-icon>
               </div>
               <div class="stat-content">
-                <h1>{{ stats.approvalRate }}%</h1>
-                <p>通过率 <span style="color:#10b981;font-size:12px">↑ 5%</span></p>
+                <h1 class="stat-number">{{ animatedStats.approvalRate }}%</h1>
+                <p>通过率 <span class="stat-badge up">↑ 5%</span></p>
               </div>
             </div>
           </el-card>
         </el-col>
         <el-col :span="6">
-          <el-card class="stat-card" shadow="hover" :style="{ borderTop: '3px solid #7c3aed' }">
+          <el-card class="stat-card stat-card-purple" shadow="hover">
             <div class="stat-card-inner">
               <div class="stat-icon stat-icon-purple">
                 <el-icon :size="28"><StarFilled /></el-icon>
               </div>
               <div class="stat-content">
-                <h1>{{ stats.avgRating }}</h1>
-                <p>平均评分 <span style="color:#10b981;font-size:12px">↑ 0.3</span></p>
+                <h1 class="stat-number">{{ animatedStats.avgRating }}</h1>
+                <p>平均评分 <span class="stat-badge up">↑ 0.3</span></p>
               </div>
             </div>
           </el-card>
@@ -160,7 +160,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, watch } from 'vue'
 import * as echarts from 'echarts'
 import { statisticsApi, feedbackApi } from '@/api'
 import {
@@ -180,6 +180,37 @@ const stats = reactive({
   approvalRate: 0,
   avgRating: 0,
 })
+
+// Animated stats for smooth number transitions
+const animatedStats = reactive({
+  totalActivities: 0,
+  totalEnrollments: 0,
+  approvalRate: 0,
+  avgRating: 0,
+})
+
+function animateValue(key: keyof typeof animatedStats, target: number) {
+  const start = animatedStats[key]
+  const diff = target - start
+  if (diff === 0) return
+  const duration = 600
+  const startTime = performance.now()
+  function step(now: number) {
+    const elapsed = now - startTime
+    const progress = Math.min(elapsed / duration, 1)
+    const eased = 1 - Math.pow(1 - progress, 3)
+    ;(animatedStats as any)[key] = Math.round((start + diff * eased) * 10) / 10
+    if (progress < 1) {
+      requestAnimationFrame(step)
+    }
+  }
+  requestAnimationFrame(step)
+}
+
+watch(() => stats.totalActivities, (v) => animateValue('totalActivities', v))
+watch(() => stats.totalEnrollments, (v) => animateValue('totalEnrollments', v))
+watch(() => stats.approvalRate, (v) => animateValue('approvalRate', v))
+watch(() => stats.avgRating, (v) => animateValue('avgRating', v))
 
 const recentFeedbacks = ref<any[]>([])
 
@@ -533,13 +564,44 @@ onBeforeUnmount(() => {
   margin-bottom: 16px;
 }
 
+/* ========== Stat Cards with Gradient Headers ========== */
 .stat-card {
   cursor: default;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  position: relative;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 12px 12px 0 0;
+}
+.stat-card-blue::before {
+  background: linear-gradient(90deg, #1a56db, #3b82f6);
+}
+.stat-card-green::before {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+.stat-card-orange::before {
+  background: linear-gradient(90deg, #ea580c, #f97316);
+}
+.stat-card-purple::before {
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+}
+
+:deep(.stat-card .el-card__body) {
+  padding: 20px 20px 20px;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .stat-card-inner {
@@ -575,11 +637,12 @@ onBeforeUnmount(() => {
   background: linear-gradient(135deg, #a855f7, #7c3aed);
 }
 
-.stat-content h1 {
+.stat-content h1.stat-number {
   font-size: 30px;
   margin: 0;
   color: #111827;
   font-weight: 700;
+  transition: color 0.3s ease;
 }
 
 .stat-content p {
@@ -588,8 +651,33 @@ onBeforeUnmount(() => {
   font-size: 13px;
 }
 
+.stat-badge {
+  display: inline-block;
+  font-size: 12px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.stat-badge.up {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+.stat-badge.down {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ========== Chart Cards ========== */
 .chart-card {
   margin-bottom: 0;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.chart-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .chart-row {
@@ -606,6 +694,7 @@ onBeforeUnmount(() => {
   margin: 0;
   font-size: 15px;
   color: #1f2937;
+  font-weight: 600;
 }
 
 .chart-subtitle {
@@ -637,6 +726,10 @@ onBeforeUnmount(() => {
   background: #f9fafb;
   border-radius: 8px;
   border: 1px solid #f3f4f6;
+  transition: background 0.2s ease;
+}
+.feedback-item:hover {
+  background: #f3f4f6;
 }
 
 .feedback-item-header {

@@ -1,6 +1,8 @@
 <template>
   <div class="login-page">
     <div class="login-card">
+      <div class="login-accent-bar" />
+      <div class="login-logo">🏫</div>
       <h1 class="login-title">新疆大学招生宣传报名平台</h1>
       <p class="login-sub">统一身份认证登录</p>
       <el-form ref="formRef" :model="form" :rules="rules" @keyup.enter="handleLogin">
@@ -72,11 +74,79 @@ async function handleLogin() {
 </script>
 
 <style scoped>
-.login-page { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f1d3d, #1a3a6b 40%, #1a56db 100%); }
-.login-card { background: #fff; border-radius: 16px; padding: 44px 40px; width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
-.login-title { font-size: 22px; text-align: center; margin-bottom: 4px; color: #1f2937; }
-.login-sub { text-align: center; color: #9ca3af; font-size: 13px; margin-bottom: 32px; }
-.login-links { text-align: center; margin-top: 16px; font-size: 13px; }
+.login-page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #060e1f 0%, #0f1d3d 30%, #13294b 50%, #1a3a6b 70%, #1a56db 100%);
+  position: relative;
+  overflow: hidden;
+}
+.login-page::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(26, 86, 219, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 60% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 40% 30%, rgba(139, 92, 246, 0.06) 0%, transparent 35%);
+  animation: bg-drift 20s ease-in-out infinite;
+}
+@keyframes bg-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(2%, 1%) rotate(1deg); }
+  66% { transform: translate(-1%, -2%) rotate(-1deg); }
+}
+.login-card {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 0;
+  width: 420px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  animation: card-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.login-accent-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #1a56db, #3b82f6, #60a5fa);
+}
+.login-logo {
+  font-size: 42px;
+  text-align: center;
+  margin-top: 32px;
+  line-height: 1;
+}
+.login-title {
+  font-size: 21px;
+  text-align: center;
+  margin: 12px 40px 4px;
+  color: #1f2937;
+  font-weight: 700;
+}
+.login-sub {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+  margin: 0 40px 28px;
+}
+.login-card .el-form {
+  padding: 0 40px 24px;
+}
+.login-links {
+  text-align: center;
+  padding: 0 40px 32px;
+  font-size: 13px;
+}
 .login-links a { color: #1a56db; text-decoration: none; }
 .login-links a:hover { text-decoration: underline; }
 </style>

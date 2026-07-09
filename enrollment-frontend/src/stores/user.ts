@@ -8,7 +8,7 @@ export const useUserStore = defineStore('user', () => {
   const userInfo = ref<UserInfo | null>(null)
 
   const isLoggedIn = computed(() => !!token.value)
-  const currentRole = computed(() => userInfo.value?.role || '')
+  const currentRole = computed(() => (userInfo.value?.role || '').toLowerCase())
   const isStudent = computed(() => currentRole.value === 'student')
   const isTeacher = computed(() => currentRole.value === 'teacher')
   const isCollegeAdmin = computed(() => currentRole.value === 'college_admin')

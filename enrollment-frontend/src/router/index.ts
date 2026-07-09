@@ -71,7 +71,7 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const store = useUserStore()
   if (to.path === '/login' || to.path === '/register') {
     next()
@@ -80,6 +80,10 @@ router.beforeEach((to, _from, next) => {
   if (!store.isLoggedIn) {
     next('/login')
     return
+  }
+  // On page refresh, restore user info from token
+  if (!store.userInfo) {
+    try { await store.fetchProfile() } catch { store.logout(); next('/login'); return }
   }
   const roleRouteMap: Record<string, string> = {
     student: '/student',

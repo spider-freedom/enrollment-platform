@@ -1,0 +1,26 @@
+# Backend
+enrollment-backend/target/
+enrollment-backend/.env
+*.class
+*.jar
+*.log
+
+# Frontend
+enrollment-frontend/node_modules/
+enrollment-frontend/dist/
+enrollment-frontend/.env.local
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+uploads/

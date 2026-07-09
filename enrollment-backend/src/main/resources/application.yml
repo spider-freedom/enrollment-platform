@@ -1,0 +1,81 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/enrollment_platform?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true
+    username: root
+    password: 123456
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT
+jwt:
+  secret: xinjiang-university-enrollment-platform-2026-secret-key
+  expiration: 86400000
+
+# LangChain4j AI
+langchain4j:
+  open-ai:
+    api-key: ${DEEPSEEK_API_KEY:sk-your-key}
+    base-url: https://api.deepseek.com/v1
+    model-name: deepseek-chat
+    temperature: 0.3
+    max-tokens: 4096
+
+# Swagger
+springdoc:
+  swagger-ui:
+    path: /doc.html
+  api-docs:
+    path: /v3/api-docs
+
+# File storage
+file:
+  upload-path: ./uploads
+  allowed-extensions: pdf,doc,docx,xls,xlsx,jpg,jpeg,png,gif,mp4
+  max-size: 10485760
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+# Logging
+logging:
+  level:
+    com.xju: DEBUG
+    com.xju.enrollment: DEBUG

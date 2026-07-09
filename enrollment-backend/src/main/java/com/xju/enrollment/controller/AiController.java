@@ -1,0 +1,81 @@
+package com.xju.enrollment.controller;
+
+import com.xju.enrollment.ai.FeedbackAnalyzer;
+import com.xju.enrollment.ai.SchoolNameNormalizer;
+import com.xju.enrollment.common.ApiResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/ai")
+@RequiredArgsConstructor
+public class AiController {
+
+    private final SchoolNameNormalizer schoolNameNormalizer;
+    private final FeedbackAnalyzer feedbackAnalyzer;
+    private final ChatLanguageModel chatLanguageModel;
+
+    @GetMapping("/school/suggest")
+    public ApiResponse<List<String>> suggest(@RequestParam(defaultValue = "") String keyword) {
+        List<String> suggestions = schoolNameNormalizer.suggest(keyword);
+        return ApiResponse.ok(suggestions);
+    }
+
+    @PostMapping("/school/normalize")
+    public ApiResponse<String> normalize(@RequestBody Map<String, String> body) {
+        String input = body.get("name");
+        String normalized = schoolNameNormalizer.normalize(input);
+        return ApiResponse.ok(normalized);
+    }
+
+    @PostMapping("/feedback/analyze")
+    public ApiResponse<String> analyze(@RequestBody Map<String, String> body) {
+        String content = body.get("content");
+        String result = feedbackAnalyzer.analyze(content);
+        return ApiResponse.ok(result);
+    }
+
+    @PostMapping("/feedback/summarize")
+    public ApiResponse<String> summarize(@RequestBody Map<String, List<String>> body) {
+        List<String> contents = body.get("contents");
+        String result = feedbackAnalyzer.summarize(contents);
+        return ApiResponse.ok(result);
+    }
+
+    @PostMapping("/approval/suggest")
+    public ApiResponse<Map<String, Object>> approvalSuggest(@RequestBody Map<String, Object> body) {
+        String studentName = (String) body.get("studentName");
+        String studentRole = (String) body.get("studentRole");
+        String collegeName = (String) body.get("collegeName");
+        Double gpa = body.get("gpa") != null ? ((Number) body.get("gpa")).doubleValue() : null;
+        String targetSchool = (String) body.get("targetSchool");
+        String activityTitle = (String) body.get("activityTitle");
+        int currentCount = body.get("currentCount") != null ? ((Number) body.get("currentCount")).intValue() : 0;
+        int maxCount = body.get("maxCount") != null ? ((Number) body.get("maxCount")).intValue() : 0;
+
+        String prompt = String.format(
+            "你是新疆大学招生宣传活动的审批助手。请分析以下报名申请并给出审批建议。\n" +
+            "申请人: %s (%s)\n学院: %s\n绩点: %s\n目标学校: %s\n活动: %s\n当前已通过: %d/%d人\n\n" +
+            "请以JSON格式返回，只返回JSON不要其他内容：\n" +
+            "{\"suggestion\": \"建议通过\"或\"建议谨慎\"或\"建议拒绝\", \"reason\": \"理由\", \"risk\": \"风险点(无则写无)\"}",
+            studentName, studentRole, collegeName, gpa != null ? String.format("%.1f", gpa) : "无",
+            targetSchool, activityTitle, currentCount, maxCount
+        );
+
+        try {
+            String response = chatLanguageModel.generate(prompt);
+            // Strip markdown code blocks if present
+            String json = response.replaceAll("```json\\s*", "").replaceAll("```\\s*", "").trim();
+            Map<String, Object> result = new ObjectMapper().readValue(json, Map.class);
+            return ApiResponse.ok("AI分析完成", result);
+        } catch (Exception e) {
+            return ApiResponse.ok("AI服务暂时不可用，请人工判断",
+                Map.of("suggestion", "请人工判断", "reason", "AI服务暂不可用: " + e.getMessage(), "risk", "无"));
+        }
+    }
+}

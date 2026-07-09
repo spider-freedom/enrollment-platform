@@ -110,15 +110,11 @@
         <el-table-column label="创建人" width="70" show-overflow-tooltip>
           <template #default="{ row }">{{ row.creatorName || '-' }}</template>
         </el-table-column>
-        <el-table-column label="轮播" width="60" align="center">
-          <template #default="{ row }">
-            <el-switch :model-value="row.isBanner === 1" size="small" @change="(v:boolean) => toggleBanner(row, v)" />
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="140" fixed="right" align="center">
+        <el-table-column label="操作" width="200" fixed="right" align="center">
           <template #default="{ row }">
             <el-button size="small" type="primary" link @click="handleEdit(row)">编辑</el-button>
             <el-button size="small" link @click="handleView(row)">查看</el-button>
+            <el-button size="small" :type="row.isBanner === 1 ? 'warning' : 'info'" link @click="toggleBanner(row, row.isBanner !== 1)">{{ row.isBanner === 1 ? '取消轮播' : '设为轮播' }}</el-button>
             <el-button size="small" type="danger" link @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>

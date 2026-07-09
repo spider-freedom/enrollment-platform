@@ -16,7 +16,7 @@
             消息通知 <span style="font-size:11px;color:#999;cursor:pointer;font-weight:400" @click="markAllRead()">全部已读</span>
           </div>
           <div style="max-height:300px;overflow-y:auto">
-            <div v-for="(n,i) in notifications" :key="i" style="padding:10px 0;border-bottom:1px solid #f5f5f5;cursor:pointer" @click="handleNotifyClick(n)">
+            <div v-for="(n,i) in filteredNotifications" :key="i" style="padding:10px 0;border-bottom:1px solid #f5f5f5;cursor:pointer" @click="handleNotifyClick(n)">
               <div style="font-size:13px;font-weight:500">{{ n.icon }} {{ n.title }}</div>
               <div style="font-size:12px;color:#999;margin-top:2px">{{ n.desc }}</div>
               <div style="font-size:11px;color:#bbb;margin-top:2px">{{ n.time }}</div>
@@ -79,10 +79,18 @@ const roleLabel = computed(() => roleLabelMap[store.currentRole] || store.curren
 const roleTagType = computed(() => roleTagTypeMap[store.currentRole] || 'info')
 
 const notifications = ref([
-  { icon:'✅', title:'报名审批通过', desc:'「寒假招生宣传活动」已通过学院审核，进入学校审核', time:'2小时前', path:'/student/enrollments' },
-  { icon:'📨', title:'反馈收到回复', desc:'管理员回复了您对「寒假招生宣传活动」的反馈', time:'1天前', path:'/student/my-feedback' },
-  { icon:'📢', title:'新活动发布', desc:'招生办发布了「线上招生政策宣讲与答疑」', time:'3天前', path:'/student/activities' },
+  { icon:'✅', title:'报名审批通过', desc:'「寒假招生宣传活动」已通过学院审核', time:'2小时前', role:'student', path:'/student/enrollments' },
+  { icon:'📨', title:'反馈收到回复', desc:'管理员回复了您的反馈', time:'1天前', role:'student', path:'/student/my-feedback' },
+  { icon:'📢', title:'新活动发布', desc:'招生办发布了「线上招生政策宣讲」', time:'3天前', role:'all', path:'/student/activities' },
+  { icon:'📋', title:'有待审批报名', desc:'有新的报名申请等待您审批', time:'1天前', role:'college_admin', path:'/college/approvals' },
+  { icon:'📋', title:'有待审批报名', desc:'有新的报名申请等待学校审批', time:'1天前', role:'school_admin', path:'/school/approvals' },
+  { icon:'📨', title:'有新反馈提交', desc:'有新的活动反馈等待您查看', time:'2天前', role:'college_admin', path:'/college/feedbacks' },
 ])
+
+const filteredNotifications = computed(() => {
+  const role = store.currentRole || ''
+  return notifications.value.filter(n => n.role === 'all' || n.role === role)
+})
 
 function markAllRead() {
   unreadCount.value = 0

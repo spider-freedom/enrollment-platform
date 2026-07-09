@@ -13,7 +13,7 @@
             </el-badge>
           </template>
           <div style="font-weight:600;padding:4px 0 12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between">
-            消息通知 <span style="font-size:11px;color:#999;cursor:pointer;font-weight:400" @click="unreadCount=0">全部已读</span>
+            消息通知 <span style="font-size:11px;color:#999;cursor:pointer;font-weight:400" @click="markAllRead()">全部已读</span>
           </div>
           <div style="max-height:300px;overflow-y:auto">
             <div v-for="(n,i) in notifications" :key="i" style="padding:10px 0;border-bottom:1px solid #f5f5f5;cursor:pointer" @click="handleNotifyClick(n)">
@@ -84,9 +84,9 @@ const notifications = ref([
   { icon:'📢', title:'新活动发布', desc:'招生办发布了「线上招生政策宣讲与答疑」', time:'3天前', path:'/student/activities' },
 ])
 
-function handleNotifyClick(n: any) {
-  unreadCount.value = Math.max(0, unreadCount.value - 1)
-  if (n.path) router.push(n.path)
+function markAllRead() {
+  unreadCount.value = 0
+  localStorage.setItem('unreadNotifications', '0')
 }
 
 const profilePath = computed(() => {
@@ -137,7 +137,14 @@ function handleLogout() {
   router.push('/login')
 }
 
-onMounted(() => { unreadCount.value = 3 })
+onMounted(() => {
+  unreadCount.value = parseInt(localStorage.getItem('unreadNotifications') || '3')
+})
+function handleNotifyClick(n: any) {
+  unreadCount.value = Math.max(0, unreadCount.value - 1)
+  localStorage.setItem('unreadNotifications', String(unreadCount.value))
+  if (n.path) router.push(n.path)
+}
 </script>
 
 <style scoped>

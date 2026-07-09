@@ -132,17 +132,16 @@
             {{ row.creatorName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right" align="center">
+        <el-table-column label="轮播" width="70" align="center">
           <template #default="{ row }">
-            <el-button size="small" type="primary" link @click="handleEdit(row)">
-              编辑
-            </el-button>
-            <el-button size="small" link @click="handleView(row)">
-              查看
-            </el-button>
-            <el-button size="small" type="danger" link @click="handleDelete(row)">
-              删除
-            </el-button>
+            <el-switch :model-value="row.isBanner === 1" size="small" @change="(v:boolean) => toggleBanner(row, v)" />
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="160" fixed="right" align="center">
+          <template #default="{ row }">
+            <el-button size="small" type="primary" link @click="handleEdit(row)">编辑</el-button>
+            <el-button size="small" link @click="handleView(row)">查看</el-button>
+            <el-button size="small" type="danger" link @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -277,7 +276,10 @@ async function fetchList() {
 
     const res = await activityApi.listSchool(params)
     const data = res?.data || res
-    if (data && data.records) {
+    if (data && data.list) {
+      list.value = data.list
+      total.value = data.total ?? 0
+    } else if (data && data.records) {
       list.value = data.records
       total.value = data.total ?? 0
     } else if (Array.isArray(data)) {
@@ -321,6 +323,14 @@ function handleSizeChange(size: number) {
 
 function handleExport() {
   window.open('/api/activity/export', '_blank')
+}
+
+async function toggleBanner(row: any, val: boolean) {
+  try {
+    await activityApi.update(row.id, { isBanner: val ? 1 : 0 })
+    row.isBanner = val ? 1 : 0
+    ElMessage.success(val ? '已设为轮播' : '已取消轮播')
+  } catch { ElMessage.error('操作失败') }
 }
 
 // ============= 操作 =============

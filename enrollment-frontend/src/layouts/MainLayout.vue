@@ -81,7 +81,7 @@ const roleTagType = computed(() => roleTagTypeMap[store.currentRole] || 'info')
 const notifications = ref([
   { icon:'✅', title:'报名审批通过', desc:'「寒假招生宣传活动」已通过学院审核', time:'2小时前', role:'student', path:'/student/enrollments' },
   { icon:'📨', title:'反馈收到回复', desc:'管理员回复了您的反馈', time:'1天前', role:'student', path:'/student/my-feedback' },
-  { icon:'📢', title:'新活动发布', desc:'招生办发布了「线上招生政策宣讲」', time:'3天前', role:'all', path:'/student/activities' },
+  { icon:'📢', title:'新活动发布', desc:'招生办发布了「线上招生政策宣讲」', time:'3天前', role:'all', path:'' },
   { icon:'📋', title:'有待审批报名', desc:'有新的报名申请等待您审批', time:'1天前', role:'college_admin', path:'/college/approvals' },
   { icon:'📋', title:'有待审批报名', desc:'有新的报名申请等待学校审批', time:'1天前', role:'school_admin', path:'/school/approvals' },
   { icon:'📨', title:'有新反馈提交', desc:'有新的活动反馈等待您查看', time:'2天前', role:'college_admin', path:'/college/feedbacks' },
@@ -151,7 +151,15 @@ onMounted(() => {
 function handleNotifyClick(n: any) {
   unreadCount.value = Math.max(0, unreadCount.value - 1)
   localStorage.setItem('unreadNotifications', String(unreadCount.value))
-  if (n.path) router.push(n.path)
+  let path = n.path
+  if (!path) {
+    const role = store.currentRole || ''
+    if (role === 'STUDENT') path = '/student/activities'
+    else if (role === 'TEACHER') path = '/teacher/activities'
+    else if (role === 'COLLEGE_ADMIN') path = '/college/activities'
+    else if (role === 'SCHOOL_ADMIN') path = '/school/activities'
+  }
+  if (path) router.push(path)
 }
 </script>
 

@@ -401,7 +401,7 @@ function buildPayload(status: string) {
     title: form.title,
     description: form.description,
     type: form.type,
-    targetAudience: form.targetAudience,
+    targetAudience: form.targetAudience === 'student' ? 1 : form.targetAudience === 'teacher' ? 2 : 3,
     location: form.location,
     startTime: form.startTime,
     endTime: form.endTime,

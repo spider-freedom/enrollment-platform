@@ -23,6 +23,7 @@ export const activityApi = {
   listSchool: (params: any) => request.get('/activity/list/school', { params }),
   getById: (id: number) => request.get(`/activity/${id}`),
   getBanners: () => request.get('/activity/banners'),
+  toggleBanner: (id: number, isBanner: number) => request.post(`/activity/${id}/banner`, { isBanner }),
   create: (data: any) => request.post('/activity/create', data),
   update: (id: number, data: any) => request.put(`/activity/update/${id}`, data),
   delete: (id: number) => request.delete(`/activity/delete/${id}`),

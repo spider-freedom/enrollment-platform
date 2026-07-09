@@ -38,6 +38,12 @@ public class ActivityController {
         return ApiResponse.ok(activity);
     }
 
+    @PostMapping("/{id}/banner")
+    public ApiResponse<Void> toggleBanner(@PathVariable Long id, @RequestBody Map<String, Integer> body) {
+        activityService.toggleBanner(id, body.get("isBanner"));
+        return ApiResponse.ok(null);
+    }
+
     @PutMapping("/update/{id}")
     public ApiResponse<Void> updateActivity(@PathVariable Long id, @Valid @RequestBody ActivityRequest request) {
         activityService.updateActivity(id, request);

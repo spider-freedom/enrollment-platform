@@ -93,6 +93,13 @@ public class ActivityService {
         return doPageQuery(query, wrapper);
     }
 
+    public void toggleBanner(Long id, Integer isBanner) {
+        Activity activity = activityMapper.selectById(id);
+        if (activity == null) throw new BusinessException("活动不存在");
+        activity.setIsBanner(isBanner != null ? isBanner : 0);
+        activityMapper.updateById(activity);
+    }
+
     public List<ActivityVO> getBanners() {
         LambdaQueryWrapper<Activity> w = new LambdaQueryWrapper<>();
         w.eq(Activity::getIsBanner, 1);

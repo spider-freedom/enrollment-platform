@@ -301,7 +301,7 @@ function handleExport() {
 
 async function toggleBanner(row: any, val: boolean) {
   try {
-    await activityApi.update(row.id, { isBanner: val ? 1 : 0 })
+    await activityApi.toggleBanner(row.id, val ? 1 : 0)
     row.isBanner = val ? 1 : 0
     ElMessage.success(val ? '已设为轮播' : '已取消轮播')
   } catch { ElMessage.error('操作失败') }

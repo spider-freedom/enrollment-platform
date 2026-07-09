@@ -138,17 +138,17 @@ CREATE TABLE feedback_attachment (
 -- ============================================================
 -- 密码均为 123456 的 BCrypt 加密值
 INSERT INTO sys_user (username, password, name, role, college_id, college_name, major, grade, gpa, email, phone) VALUES
-('2021001', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5Eh', '艾克拜尔·买买提', 'STUDENT', 1, '计算机科学与技术学院', '软件工程', '2021级', 3.7, 'aikebai@xju.edu.cn', '13800001111'),
-('2021002', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5Eh', '古丽娜尔·阿不都', 'STUDENT', 1, '计算机科学与技术学院', '计算机科学', '2021级', 3.5, 'gulinaer@xju.edu.cn', '13800002222'),
-('2022001', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5Eh', '迪丽娜尔', 'STUDENT', 2, '数学与系统科学学院', '数学与应用数学', '2022级', 3.9, 'dilinaer@xju.edu.cn', '13800003333'),
-('T2021001', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5Eh', '李老师', 'TEACHER', 1, '计算机科学与技术学院', '副教授', NULL, NULL, 'lilaoshi@xju.edu.cn', '13900002222'),
-('C2021001', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5Eh', '赵老师', 'COLLEGE_ADMIN', 1, '计算机科学与技术学院', NULL, NULL, NULL, 'zhaolaoshi@xju.edu.cn', '13700003333'),
-('S2021001', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5Eh', '陈老师', 'SCHOOL_ADMIN', NULL, NULL, NULL, NULL, NULL, 'chenlaoshi@xju.edu.cn', '13600004444'),
+('2021001', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '艾克拜尔·买买提', 'STUDENT', 1, '计算机科学与技术学院', '软件工程', '2021级', 3.7, 'aikebai@xju.edu.cn', '13800001111'),
+('2021002', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '古丽娜尔·阿不都', 'STUDENT', 1, '计算机科学与技术学院', '计算机科学', '2021级', 3.5, 'gulinaer@xju.edu.cn', '13800002222'),
+('2022001', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '迪丽娜尔', 'STUDENT', 2, '数学与系统科学学院', '数学与应用数学', '2022级', 3.9, 'dilinaer@xju.edu.cn', '13800003333'),
+('T2021001', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '李老师', 'TEACHER', 1, '计算机科学与技术学院', '副教授', NULL, NULL, 'lilaoshi@xju.edu.cn', '13900002222'),
+('C2021001', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '赵老师', 'COLLEGE_ADMIN', 1, '计算机科学与技术学院', NULL, NULL, NULL, 'zhaolaoshi@xju.edu.cn', '13700003333'),
+('S2021001', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '陈老师', 'SCHOOL_ADMIN', NULL, NULL, NULL, NULL, NULL, 'chenlaoshi@xju.edu.cn', '13600004444'),
 
 -- 新增用户
-('2022002', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5Eh', '阿依古丽·吐尔逊', 'STUDENT', 2, '数学与系统科学学院', '统计学', '2022级', 3.6, 'ayiguli@xju.edu.cn', '13800005555'),
-('2023001', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5Eh', '买买提·艾力', 'STUDENT', 3, '信息科学与工程学院', '电子信息工程', '2023级', 3.4, 'maimaiti@xju.edu.cn', '13800006666'),
-('T2022001', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5Eh', '王老师', 'TEACHER', 2, '数学与系统科学学院', '教授', NULL, NULL, 'wanglaoshi@xju.edu.cn', '13900005555');
+('2022002', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '阿依古丽·吐尔逊', 'STUDENT', 2, '数学与系统科学学院', '统计学', '2022级', 3.6, 'ayiguli@xju.edu.cn', '13800005555'),
+('2023001', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '买买提·艾力', 'STUDENT', 3, '信息科学与工程学院', '电子信息工程', '2023级', 3.4, 'maimaiti@xju.edu.cn', '13800006666'),
+('T2022001', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '王老师', 'TEACHER', 2, '数学与系统科学学院', '教授', NULL, NULL, 'wanglaoshi@xju.edu.cn', '13900005555');
 
 INSERT INTO activity (title, description, type, status, target_audience, start_time, end_time, enroll_start, enroll_end, location, max_students, max_teachers, max_per_school, workflow_key, creator_id) VALUES
 ('2026年寒假招生宣传活动', '面向全校的寒假招生宣传活动，前往新疆各地州重点高中开展宣讲，与考生和家长面对面交流，介绍新疆大学的办学特色、专业设置和招生政策。', 'OFFLINE', 'PUBLISHED', 3, '2026-01-15 09:00:00', '2026-01-20 17:00:00', '2026-01-01 00:00:00', '2026-01-10 23:59:59', '新疆各地州重点高中', 20, 5, 3, 'college_school_approval', 6),

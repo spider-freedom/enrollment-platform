@@ -38,19 +38,28 @@
           />
         </el-form-item>
         <el-row :gutter="16">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="活动类型" prop="type">
-              <el-select v-model="form.type" placeholder="请选择活动类型" style="width: 100%">
-                <el-option label="线下宣讲" value="OFFLINE" />
-                <el-option label="线上直播" value="ONLINE" />
-                <el-option label="开放日" value="OPEN_DAY" />
-                <el-option label="面试" value="INTERVIEW" />
+              <el-select v-model="form.type" placeholder="请选择" style="width: 100%">
+                <el-option label="线下活动" value="OFFLINE" />
+                <el-option label="线上活动" value="ONLINE" />
+                <el-option label="校内活动" value="INTERNAL" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
+            <el-form-item label="活动状态" prop="status">
+              <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
+                <el-option label="草稿" value="DRAFT" />
+                <el-option label="已发布" value="PUBLISHED" />
+                <el-option label="进行中" value="ONGOING" />
+                <el-option label="已结束" value="ENDED" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="招生对象" prop="targetAudience">
-              <el-select v-model="form.targetAudience" placeholder="请选择招生对象" style="width: 100%">
+              <el-select v-model="form.targetAudience" placeholder="请选择" style="width: 100%">
                 <el-option label="仅学生" value="student" />
                 <el-option label="仅教师" value="teacher" />
                 <el-option label="学生+教师" value="all" />
@@ -296,6 +305,7 @@ const form = reactive({
   title: '',
   description: '',
   type: 'OFFLINE',
+  status: 'DRAFT',
   targetAudience: 'all',
   location: '',
   startTime: '',
@@ -372,6 +382,7 @@ async function loadActivity(id: number) {
       form.title = data.title || ''
       form.description = data.description || ''
       form.type = data.type || 'OFFLINE'
+      form.status = data.status || 'DRAFT'
       form.targetAudience = String(data.targetAudience ?? 'all')
       form.location = data.location || ''
       form.startTime = data.startTime || ''
@@ -396,11 +407,12 @@ async function loadActivity(id: number) {
 }
 
 // ============= 提交 =============
-function buildPayload(status: string) {
+function buildPayload() {
   return {
     title: form.title,
     description: form.description,
     type: form.type,
+    status: form.status,
     targetAudience: form.targetAudience === 'student' ? 1 : form.targetAudience === 'teacher' ? 2 : 3,
     location: form.location,
     startTime: form.startTime,
@@ -413,16 +425,13 @@ function buildPayload(status: string) {
     workflowKey: form.workflowKey,
     bannerUrl: form.bannerUrl,
     isBanner: form.isBanner ? 1 : 0,
-    linkUrl: form.linkUrl,
-    customFields: form.customFields,
-    status,
   }
 }
 
 async function handleSaveDraft() {
   submitting.value = true
   try {
-    const payload = buildPayload('DRAFT')
+    const payload = buildPayload()
     if (isEdit.value && editId.value) {
       await activityApi.update(editId.value, payload)
       ElMessage.success('草稿已保存')
@@ -444,7 +453,7 @@ async function handlePublish() {
 
   submitting.value = true
   try {
-    const payload = buildPayload('PUBLISHED')
+    const payload = buildPayload()
     if (isEdit.value && editId.value) {
       await activityApi.update(editId.value, payload)
       ElMessage.success('活动修改成功！')

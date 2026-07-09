@@ -209,22 +209,14 @@ function workflowLabel(key?: string) {
 
 function statusLabel(status: string) {
   const map: Record<string, string> = {
-    DRAFT: '草稿',
-    ENROLLING: '报名中',
-    ONGOING: '进行中',
-    FINISHED: '已结束',
-    CANCELLED: '已取消',
+    DRAFT: '草稿', PUBLISHED: '已发布', ONGOING: '进行中', ENDED: '已结束',
   }
   return map[status] || status || '-'
 }
 
 function statusTagColor(status: string) {
   const map: Record<string, string> = {
-    DRAFT: 'info',
-    ENROLLING: 'success',
-    ONGOING: '',
-    FINISHED: 'info',
-    CANCELLED: 'danger',
+    DRAFT: 'info', PUBLISHED: 'success', ONGOING: '', ENDED: 'info',
   }
   return map[status] || 'info'
 }

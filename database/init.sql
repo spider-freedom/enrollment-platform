@@ -45,6 +45,7 @@ CREATE TABLE activity (
     max_per_school INT DEFAULT 3 COMMENT '每校最大人数',
     banner_url VARCHAR(500) COMMENT 'Banner图片URL',
     banner_link VARCHAR(500) COMMENT 'Banner跳转链接',
+    is_banner TINYINT DEFAULT 0 COMMENT '是否轮播 0=否 1=是',
     group_rule VARCHAR(200) COMMENT '分组规则',
     rank_rule VARCHAR(200) COMMENT '排名规则',
     workflow_key VARCHAR(100) COMMENT '审批流程Key',

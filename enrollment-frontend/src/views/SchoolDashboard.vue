@@ -432,86 +432,58 @@ function initCharts() {
 
 // ============= 数据获取 =============
 async function fetchStats() {
-  // 获取仪表盘主数据
-  try {
-    const res = await statisticsApi.getDashboard()
-    const dash = res?.data || res
-    if (dash) {
-      stats.totalActivities = dash.totalActivities ?? 0
-      stats.totalEnrollments = dash.totalEnrollments ?? 0
-      stats.approvalRate = dash.approvalRate ?? 0
-      stats.avgRating = dash.avgRating ?? 0
-    }
-  } catch {
-    // 使用mock数据
-    stats.totalActivities = 36
-    stats.totalEnrollments = 1248
-    stats.approvalRate = 78
-    stats.avgRating = 4.5
+  const res = await statisticsApi.getDashboard()
+  const dash = res?.data || res
+  if (dash) {
+    stats.totalActivities = dash.totalActivities ?? 0
+    stats.totalEnrollments = dash.totalEnrollments ?? 0
+    stats.approvalRate = dash.approvalRate ?? 0
+    stats.avgRating = dash.avgRating ?? 0
   }
 
-  // 获取趋势数据
-  try {
-    const trendRes = await statisticsApi.getTrend()
-    const trend = trendRes?.data || trendRes
-    if (trend && trendInstance) {
-      const categories = trend.months || trend.labels || defaultTrend.months
-      const values = trend.values || trend.data || defaultTrend.values
-      trendInstance.setOption(
-        createLineOption(categories, values, '报名人数'),
-      )
-    }
-  } catch {
-    // 保持默认mock数据
+  const trendRes = await statisticsApi.getTrend()
+  const trend = trendRes?.data || trendRes
+  if (trend && trendInstance) {
+    const categories = trend.months || trend.labels || defaultTrend.months
+    const values = trend.values || trend.data || defaultTrend.values
+    trendInstance.setOption(
+      createLineOption(categories, values, '报名人数'),
+    )
   }
 
-  // 获取学院分布
-  try {
-    const colRes = await statisticsApi.getCollegeDist()
-    const col = colRes?.data || colRes
-    if (Array.isArray(col) && col.length > 0 && collegeInstance) {
-      collegeInstance.setOption(
-        createBarOption(
-          col.map((c: any) => c.collegeName || c.name || '未知'),
-          col.map((c: any) => c.enrollmentCount || c.count || c.value || 0),
-          '报名数',
-        ),
-      )
-    }
-  } catch {
-    // 保持默认mock数据
+  const colRes = await statisticsApi.getCollegeDist()
+  const col = colRes?.data || colRes
+  if (Array.isArray(col) && col.length > 0 && collegeInstance) {
+    collegeInstance.setOption(
+      createBarOption(
+        col.map((c: any) => c.collegeName || c.name || '未知'),
+        col.map((c: any) => c.enrollmentCount || c.count || c.value || 0),
+        '报名数',
+      ),
+    )
   }
 
-  // 获取评分分布
-  try {
-    const rateRes = await statisticsApi.getRatingDist()
-    const rateData = rateRes?.data || rateRes
-    if (rateData && ratingInstance) {
-      let entries: { value: number; name: string }[] = []
-      if (typeof rateData === 'object' && !Array.isArray(rateData)) {
-        entries = Object.entries(rateData).map(([k, v]) => ({
-          value: Number(v),
-          name: k.includes('分') ? k : `${k}分`,
-        }))
-      }
-      if (entries.length > 0) {
-        ratingInstance.setOption(createPieOption(entries))
-      }
+  const rateRes = await statisticsApi.getRatingDist()
+  const rateData = rateRes?.data || rateRes
+  if (rateData && ratingInstance) {
+    let entries: { value: number; name: string }[] = []
+    if (typeof rateData === 'object' && !Array.isArray(rateData)) {
+      entries = Object.entries(rateData).map(([k, v]) => ({
+        value: Number(v),
+        name: k.includes('分') ? k : `${k}分`,
+      }))
     }
-  } catch {
-    // 保持默认mock数据
+    if (entries.length > 0) {
+      ratingInstance.setOption(createPieOption(entries))
+    }
   }
 }
 
 async function fetchRecentFeedbacks() {
-  try {
-    const res = await feedbackApi.listSchool({ page: 1, size: 3 })
-    const data = res?.data || res
-    const records = data?.records || (Array.isArray(data) ? data : [])
-    recentFeedbacks.value = records.slice(0, 3)
-  } catch {
-    recentFeedbacks.value = []
-  }
+  const res = await feedbackApi.listSchool({ page: 1, size: 3 })
+  const data = res?.data || res
+  const records = data?.records || (Array.isArray(data) ? data : [])
+  recentFeedbacks.value = records.slice(0, 3)
 }
 
 async function fetchAll() {

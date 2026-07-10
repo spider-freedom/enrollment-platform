@@ -45,6 +45,10 @@ const rolePathMap: Record<string, string> = {
   TEACHER: '/teacher/activities',
   COLLEGE_ADMIN: '/college/activities',
   SCHOOL_ADMIN: '/school/dashboard',
+  student: '/student/activities',
+  teacher: '/teacher/activities',
+  college_admin: '/college/activities',
+  school_admin: '/school/dashboard',
 }
 
 async function handleLogin() {
@@ -55,15 +59,8 @@ async function handleLogin() {
     await store.login(form.username, form.password)
     ElMessage.success('登录成功')
     const role = store.currentRole
-    if (role && rolePathMap[role]) {
-      router.push(rolePathMap[role])
-    } else if (role) {
-      const lc = role.toLowerCase()
-      const fallback = rolePathMap[Object.keys(rolePathMap).find(k => k.toLowerCase() === lc) || '']
-      router.push(fallback || '/student/activities')
-    } else {
-      router.push('/student/activities')
-    }
+    const path = role ? rolePathMap[role] : null
+    router.push(path || '/student/activities')
   } catch (e: any) {
     const msg = e?.response?.data?.message || e?.message || '登录失败'
     ElMessage.error(msg)

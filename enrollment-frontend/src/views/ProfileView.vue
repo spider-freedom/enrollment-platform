@@ -32,6 +32,7 @@
 import { reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+import { userApi } from '@/api'
 
 const store = useUserStore()
 const pwdForm = reactive({ oldPassword: '', newPassword: '', confirmPassword: '' })
@@ -41,14 +42,21 @@ function roleLabel(role: string) {
   return map[role] || role
 }
 
-function handleChangePwd() {
+async function handleChangePwd() {
+  if (!pwdForm.oldPassword) { ElMessage.error('请输入原密码'); return }
+  if (!pwdForm.newPassword) { ElMessage.error('请输入新密码'); return }
   if (pwdForm.newPassword !== pwdForm.confirmPassword) {
     ElMessage.error('两次密码不一致')
     return
   }
-  ElMessage.success('密码修改成功')
-  pwdForm.oldPassword = ''
-  pwdForm.newPassword = ''
-  pwdForm.confirmPassword = ''
+  try {
+    await userApi.changePassword({ oldPassword: pwdForm.oldPassword, newPassword: pwdForm.newPassword })
+    ElMessage.success('密码修改成功')
+    pwdForm.oldPassword = ''
+    pwdForm.newPassword = ''
+    pwdForm.confirmPassword = ''
+  } catch (e: any) {
+    ElMessage.error(e?.response?.data?.message || '密码修改失败')
+  }
 }
 </script>

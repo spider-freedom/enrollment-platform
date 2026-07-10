@@ -256,6 +256,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { aiApi, approvalApi, activityApi } from '@/api'
+import { downloadFile } from '@/api/request'
 import type { Enrollment } from '@/types'
 
 // ============= 状态 =============
@@ -484,7 +485,7 @@ function handleSizeChange(size: number) {
 }
 
 function handleExport() {
-  window.open('/api/enrollment/export?status=' + (filters.status || ''), '_blank')
+  downloadFile('/enrollment/export?status=' + (filters.status || ''), '报名数据导出.xlsx')
 }
 
 function handleSelectionChange(rows: Enrollment[]) {

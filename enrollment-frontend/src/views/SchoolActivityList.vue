@@ -137,6 +137,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
+import { downloadFile } from '@/api/request'
 import type { Activity } from '@/types'
 
 const router = useRouter()
@@ -282,7 +283,7 @@ function handleSizeChange(size: number) {
 }
 
 function handleExport() {
-  window.open('/api/activity/export', '_blank')
+  downloadFile('/activity/export', '活动数据导出.xlsx')
 }
 
 async function toggleBanner(row: any, val: boolean) {

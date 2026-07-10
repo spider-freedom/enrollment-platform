@@ -1,10 +1,28 @@
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 
 const request = axios.create({
   baseURL: '/api',
   timeout: 30000,
   headers: { 'Content-Type': 'application/json; charset=utf-8' },
 })
+
+// Authenticated file download (blob, no response unwrapping)
+export async function downloadFile(url: string, filename?: string) {
+  const token = localStorage.getItem('token')
+  const resp = await axios.get(url, {
+    baseURL: '/api',
+    responseType: 'blob',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  })
+  const blob = new Blob([resp.data])
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = filename || url.split('/').pop() || 'export.xlsx'
+  link.click()
+  URL.revokeObjectURL(link.href)
+  ElMessage.success('导出成功')
+}
 
 request.interceptors.request.use(
   (config) => {

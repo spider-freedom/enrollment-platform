@@ -30,24 +30,29 @@ public class StatisticsService {
     public DashboardVO getDashboard() {
         long totalActivities = activityMapper.selectCount(null);
 
-        List<Enrollment> allEnrollments = enrollmentMapper.selectList(null);
-        long totalEnrollments = allEnrollments.size();
+        long totalEnrollments = enrollmentMapper.selectCount(null);
 
-        long approvedCount = allEnrollments.stream()
-                .filter(e -> "APPROVED".equals(e.getStatus()))
-                .count();
+        long approvedCount = enrollmentMapper.selectCount(
+                new LambdaQueryWrapper<Enrollment>()
+                        .eq(Enrollment::getStatus, "APPROVED"));
 
         double approvalRate = totalEnrollments > 0
                 ? (double) approvedCount / totalEnrollments * 100
                 : 0.0;
 
-        List<Feedback> allFeedbacks = feedbackMapper.selectList(null);
+        long totalFeedbacks = feedbackMapper.selectCount(null);
 
         double feedbackRate = approvedCount > 0
-                ? (double) allFeedbacks.size() / approvedCount * 100
+                ? (double) totalFeedbacks / approvedCount * 100
                 : 0.0;
 
-        double avgRating = allFeedbacks.stream()
+        // Only load rating column for average calculation
+        List<Feedback> ratingList = feedbackMapper.selectList(
+                new LambdaQueryWrapper<Feedback>()
+                        .isNotNull(Feedback::getRating)
+                        .select(Feedback::getRating));
+
+        double avgRating = ratingList.stream()
                 .filter(f -> f.getRating() != null)
                 .mapToInt(Feedback::getRating)
                 .average()

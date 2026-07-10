@@ -471,7 +471,7 @@ async function handlePublish() {
 
 // ============= 生命周期 =============
 onMounted(() => {
-  const id = route.query.id
+  const id = route.query.id || route.params.id
   if (id) {
     isEdit.value = true
     editId.value = Number(id)

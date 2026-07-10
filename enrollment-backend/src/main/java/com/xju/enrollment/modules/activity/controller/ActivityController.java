@@ -7,7 +7,6 @@ import com.xju.enrollment.modules.activity.dto.ActivityVO;
 import java.util.List;
 import com.xju.enrollment.modules.activity.dto.ActivityListQuery;
 import com.xju.enrollment.modules.activity.dto.ActivityRequest;
-import com.xju.enrollment.modules.activity.dto.ActivityVO;
 import com.xju.enrollment.modules.activity.service.ActivityService;
 import com.xju.enrollment.security.SecurityUtils;
 import jakarta.servlet.http.HttpServletResponse;

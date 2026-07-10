@@ -310,6 +310,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Upload } from '@element-plus/icons-vue'
 import { feedbackApi, activityApi, aiApi } from '@/api'
+import { downloadFile } from '@/api/request'
 import type { Feedback } from '@/types'
 
 // ============= 状态 =============
@@ -459,7 +460,7 @@ function handleSizeChange(size: number) {
 }
 
 function handleExport() {
-  window.open('/api/feedback/export?status=' + (filters.status || ''), '_blank')
+  downloadFile('/feedback/export?status=' + (filters.status || ''), '反馈数据导出.xlsx')
 }
 
 // ============= 查看详情 =============

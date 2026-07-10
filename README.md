@@ -1,13 +1,18 @@
 # 新疆大学招生宣传报名平台
 
-招生宣传报名管理系统，支撑活动发布、报名、审批、反馈全流程，集成 AI 辅助分析。
+基于 **Java** + **Vue** 的招生宣传报名管理系统，支撑活动发布、报名、审批、反馈全流程，集成 AI 辅助分析。
 
 ## 技术栈
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen?logo=springboot)
-![Vue](https://img.shields.io/badge/Vue-3.x-4FC08D?logo=vue.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql)
+| 层级 | 技术 |
+|------|------|
+| 后端语言 | ![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk) |
+| 后端框架 | ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen?logo=springboot) |
+| ORM | ![MyBatis Plus](https://img.shields.io/badge/MyBatis%20Plus-3.5.7-1E90FF) |
+| AI 框架 | ![LangChain4j](https://img.shields.io/badge/LangChain4j-0.35.0-FF6F00) |
+| 前端框架 | ![Vue](https://img.shields.io/badge/Vue-3.x-4FC08D?logo=vue.js) ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript) |
+| UI 组件 | ![Element Plus](https://img.shields.io/badge/Element%20Plus-latest-409EFF?logo=elementplus) |
+| 数据库 | ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql)
 ![MyBatis Plus](https://img.shields.io/badge/MyBatis%20Plus-3.5.7-1E90FF)
 ![LangChain4j](https://img.shields.io/badge/LangChain4j-0.35.0-FF6F00)
 ![Knife4j](https://img.shields.io/badge/Knife4j-4.5.0-00B388)

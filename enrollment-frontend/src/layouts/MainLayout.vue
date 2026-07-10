@@ -69,7 +69,8 @@ const route = useRoute()
 const unreadCount = ref(0)
 
 const roleLabelMap: Record<string, string> = {
-  STUDENT: '学生', TEACHER: '教师', COLLEGE_ADMIN: '学院管理员', SCHOOL_ADMIN: '学校管理员'
+  STUDENT: '学生', TEACHER: '教师', COLLEGE_ADMIN: '学院管理员', SCHOOL_ADMIN: '学校管理员',
+  student: '学生', teacher: '教师', college_admin: '学院管理员', school_admin: '学校管理员',
 }
 const roleTagTypeMap: Record<string, string> = {
   STUDENT: 'info', TEACHER: 'success', COLLEGE_ADMIN: 'warning', SCHOOL_ADMIN: 'danger'

@@ -201,7 +201,7 @@
     >
       <el-form :model="dialogForm" label-width="80px">
         <el-form-item label="申请人">
-          <span>{{ currentRow?.userName }}</span>
+          <span>{{ currentRow?.applicantName }}</span>
         </el-form-item>
         <el-form-item label="活动">
           <span>{{ currentRow?.activityTitle }}</span>
@@ -522,16 +522,16 @@ async function confirmDialog() {
   dialogSubmitting.value = true
   try {
     const payload = {
-      enrollmentId: currentRow.value?.id,
+      enrollmentId: currentRow.value?.enrollmentId,
       comment: dialogForm.comment,
     }
 
     if (dialogAction.value === 'approve') {
       await approvalApi.approve(payload)
-      ElMessage.success(`已通过 ${currentRow.value?.userName} 的报名申请`)
+      ElMessage.success(`已通过 ${currentRow.value?.applicantName} 的报名申请`)
     } else {
       await approvalApi.reject(payload)
-      ElMessage.success(`已拒绝 ${currentRow.value?.userName} 的报名申请`)
+      ElMessage.success(`已拒绝 ${currentRow.value?.applicantName} 的报名申请`)
     }
 
     dialogVisible.value = false
@@ -566,7 +566,7 @@ async function handleBatchApprove() {
   loading.value = true
   try {
     await approvalApi.batchApprove({
-      enrollmentIds: pendings.map((r) => r.id),
+      enrollmentIds: pendings.map((r: any) => r.enrollmentId),
       action: 'APPROVE',
     })
     ElMessage.success(`已批量通过 ${pendings.length} 条报名申请`)
@@ -601,7 +601,7 @@ async function handleBatchReject() {
   loading.value = true
   try {
     await approvalApi.batchApprove({
-      enrollmentIds: pendings.map((r) => r.id),
+      enrollmentIds: pendings.map((r: any) => r.enrollmentId),
       action: 'REJECT',
     })
     ElMessage.success(`已批量拒绝 ${pendings.length} 条报名申请`)

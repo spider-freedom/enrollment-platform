@@ -47,6 +47,8 @@ const router = createRouter({
       meta: { role: 'college_admin' },
       children: [
         { path: 'activities', name: 'CollegeActivities', component: () => import('@/views/CollegeActivityList.vue') },
+        { path: 'activities/create', name: 'CollegeActivityCreate', component: () => import('@/views/SchoolActivityCreate.vue') },
+        { path: 'activities/:id', name: 'CollegeActivityDetail', component: () => import('@/views/SchoolActivityCreate.vue') },
         { path: 'approvals', name: 'CollegeApprovals', component: () => import('@/views/CollegeApprovalList.vue') },
         { path: 'feedbacks', name: 'CollegeFeedbacks', component: () => import('@/views/CollegeFeedbackList.vue') },
         { path: 'users', name: 'CollegeUsers', component: () => import('@/views/CollegeUserManagement.vue') },

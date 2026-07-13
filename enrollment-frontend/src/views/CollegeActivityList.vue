@@ -72,6 +72,7 @@
       </el-select>
       <el-button type="primary" style="margin-left: 12px" @click="handleSearch">搜索</el-button>
       <el-button style="margin-left: 8px" @click="handleReset">重置</el-button>
+      <el-button type="success" style="margin-left: auto" @click="$router.push('/college/activities/create')">创建活动</el-button>
     </div>
 
     <!-- 错误提示 -->
@@ -126,10 +127,13 @@
       <el-table-column prop="location" label="地点" width="140" show-overflow-tooltip />
       <el-table-column prop="startTime" label="开始时间" width="140" />
       <el-table-column prop="endTime" label="结束时间" width="140" />
-      <el-table-column label="操作" width="120" fixed="right">
+      <el-table-column label="操作" width="200" fixed="right">
         <template #default="{ row }">
-          <el-button size="small" type="primary" @click="viewDetail(row.id)">
-            查看详情
+          <el-button size="small" type="primary" @click="editActivity(row.id)">
+            编辑
+          </el-button>
+          <el-button size="small" type="danger" @click="deleteActivity(row)">
+            删除
           </el-button>
         </template>
       </el-table-column>
@@ -157,7 +161,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { List, VideoPlay, EditPen, CircleClose } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import type { Activity } from '@/types'
@@ -278,8 +282,23 @@ function handleReset() {
   fetchData()
 }
 
-function viewDetail(id: number) {
-  router.push(`/student/activities/${id}`)
+function editActivity(id: number) {
+  router.push(`/college/activities/${id}`)
+}
+
+async function deleteActivity(row: any) {
+  try {
+    await ElMessageBox.confirm(`确定要删除活动「${row.title}」吗？`, '确认删除', {
+      type: 'warning', confirmButtonText: '删除', cancelButtonText: '取消',
+    })
+  } catch { return }
+  try {
+    await activityApi.delete(row.id)
+    ElMessage.success('已删除')
+    fetchData()
+  } catch (e: any) {
+    ElMessage.error(e?.response?.data?.message || '删除失败')
+  }
 }
 
 onMounted(() => {

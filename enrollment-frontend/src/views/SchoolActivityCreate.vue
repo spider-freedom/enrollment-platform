@@ -293,16 +293,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete, PictureFilled } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
+import { useUserStore } from '@/stores/user'
 import { ACTIVITY_CATEGORY_OPTIONS } from '@/utils/constants'
 
 const router = useRouter()
 const route = useRoute()
+const store = useUserStore()
 const categoryOptions = ACTIVITY_CATEGORY_OPTIONS
+const isCollegeAdmin = computed(() => (store.currentRole || '').toLowerCase() === 'college_admin')
 
 // ============= 模式判断 =============
 const isEdit = ref(false)
@@ -324,7 +327,7 @@ const form = reactive({
   description: '',
   type: 'OFFLINE',
   category: '宣讲会',
-  level: '校级',
+  level: (store.currentRole || '').toLowerCase() === 'college_admin' ? '院级' : '校级',
   status: 'DRAFT',
   targetAudience: 'all',
   location: '',
@@ -456,6 +459,8 @@ function buildPayload() {
     workflowKey: form.workflowKey,
     bannerUrl: form.bannerUrl,
     isBanner: form.isBanner ? 1 : 0,
+    collegeId: isCollegeAdmin.value ? (store.userInfo?.collegeId || null) : null,
+    collegeName: isCollegeAdmin.value ? (store.userInfo?.collegeName || null) : null,
   }
 }
 

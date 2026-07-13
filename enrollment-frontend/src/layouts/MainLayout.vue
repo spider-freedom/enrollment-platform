@@ -179,10 +179,10 @@ const roleMenuMap: Record<string, { path: string; label: string; icon: any }[]> 
     { path: '/teacher/profile', label: '个人主页', icon: User },
   ],
   college_admin: [
-    { path: '/college/activities', label: '活动列表', icon: List },
+    { path: '/college/activities', label: '活动管理', icon: Management },
     { path: '/college/approvals', label: '报名审批', icon: Checked },
     { path: '/college/feedbacks', label: '反馈管理', icon: EditPen },
-    { path: '/college/users', label: '用户管理', icon: Management },
+    { path: '/college/users', label: '用户管理', icon: User },
     { path: '/college/profile', label: '个人主页', icon: User },
   ],
   school_admin: [

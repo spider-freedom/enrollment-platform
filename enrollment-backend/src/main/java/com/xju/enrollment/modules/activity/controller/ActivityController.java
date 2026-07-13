@@ -12,6 +12,7 @@ import com.xju.enrollment.security.SecurityUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -95,6 +96,12 @@ public class ActivityController {
         ExcelExportUtil.export(response, "活动数据导出.xlsx", data,
             new String[]{"活动名称","类型","状态","开始时间","结束时间","地点"},
             new String[]{"title","type","status","startTime","endTime","location"});
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<Void> deleteActivity(@PathVariable Long id) {
+        activityService.deleteActivity(id);
+        return ApiResponse.ok("删除成功", null);
     }
 
     @GetMapping("/{id}")

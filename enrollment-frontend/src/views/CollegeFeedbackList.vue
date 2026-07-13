@@ -57,8 +57,9 @@
         style="width: 140px; margin-left: 12px"
         @change="handleSearch"
       >
-        <el-option label="待回复" value="PENDING" />
+        <el-option label="待回复" value="SUBMITTED" />
         <el-option label="已回复" value="REPLIED" />
+        <el-option label="已关闭" value="CLOSED" />
       </el-select>
       <el-button type="primary" style="margin-left: 12px" @click="handleSearch">搜索</el-button>
       <el-button style="margin-left: 8px" @click="handleReset">重置</el-button>
@@ -102,10 +103,10 @@
       <el-table-column label="状态" width="90">
         <template #default="{ row }">
           <el-tag
-            :type="row.status === '已回复' || row.status === 'REPLIED' ? 'success' : 'warning'"
+            :type="row.status === 'REPLIED' ? 'success' : 'warning'"
             size="small"
           >
-            {{ feedbackStatusLabel(row.status) }}
+            {{ row.status === 'SUBMITTED' ? '待回复' : row.status === 'REPLIED' ? '已回复' : row.status === 'CLOSED' ? '已关闭' : row.status }}
           </el-tag>
         </template>
       </el-table-column>
@@ -113,14 +114,13 @@
       <el-table-column label="操作" width="120" fixed="right">
         <template #default="{ row }">
           <el-button
-            v-if="row.status !== '已回复' && row.status !== 'REPLIED'"
+            v-if="row.status === 'SUBMITTED'"
             size="small"
-            type="primary"
+            type="success"
             @click="openReply(row)"
           >
             回复
           </el-button>
-          <el-tag v-else type="success" size="small">已回复</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -260,10 +260,10 @@ let currentFeedback: Feedback | null = null
 const stats = computed(() => {
   const totalCount = list.value.length
   const pendingReply = list.value.filter(
-    (f) => f.status !== '已回复' && f.status !== 'REPLIED'
+    (f) => f.status === 'SUBMITTED'
   ).length
   const replied = list.value.filter(
-    (f) => f.status === '已回复' || f.status === 'REPLIED'
+    (f) => f.status === 'REPLIED'
   ).length
   const ratings = list.value.map((f) => f.rating).filter((r) => r > 0)
   const avgRating = ratings.length > 0
@@ -295,11 +295,6 @@ function roleTagType(r: string): string {
   return roleTagTypeMap[r] || 'info'
 }
 
-function feedbackStatusLabel(status: string): string {
-  if (status === '已回复' || status === 'REPLIED') return '已回复'
-  if (status === '待回复' || status === 'PENDING') return '待回复'
-  return status
-}
 
 // ---- 数据获取 ----
 async function fetchData() {

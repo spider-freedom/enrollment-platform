@@ -146,8 +146,8 @@
         <el-table-column prop="userName" label="提交人" width="100" />
         <el-table-column label="角色" width="80" align="center">
           <template #default="{ row }">
-            <el-tag size="small" :type="row.userRole === 'teacher' ? 'warning' : ''" effect="plain">
-              {{ row.userRole === 'student' ? '学生' : row.userRole === 'teacher' ? '教师' : row.userRole || '-' }}
+            <el-tag size="small" :type="row.userRole === 'TEACHER' ? 'warning' : ''" effect="plain">
+              {{ row.userRole === 'STUDENT' ? '学生' : row.userRole === 'TEACHER' ? '教师' : row.userRole || '-' }}
             </el-tag>
           </template>
         </el-table-column>
@@ -159,41 +159,31 @@
         </el-table-column>
         <el-table-column label="评分" width="180" align="center">
           <template #default="{ row }">
-            <el-rate
-              :model-value="row.rating"
-              disabled
-              show-score
-              text-color="#f59e0b"
-            />
+            <el-rate :model-value="row.rating" disabled show-score text-color="#f59e0b" />
           </template>
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status === '已回复' || row.status === 'REPLIED' ? 'success' : 'warning'" size="small">
-              {{ statusLabel(row.status) }}
+            <el-tag :type="row.status === 'REPLIED' ? 'success' : 'warning'" size="small">
+              {{ row.status === 'SUBMITTED' ? '待回复' : row.status === 'REPLIED' ? '已回复' : row.status === 'CLOSED' ? '已关闭' : row.status }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="回复人" width="100" show-overflow-tooltip>
           <template #default="{ row }">
-            {{ row.replyUserName || (row.reply ? '管理员' : '') || '-' }}
+            {{ row.replyUserName || '-' }}
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="提交时间" width="160" />
-        <el-table-column label="操作" width="160" fixed="right" align="center">
+        <el-table-column label="操作" width="120" align="center">
           <template #default="{ row }">
-            <el-button size="small" type="primary" link @click="openViewDialog(row)">
-              查看
-            </el-button>
+            <el-button size="small" type="primary" link @click="openViewDialog(row)">查看</el-button>
             <el-button
-              v-if="row.status === '待回复' || row.status === 'PENDING'"
+              v-if="row.status === 'SUBMITTED'"
               size="small"
+              type="success"
               link
-              @click="openReplyDialog(row)"
-            >
-              回复
-            </el-button>
-            <span v-else class="replied-text">已回复</span>
+              @click="openReplyDialog(row)">回复</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -227,8 +217,8 @@
             <el-rate :model-value="viewRow.rating" disabled show-score text-color="#f59e0b" />
           </el-descriptions-item>
           <el-descriptions-item label="状态">
-            <el-tag :type="viewRow.status === '已回复' || viewRow.status === 'REPLIED' ? 'success' : 'warning'" size="small">
-              {{ statusLabel(viewRow.status) }}
+            <el-tag :type="viewRow.status === 'REPLIED' ? 'success' : 'warning'" size="small">
+              {{ viewRow.status === 'SUBMITTED' ? '待回复' : viewRow.status === 'REPLIED' ? '已回复' : viewRow.status === 'CLOSED' ? '已关闭' : viewRow.status }}
             </el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="提交时间" :span="2">{{ viewRow.createTime }}</el-descriptions-item>
@@ -426,10 +416,10 @@ async function fetchList() {
 function updateStats() {
   stats.total = total.value
   stats.pending = list.value.filter(
-    (f) => f.status === '待回复' || f.status === 'PENDING',
+    (f) => f.status === 'SUBMITTED',
   ).length
   stats.replied = list.value.filter(
-    (f) => f.status === '已回复' || f.status === 'REPLIED',
+    (f) => f.status === 'REPLIED',
   ).length
   const ratings = list.value.map((f) => f.rating).filter((r) => r > 0)
   stats.avgRating = ratings.length > 0

@@ -169,7 +169,7 @@ const activeTab = ref('all')
 const keyword = ref('')
 const filterType = ref('')
 const page = ref(1)
-const pageSize = ref(12)
+const pageSize = ref(10)
 const total = ref(0)
 
 function getActivityEmoji(a: any): string {

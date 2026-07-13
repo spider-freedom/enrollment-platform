@@ -174,7 +174,7 @@ const filterType = ref('')
 const filterStatus = ref('')
 
 // ---- 分页 ----
-const pagination = reactive({ page: 1, size: 20 })
+const pagination = reactive({ page: 1, size: 10 })
 const total = ref(0)
 
 // ---- 列表 ----

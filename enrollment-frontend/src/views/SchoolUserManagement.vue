@@ -33,7 +33,7 @@
 
       <el-alert v-if="errorMsg" :title="errorMsg" type="error" show-icon closable style="margin-bottom:16px" @close="errorMsg=''" />
 
-      <el-table :data="filteredList" v-loading="loading" border stripe>
+      <el-table :data="paginatedList" v-loading="loading" border stripe>
         <el-table-column prop="username" label="用户名" width="110" />
         <el-table-column prop="name" label="姓名" width="80" />
         <el-table-column label="角色" width="100">
@@ -87,12 +87,22 @@
 
       <el-empty v-if="!loading && userList.length === 0" description="暂无用户数据" />
       <el-empty v-else-if="!loading && userList.length > 0 && filteredList.length === 0" description="没有匹配的用户" />
+
+      <div class="pagination-wrap" v-if="filteredList.length > pageSize">
+        <el-pagination
+          v-model:current-page="page"
+          :page-size="pageSize"
+          :total="filteredList.length"
+          layout="total, prev, pager, next"
+          background
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { schoolUserApi } from '@/api'
 
@@ -103,6 +113,10 @@ const filterKeyword = ref('')
 const filterRole = ref('')
 const filterCollege = ref('')
 const fileInput = ref<HTMLInputElement | null>(null)
+const page = ref(1)
+const pageSize = ref(10)
+
+watch([filterKeyword, filterRole, filterCollege], () => { page.value = 1 })
 
 function isStudent(r: string) { return (r||'').toUpperCase() === 'STUDENT' }
 function isTeacher(r: string) { return (r||'').toUpperCase() === 'TEACHER' }
@@ -124,6 +138,11 @@ const collegeOptions = computed(() => {
     .map(u => u.collegeName)
     .filter((v, i, a) => v && a.indexOf(v) === i)
   return names.sort()
+})
+
+const paginatedList = computed(() => {
+  const start = (page.value - 1) * pageSize.value
+  return filteredList.value.slice(start, start + pageSize.value)
 })
 
 const filteredList = computed(() => {

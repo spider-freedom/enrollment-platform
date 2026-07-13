@@ -1,6 +1,20 @@
 <template>
   <div class="profile">
-    <el-card>
+    <el-card class="avatar-card">
+      <div class="avatar-section">
+        <el-avatar :size="80" :src="avatarUrl" icon="UserFilled" />
+        <div class="avatar-info">
+          <h3>{{ store.userInfo?.name || '用户' }}</h3>
+          <p>{{ roleLabel(store.userInfo?.role || '') }}</p>
+        </div>
+        <label class="avatar-upload-btn">
+          <input type="file" accept="image/*" hidden @change="handleAvatarChange" />
+          <el-button type="primary" size="small" :loading="uploading">更换头像</el-button>
+        </label>
+      </div>
+    </el-card>
+
+    <el-card style="margin-top:20px">
       <template #header><h3>个人信息</h3></template>
       <el-descriptions :column="2" border v-if="store.userInfo">
         <el-descriptions-item label="用户名">{{ store.userInfo.username }}</el-descriptions-item>
@@ -70,7 +84,28 @@ import { userApi } from '@/api'
 
 const store = useUserStore()
 const saving = ref(false)
+const uploading = ref(false)
 const isStudent = computed(() => (store.userInfo?.role || '').toUpperCase() === 'STUDENT')
+const avatarUrl = computed(() => store.userInfo?.avatar || '')
+
+async function handleAvatarChange(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  if (file.size > 2 * 1024 * 1024) { ElMessage.error('头像不能超过2MB'); return }
+  uploading.value = true
+  try {
+    const res: any = await userApi.uploadAvatar(file)
+    const url = res?.data?.url || res?.url
+    if (url) {
+      await store.fetchProfile()
+      ElMessage.success('头像已更新')
+    }
+  } catch (err: any) {
+    ElMessage.error(err?.response?.data?.message || '上传失败')
+  } finally {
+    uploading.value = false
+  }
+}
 const pwdForm = reactive({ oldPassword: '', newPassword: '', confirmPassword: '' })
 const profileForm = reactive({
   name: '', collegeName: '', major: '', grade: '', gpa: '', email: '', phone: '',

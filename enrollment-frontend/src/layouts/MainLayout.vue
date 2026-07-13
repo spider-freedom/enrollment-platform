@@ -34,7 +34,7 @@
         <el-tag :type="roleTagType" size="default" effect="dark">{{ roleLabel }}</el-tag>
 
         <div class="user-info" @click="$router.push(profilePath)">
-          <el-avatar :size="34" icon="UserFilled" />
+          <el-avatar :size="34" :src="store.userInfo?.avatar || ''" icon="UserFilled" />
           <span class="user-name">{{ store.userInfo?.name || '用户' }}</span>
         </div>
 

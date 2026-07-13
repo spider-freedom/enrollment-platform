@@ -13,6 +13,13 @@ export const userApi = {
   getProfile: () => request.get('/user/profile'),
   updateProfile: (data: any) => request.put('/user/profile', data),
   changePassword: (data: any) => request.put('/user/password', data),
+  uploadAvatar: (file: File) => {
+    const fd = new FormData()
+    fd.append('file', file)
+    return request.post('/user/avatar', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
 }
 
 // Activity

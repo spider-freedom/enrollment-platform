@@ -123,16 +123,15 @@
           {{ row.gpa != null ? row.gpa : '-' }}
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="提交时间" width="170" />
-      <el-table-column prop="collegeName" label="学院" width="160" show-overflow-tooltip />
-      <el-table-column label="审核状态" width="100">
+      <el-table-column prop="createTime" label="提交时间" width="160" />
+      <el-table-column label="审核状态" width="90">
         <template #default="{ row }">
           <el-tag :type="statusTagType(row.currentStatus)" size="small">
             {{ statusLabel(row.currentStatus) }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="240" fixed="right">
+      <el-table-column label="操作" width="150">
         <template #default="{ row }">
           <el-button
             v-if="row.currentStatus === 'SUBMITTED'"

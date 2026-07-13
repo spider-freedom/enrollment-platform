@@ -159,7 +159,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="申请时间" width="160" />
-        <el-table-column label="操作" width="230" fixed="right" align="center">
+        <el-table-column label="操作" width="150" align="center">
           <template #default="{ row }">
             <template v-if="row.currentStatus === 'APPROVING'">
               <el-button size="small" type="success" link @click="openApproveDialog(row)">

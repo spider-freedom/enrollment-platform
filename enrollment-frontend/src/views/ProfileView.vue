@@ -7,10 +7,8 @@
           <h3>{{ store.userInfo?.name || '用户' }}</h3>
           <p>{{ roleLabel(store.userInfo?.role || '') }}</p>
         </div>
-        <label class="avatar-upload-btn">
-          <input type="file" accept="image/*" hidden @change="handleAvatarChange" />
-          <el-button type="primary" size="small" :loading="uploading">更换头像</el-button>
-        </label>
+        <input ref="fileInput" type="file" accept="image/*" hidden @change="handleAvatarChange" />
+        <el-button type="primary" size="small" :loading="uploading" @click="() => fileInput?.click()">更换头像</el-button>
       </div>
     </el-card>
 
@@ -85,6 +83,7 @@ import { userApi } from '@/api'
 const store = useUserStore()
 const saving = ref(false)
 const uploading = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
 const isStudent = computed(() => (store.userInfo?.role || '').toUpperCase() === 'STUDENT')
 const avatarUrl = computed(() => store.userInfo?.avatar || '')
 

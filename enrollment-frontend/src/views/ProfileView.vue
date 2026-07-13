@@ -26,16 +26,18 @@
         <el-form-item label="学院">
           <el-input v-model="profileForm.collegeName" placeholder="请输入学院名称" />
         </el-form-item>
-        <el-form-item v-if="store.userInfo?.major !== undefined" label="专业">
-          <el-input v-model="profileForm.major" placeholder="请输入专业" />
-        </el-form-item>
-        <el-form-item v-if="store.userInfo?.grade !== undefined" label="年级">
-          <el-input v-model="profileForm.grade" placeholder="请输入年级" />
-        </el-form-item>
-        <el-form-item v-if="store.userInfo?.gpa !== undefined" label="GPA">
-          <el-input v-model="profileForm.gpa" placeholder="GPA由系统管理" disabled />
-          <span style="font-size:12px;color:#999;margin-left:8px">GPA与学号绑定，不可自行修改</span>
-        </el-form-item>
+        <template v-if="isStudent">
+          <el-form-item label="专业">
+            <el-input v-model="profileForm.major" placeholder="请输入专业" />
+          </el-form-item>
+          <el-form-item label="年级">
+            <el-input v-model="profileForm.grade" placeholder="请输入年级" />
+          </el-form-item>
+          <el-form-item label="GPA">
+            <el-input v-model="profileForm.gpa" placeholder="GPA由系统管理" disabled />
+            <span style="font-size:12px;color:#999;margin-left:8px">GPA与学号绑定，不可自行修改</span>
+          </el-form-item>
+        </template>
         <el-form-item label="邮箱">
           <el-input v-model="profileForm.email" placeholder="请输入邮箱" />
         </el-form-item>
@@ -61,13 +63,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 import { userApi } from '@/api'
 
 const store = useUserStore()
 const saving = ref(false)
+const isStudent = computed(() => (store.userInfo?.role || '').toUpperCase() === 'STUDENT')
 const pwdForm = reactive({ oldPassword: '', newPassword: '', confirmPassword: '' })
 const profileForm = reactive({
   name: '', collegeName: '', major: '', grade: '', gpa: '', email: '', phone: '',

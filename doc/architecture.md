@@ -9,20 +9,26 @@
 ### 图 1：系统架构总览图
 
 ```mermaid
-%%{init: {'theme': 'default'}}%%
 flowchart TB
     Browser["浏览器 localhost:3000"]
     Vite["Vite 前端服务器"]
     Backend["Spring Boot localhost:8080"]
-    MySQL[("MySQL 8.0")]
-    Redis[("Redis 7.x")]
-    Disk[("本地磁盘")]
+    MySQL["MySQL 8.0"]
+    Redis["Redis 7.x"]
+    Disk["本地磁盘"]
 
     Browser --> Vite
     Vite -->|"/api 代理"| Backend
     Backend -->|"读写"| MySQL
     Backend -->|"缓存"| Redis
     Backend -->|"文件"| Disk
+
+    style Browser fill:#e3f2fd,stroke:#1a56db,color:#000
+    style Vite fill:#e8f5e9,stroke:#16a34a,color:#000
+    style Backend fill:#fff3e0,stroke:#f97316,color:#000
+    style MySQL fill:#f5f5f5,stroke:#666,color:#000
+    style Redis fill:#f5f5f5,stroke:#666,color:#000
+    style Disk fill:#f5f5f5,stroke:#666,color:#000
 ```
 
 **架构说明：**

@@ -33,7 +33,8 @@
           <el-input v-model="profileForm.grade" placeholder="请输入年级" />
         </el-form-item>
         <el-form-item v-if="store.userInfo?.gpa !== undefined" label="GPA">
-          <el-input v-model="profileForm.gpa" placeholder="请输入GPA" type="number" step="0.1" />
+          <el-input v-model="profileForm.gpa" placeholder="GPA由系统管理" disabled />
+          <span style="font-size:12px;color:#999;margin-left:8px">GPA与学号绑定，不可自行修改</span>
         </el-form-item>
         <el-form-item label="邮箱">
           <el-input v-model="profileForm.email" placeholder="请输入邮箱" />

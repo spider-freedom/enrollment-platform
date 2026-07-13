@@ -54,6 +54,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
+            <el-form-item label="活动级别" prop="level">
+              <el-select v-model="form.level" placeholder="请选择级别" style="width: 100%">
+                <el-option label="院级活动" value="院级" />
+                <el-option label="校级活动" value="校级" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="6">
             <el-form-item label="活动状态" prop="status">
               <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
                 <el-option label="草稿" value="DRAFT" />
@@ -314,6 +324,7 @@ const form = reactive({
   description: '',
   type: 'OFFLINE',
   category: '宣讲会',
+  level: '校级',
   status: 'DRAFT',
   targetAudience: 'all',
   location: '',
@@ -392,6 +403,7 @@ async function loadActivity(id: number) {
       form.description = data.description || ''
       form.type = data.type || 'OFFLINE'
       form.category = data.category || '宣讲会'
+      form.level = data.level || '校级'
       form.status = data.status || 'DRAFT'
       form.targetAudience = String(data.targetAudience ?? 'all')
       form.location = data.location || ''
@@ -430,6 +442,7 @@ function buildPayload() {
     description: form.description,
     type: form.type,
     category: form.category,
+    level: form.level,
     status: form.status,
     targetAudience: form.targetAudience === 'student' ? 1 : form.targetAudience === 'teacher' ? 2 : 3,
     location: form.location,

@@ -108,33 +108,34 @@
       @selection-change="handleSelection"
     >
       <el-table-column type="selection" width="50" />
-      <el-table-column prop="userName" label="申请人" width="120" />
+      <el-table-column prop="applicantName" label="申请人" width="120" />
       <el-table-column label="角色" width="90">
         <template #default="{ row }">
-          <el-tag :type="roleTagType(row.userRole)" size="small">
-            {{ roleLabel(row.userRole) }}
+          <el-tag :type="roleTagType(row.applicantRole)" size="small">
+            {{ roleLabel(row.applicantRole) }}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="activityTitle" label="活动" min-width="180" show-overflow-tooltip />
-      <el-table-column prop="targetSchool" label="目标学校" width="160" show-overflow-tooltip />
+      <el-table-column prop="targetSchool" label="目标学院" width="160" show-overflow-tooltip />
       <el-table-column prop="gpa" label="GPA" width="80">
         <template #default="{ row }">
           {{ row.gpa != null ? row.gpa : '-' }}
         </template>
       </el-table-column>
-      <el-table-column prop="submittedAt" label="提交时间" width="170" />
+      <el-table-column prop="createTime" label="提交时间" width="170" />
+      <el-table-column prop="collegeName" label="学院" width="160" show-overflow-tooltip />
       <el-table-column label="审核状态" width="100">
         <template #default="{ row }">
-          <el-tag :type="statusTagType(row.status)" size="small">
-            {{ statusLabel(row.status) }}
+          <el-tag :type="statusTagType(row.currentStatus)" size="small">
+            {{ statusLabel(row.currentStatus) }}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="240" fixed="right">
         <template #default="{ row }">
           <el-button
-            v-if="row.status === 'SUBMITTED' || row.status === 'APPROVING'"
+            v-if="row.currentStatus === 'SUBMITTED'"
             size="small"
             type="success"
             @click="handleApprove(row)"
@@ -142,7 +143,7 @@
             通过
           </el-button>
           <el-button
-            v-if="row.status === 'SUBMITTED' || row.status === 'APPROVING'"
+            v-if="row.currentStatus === 'SUBMITTED'"
             size="small"
             type="danger"
             @click="handleReject(row)"
@@ -454,10 +455,10 @@ function handleReset() {
 }
 
 // ---- 单选操作 ----
-async function handleApprove(row: Enrollment) {
+async function handleApprove(row: any) {
   try {
     await ElMessageBox.confirm(
-      `确定要通过「${row.userName}」的报名申请吗？`,
+      `确定要通过「${row.applicantName}」的报名申请吗？`,
       '确认通过',
       { confirmButtonText: '确定', cancelButtonText: '取消', type: 'success' }
     )
@@ -465,8 +466,8 @@ async function handleApprove(row: Enrollment) {
     return
   }
   try {
-    await approvalApi.approve({ enrollmentId: row.id, action: 'APPROVE' })
-    ElMessage.success(`已通过 ${row.userName} 的报名`)
+    await approvalApi.approve({ enrollmentId: row.enrollmentId, action: 'APPROVE' })
+    ElMessage.success(`已通过 ${row.applicantName} 的报名`)
     fetchData()
   } catch (err: any) {
     ElMessage.error(err?.response?.data?.message || err?.message || '操作失败')
@@ -484,11 +485,11 @@ async function confirmReject() {
   rejecting.value = true
   try {
     await approvalApi.reject({
-      enrollmentId: currentReject.id,
+      enrollmentId: currentReject.enrollmentId,
       action: 'REJECT',
       rejectReason: rejectReason.value,
     })
-    ElMessage.success(`已拒绝 ${currentReject.userName} 的报名`)
+    ElMessage.success(`已拒绝 ${currentReject.applicantName} 的报名`)
     rejectVisible.value = false
     fetchData()
   } catch (err: any) {
@@ -516,7 +517,7 @@ function handleBatchAction(action: 'APPROVE' | 'REJECT') {
   )
     .then(async () => {
       try {
-        const ids = selectedRows.value.map((r) => r.id)
+        const ids = selectedRows.value.map((r: any) => r.enrollmentId)
         await approvalApi.batchApprove({ enrollmentIds: ids, action: 'APPROVE' })
         ElMessage.success('批量通过成功')
         fetchData()
@@ -531,7 +532,7 @@ async function confirmBatchReject() {
   if (selectedRows.value.length === 0) return
   rejecting.value = true
   try {
-    const ids = selectedRows.value.map((r) => r.id)
+    const ids = selectedRows.value.map((r: any) => r.enrollmentId)
     await approvalApi.batchApprove({
       enrollmentIds: ids,
       action: 'REJECT',

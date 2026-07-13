@@ -86,9 +86,10 @@ public class ActivityService {
     public PageResult<ActivityVO> listForCollege(ActivityListQuery query, Long userId) {
         LambdaQueryWrapper<Activity> wrapper = buildBaseQuery(query);
         User collegeAdmin = userService.getById(userId);
+        // College admin sees only college-level activities in their own college
+        wrapper.eq(Activity::getLevel, "院级");
         if (collegeAdmin.getCollegeId() != null) {
-            wrapper.and(w -> w.eq(Activity::getCollegeId, collegeAdmin.getCollegeId())
-                    .or().isNull(Activity::getCollegeId));
+            wrapper.eq(Activity::getCollegeId, collegeAdmin.getCollegeId());
         }
         return doPageQuery(query, wrapper);
     }
@@ -171,6 +172,7 @@ public class ActivityService {
         activity.setDescription(request.description());
         activity.setType(request.type());
         activity.setCategory(request.category());
+        activity.setLevel(request.level());
         if (request.status() != null) {
             activity.setStatus(request.status());
         }

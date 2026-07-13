@@ -72,14 +72,13 @@
         </el-col>
       </el-row>
 
-      <!-- 图表行1：报名趋势 + 学院分布 -->
+      <!-- 图表行1：活动分类统计 + 学院分布 -->
       <el-row :gutter="16">
         <el-col :span="12">
           <el-card shadow="hover" class="chart-card">
             <template #header>
               <div class="chart-header">
-                <h4>报名趋势</h4>
-                <span class="chart-subtitle">近6个月</span>
+                <h4>活动分类统计</h4>
               </div>
             </template>
             <div ref="trendChartRef" class="chart-container" />
@@ -162,7 +161,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onBeforeUnmount, watch } from 'vue'
 import * as echarts from 'echarts'
-import { statisticsApi, feedbackApi } from '@/api'
+import { statisticsApi, feedbackApi, activityApi } from '@/api'
 import {
   Document,
   UserFilled,
@@ -227,9 +226,9 @@ let ratingInstance: echarts.ECharts | null = null
 let typeInstance: echarts.ECharts | null = null
 
 // ============= 默认 Mock 数据 =============
-const defaultTrend = {
-  months: ['1月', '2月', '3月', '4月', '5月', '6月'],
-  values: [80, 120, 200, 350, 480, 620],
+const defaultCategory = {
+  names: ['宣讲会', '开放日', '夏令营', '咨询会', '线上直播', '其他'],
+  values: [3, 2, 1, 2, 2, 0],
 }
 
 const defaultCollege = {
@@ -398,7 +397,7 @@ function initCharts() {
   if (trendChartRef.value) {
     trendInstance = echarts.init(trendChartRef.value)
     trendInstance.setOption(
-      createLineOption(defaultTrend.months, defaultTrend.values, '报名人数'),
+      createBarOption(defaultCategory.names, defaultCategory.values, '活动数'),
     )
   }
 
@@ -441,14 +440,16 @@ async function fetchStats() {
     stats.avgRating = dash.avgRating ?? 0
   }
 
-  const trendRes = await statisticsApi.getTrend()
-  const trend = trendRes?.data || trendRes
-  if (trend && trendInstance) {
-    const categories = trend.months || trend.labels || defaultTrend.months
-    const values = trend.values || trend.data || defaultTrend.values
-    trendInstance.setOption(
-      createLineOption(categories, values, '报名人数'),
-    )
+  // Fetch category stats for the first chart
+  const catRes: any = await activityApi.listSchool({ page: 1, size: 100 })
+  const catData = catRes?.data || catRes
+  const catList: any[] = catData?.list || catData?.records || []
+  if (trendInstance && catList.length > 0) {
+    const catMap: Record<string, number> = {}
+    catList.forEach((a: any) => { const c = a.category || '其他'; catMap[c] = (catMap[c] || 0) + 1 })
+    const names = Object.keys(catMap)
+    const values = Object.values(catMap)
+    trendInstance.setOption(createBarOption(names, values, '活动数'))
   }
 
   const colRes = await statisticsApi.getCollegeDist()

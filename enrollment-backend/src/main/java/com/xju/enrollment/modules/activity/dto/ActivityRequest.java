@@ -16,6 +16,8 @@ public record ActivityRequest(
 
         String category,
 
+        String level,
+
         String status,
 
         @NotNull(message = "目标受众不能为空")

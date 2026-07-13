@@ -32,6 +32,11 @@ public class Activity {
     private String category;
 
     /**
+     * 院级 / 校级
+     */
+    private String level;
+
+    /**
      * DRAFT / PUBLISHED / ONGOING / ENDED
      */
     private String status;

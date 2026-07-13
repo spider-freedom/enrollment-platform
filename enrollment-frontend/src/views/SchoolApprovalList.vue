@@ -84,8 +84,10 @@
               clearable
               style="width: 140px"
             >
-              <el-option label="待学院审批" value="PENDING_COLLEGE" />
-              <el-option label="待校级审批" value="PENDING_SCHOOL" />
+              <el-option label="待学院审批" value="SUBMITTED" />
+              <el-option label="待学校审批" value="APPROVING" />
+              <el-option label="已通过" value="APPROVED" />
+              <el-option label="已驳回" value="REJECTED" />
               <el-option label="已通过" value="APPROVED" />
               <el-option label="已拒绝" value="REJECTED" />
             </el-select>
@@ -126,11 +128,11 @@
         ref="tableRef"
       >
         <el-table-column type="selection" width="50" />
-        <el-table-column prop="userName" label="申请人" width="100" />
+        <el-table-column prop="applicantName" label="申请人" width="100" />
         <el-table-column label="角色" width="80" align="center">
           <template #default="{ row }">
-            <el-tag size="small" :type="row.userRole === 'teacher' ? 'warning' : ''" effect="plain">
-              {{ row.userRole === 'student' ? '学生' : row.userRole === 'teacher' ? '教师' : row.userRole || '-' }}
+            <el-tag size="small" :type="row.applicantRole === 'TEACHER' ? 'warning' : ''" effect="plain">
+              {{ row.applicantRole === 'STUDENT' ? '学生' : row.applicantRole === 'TEACHER' ? '教师' : row.applicantRole || '-' }}
             </el-tag>
           </template>
         </el-table-column>
@@ -151,15 +153,15 @@
         </el-table-column>
         <el-table-column label="当前状态" width="110" align="center">
           <template #default="{ row }">
-            <el-tag :type="statusType(row.status)" size="small">
-              {{ statusLabel(row.status) }}
+            <el-tag :type="statusType(row.currentStatus)" size="small">
+              {{ statusLabel(row.currentStatus) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="submittedAt" label="申请时间" width="160" />
+        <el-table-column prop="createTime" label="申请时间" width="160" />
         <el-table-column label="操作" width="230" fixed="right" align="center">
           <template #default="{ row }">
-            <template v-if="row.status === 'PENDING_SCHOOL' || row.status === '待审批'">
+            <template v-if="row.currentStatus === 'APPROVING'">
               <el-button size="small" type="success" link @click="openApproveDialog(row)">
                 通过
               </el-button>
@@ -330,8 +332,8 @@ async function handleAiSuggest(row: Enrollment) {
   aiResult.value = null
   try {
     const res: any = await aiApi.approvalSuggest({
-      studentName: row.userName,
-      studentRole: roleLabelAI(row.userRole),
+      studentName: row.applicantName,
+      studentRole: roleLabelAI(row.applicantRole),
       collegeName: (row as any).collegeName || '',
       gpa: (row as any).gpa ?? null,
       targetSchool: row.targetSchool,
@@ -356,8 +358,8 @@ function statusType(status: string) {
   const map: Record<string, string> = {
     APPROVED: 'success',
     REJECTED: 'danger',
-    PENDING_SCHOOL: 'warning',
-    PENDING_COLLEGE: 'info',
+    APPROVING: 'warning',
+    SUBMITTED: 'info',
     已通过: 'success',
     已拒绝: 'danger',
     待审批: 'warning',
@@ -370,8 +372,8 @@ function statusLabel(status: string) {
   const map: Record<string, string> = {
     APPROVED: '已通过',
     REJECTED: '已拒绝',
-    PENDING_SCHOOL: '待校级审批',
-    PENDING_COLLEGE: '待学院审批',
+    APPROVING: '待学校审批',
+    SUBMITTED: '待学院审批',
     已通过: '已通过',
     已拒绝: '已拒绝',
     待审批: '待审批',
@@ -383,7 +385,8 @@ function statusLabel(status: string) {
 function collegeStatusLabel(row: any) {
   if (row.collegeApprovalStatus) return row.collegeApprovalStatus
   // 推断
-  if (row.status === 'PENDING_COLLEGE' || row.status === '待审核') return '待审批'
+  if (row.currentStatus === 'SUBMITTED') return '待审批'
+  if (row.currentStatus === 'APPROVED') return '已通过'
   if (row.collegeApproved) return '已通过'
   return '-'
 }
@@ -452,7 +455,7 @@ async function fetchList() {
 function updateStats() {
   stats.total = total.value
   stats.pending = list.value.filter(
-    (e) => e.status === 'PENDING_SCHOOL' || e.status === '待审批' || e.status === '待审核',
+    (e) => e.currentStatus === 'APPROVING' || e.currentStatus === '待审批' || e.currentStatus === '待审核',
   ).length
   stats.approved = list.value.filter(
     (e) => e.status === 'APPROVED' || e.status === '已通过',
@@ -543,7 +546,7 @@ async function confirmDialog() {
 // ============= 批量操作 =============
 async function handleBatchApprove() {
   const pendings = selectedRows.value.filter(
-    (r) => r.status === 'PENDING_SCHOOL' || r.status === '待审批' || r.status === '待审核',
+    (r) => r.currentStatus === 'APPROVING',
   )
   if (pendings.length === 0) {
     ElMessage.warning('所选记录中无待审批项')
@@ -578,7 +581,7 @@ async function handleBatchApprove() {
 
 async function handleBatchReject() {
   const pendings = selectedRows.value.filter(
-    (r) => r.status === 'PENDING_SCHOOL' || r.status === '待审批' || r.status === '待审核',
+    (r) => r.currentStatus === 'APPROVING',
   )
   if (pendings.length === 0) {
     ElMessage.warning('所选记录中无待审批项')

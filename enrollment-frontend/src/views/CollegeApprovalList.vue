@@ -38,7 +38,7 @@
     <div class="filter-bar">
       <el-input
         v-model="filterKeyword"
-        placeholder="搜索申请人或目标学校"
+        placeholder="搜索申请人或招生学校"
         clearable
         style="width: 240px"
         @clear="handleSearch"
@@ -117,7 +117,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="activityTitle" label="活动" min-width="180" show-overflow-tooltip />
-      <el-table-column prop="targetSchool" label="目标学院" width="160" show-overflow-tooltip />
+      <el-table-column prop="targetSchool" label="招生学校" width="160" show-overflow-tooltip />
       <el-table-column prop="gpa" label="GPA" width="80">
         <template #default="{ row }">
           {{ row.gpa != null ? row.gpa : '-' }}

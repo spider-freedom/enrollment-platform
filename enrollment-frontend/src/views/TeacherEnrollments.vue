@@ -15,7 +15,7 @@
       >
         <el-table-column prop="activityTitle" label="活动名称" min-width="180" />
         <el-table-column prop="submittedAt" label="报名时间" width="170" />
-        <el-table-column prop="targetSchool" label="目标学校" width="160" />
+        <el-table-column prop="targetSchool" label="招生学校" width="160" />
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
             <el-tag :type="statusType(row.status)">{{ statusLabel(row.status) }}</el-tag>

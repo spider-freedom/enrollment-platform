@@ -138,7 +138,7 @@
         </el-table-column>
         <el-table-column prop="collegeName" label="学院" width="120" show-overflow-tooltip />
         <el-table-column prop="activityTitle" label="活动" min-width="160" show-overflow-tooltip />
-        <el-table-column prop="targetSchool" label="来源学校" width="140" show-overflow-tooltip />
+        <el-table-column prop="targetSchool" label="招生学校" width="140" show-overflow-tooltip />
         <el-table-column label="GPA" width="80" align="center">
           <template #default="{ row }">
             {{ row.gpa ?? '-' }}

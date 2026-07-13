@@ -209,3 +209,39 @@ INSERT INTO feedback (activity_id, user_id, user_role, content, rating, contact,
 (9, 7, 'STUDENT', '首次参加外出招生宣传，学到了很多，建议多配一些宣传手册。', 3, '13800007777', '化学化工学院', 'SUBMITTED', NULL, NULL, NULL, '2026-03-19 11:00:00'),
 (6, 1, 'STUDENT', '线上宣讲效果很好，直播流畅，答疑环节解答了很多考生关心的问题。', 5, '13800001111', '计算机科学与技术学院', 'SUBMITTED', NULL, NULL, NULL, '2026-07-06 18:00:00');
 
+-- ============================================================
+-- 扩展数据: 新增学院管理员 + 院级活动 (各学院1-2个活动)
+-- ============================================================
+INSERT INTO sys_user (username, password, name, role, college_id, college_name, email, phone) VALUES
+('col_cs', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '孙主任', 'COLLEGE_ADMIN', 1, '计算机科学与技术学院', 'col_cs@xju.edu.cn', '13700000001'),
+('col_math', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '周主任', 'COLLEGE_ADMIN', 2, '数学与系统科学学院', 'col_math@xju.edu.cn', '13700000002'),
+('col_info', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '吴主任', 'COLLEGE_ADMIN', 3, '信息科学与工程学院', 'col_info@xju.edu.cn', '13700000003'),
+('col_info2', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '郑老师', 'COLLEGE_ADMIN', 3, '信息科学与工程学院', 'col_info2@xju.edu.cn', '13700000004'),
+('col_chem', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '冯主任', 'COLLEGE_ADMIN', 4, '化学化工学院', 'col_chem@xju.edu.cn', '13700000005'),
+('col_bio', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '褚主任', 'COLLEGE_ADMIN', 5, '生命科学与技术学院', 'col_bio@xju.edu.cn', '13700000006'),
+('col_phy', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '蒋主任', 'COLLEGE_ADMIN', 6, '物理科学与技术学院', 'col_phy@xju.edu.cn', '13700000007'),
+('col_phy2', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '韩老师', 'COLLEGE_ADMIN', 6, '物理科学与技术学院', 'col_phy2@xju.edu.cn', '13700000008'),
+('col_eng', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '杨主任', 'COLLEGE_ADMIN', 7, '外国语学院', 'col_eng@xju.edu.cn', '13700000009'),
+('col_marx', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '朱主任', 'COLLEGE_ADMIN', 8, '马克思主义学院', 'col_marx@xju.edu.cn', '13700000010');
+
+INSERT INTO sys_user (username, password, name, role, college_id, college_name, major, grade, gpa, email, phone) VALUES
+('stu_phy', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '阿迪力', 'STUDENT', 6, '物理科学与技术学院', '物理学', '2022级', 3.5, 'stu_phy@xju.edu.cn', '13800010001'),
+('stu_eng', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '米娜瓦尔', 'STUDENT', 7, '外国语学院', '英语', '2023级', 3.8, 'stu_eng@xju.edu.cn', '13800010002'),
+('stu_marx', '$2b$12$fbKC6xEPicrekDy8wB5a0.koj95WTlXvFLg59sdafHQmNytLpdWpO', '艾山江', 'STUDENT', 8, '马克思主义学院', '思想政治教育', '2021级', 3.6, 'stu_marx@xju.edu.cn', '13800010003');
+
+INSERT INTO activity (title, description, type, category, level, status, target_audience, start_time, end_time, enroll_start, enroll_end, location, max_students, max_teachers, max_per_school, workflow_key, creator_id, college_id, college_name, is_banner) VALUES
+('计算机学院AI前沿讲座', '邀请国内AI领域专家，围绕人工智能最新进展开展系列讲座。', 'OFFLINE', '宣讲会', '院级', 'PUBLISHED', 3, '2026-08-10 14:00:00', '2026-08-10 17:00:00', '2026-07-20 00:00:00', '2026-08-05 23:59:59', '计算机学院学术报告厅', 150, 15, 0, 'school_approval', 14, 1, '计算机科学与技术学院', 1),
+('计算机学院优秀学长经验分享', '邀请已毕业优秀学长回校分享考研、就业经验。', 'ONLINE', '线上直播', '院级', 'PUBLISHED', 1, '2026-09-05 19:00:00', '2026-09-05 21:00:00', '2026-08-15 00:00:00', '2026-09-04 23:59:59', '线上(腾讯会议)', 300, 0, 0, 'school_approval', 14, 1, '计算机科学与技术学院', 0),
+('数学建模竞赛宣讲', '全国大学生数学建模竞赛赛前动员与经验分享。', 'OFFLINE', '宣讲会', '院级', 'PUBLISHED', 1, '2026-08-20 10:00:00', '2026-08-20 12:00:00', '2026-08-01 00:00:00', '2026-08-18 23:59:59', '数学学院多媒体教室', 80, 0, 0, 'school_approval', 15, 2, '数学与系统科学学院', 0),
+('数学之美公众开放日', '面向全校师生展示数学的趣味与应用，包括数学游戏、趣味竞赛。', 'OFFLINE', '开放日', '院级', 'PUBLISHED', 3, '2026-09-15 09:00:00', '2026-09-15 17:00:00', '2026-08-25 00:00:00', '2026-09-12 23:59:59', '数学学院大楼', 120, 10, 0, 'school_approval', 15, 2, '数学与系统科学学院', 1),
+('信息学院校企合作宣讲', '邀请华为、中兴等企业HR来院宣讲，介绍实习与就业机会。', 'OFFLINE', '宣讲会', '院级', 'PUBLISHED', 3, '2026-08-25 14:00:00', '2026-08-25 17:00:00', '2026-08-10 00:00:00', '2026-08-23 23:59:59', '信息学院报告厅', 200, 10, 0, 'school_approval', 14, 3, '信息科学与工程学院', 1),
+('5G通信技术科普日', '面向中学生开展5G通信技术科普体验活动。', 'OFFLINE', '开放日', '院级', 'DRAFT', 1, '2026-10-10 09:00:00', '2026-10-10 17:00:00', '2026-09-20 00:00:00', '2026-10-08 23:59:59', '信息学院实验中心', 60, 5, 3, 'college_school_approval', 14, 3, '信息科学与工程学院', 0),
+('化学实验开放体验日', '开放化学实验室，让中学生亲身体验趣味化学实验。', 'OFFLINE', '开放日', '院级', 'PUBLISHED', 1, '2026-09-20 09:00:00', '2026-09-20 16:00:00', '2026-09-01 00:00:00', '2026-09-18 23:59:59', '化学化工学院实验楼', 50, 5, 3, 'college_school_approval', 15, 4, '化学化工学院', 0),
+('绿色化学前沿论坛', '国内外绿色化学领域专家线上分享最新研究成果。', 'ONLINE', '线上直播', '院级', 'ONGOING', 3, '2026-07-15 14:00:00', '2026-07-15 17:00:00', '2026-07-01 00:00:00', '2026-07-14 23:59:59', '线上(腾讯会议)', 500, 20, 0, 'school_approval', 15, 4, '化学化工学院', 0),
+('生物标本馆参观活动', '带领中学生参观生物标本馆，了解新疆特有动植物资源。', 'OFFLINE', '开放日', '院级', 'PUBLISHED', 1, '2026-09-25 09:00:00', '2026-09-25 17:00:00', '2026-09-10 00:00:00', '2026-09-23 23:59:59', '生命科学学院标本馆', 40, 5, 5, 'college_school_approval', 14, 5, '生命科学与技术学院', 0),
+('物理趣味实验展', '通过趣味物理实验展示，激发中学生对物理学科的兴趣。', 'OFFLINE', '开放日', '院级', 'PUBLISHED', 1, '2026-10-05 09:00:00', '2026-10-05 16:00:00', '2026-09-15 00:00:00', '2026-10-03 23:59:59', '物理学院实验中心', 50, 5, 3, 'college_school_approval', 14, 6, '物理科学与技术学院', 1),
+('天体物理科普讲座', '邀请天文台专家线上讲解黑洞、引力波等天体物理前沿话题。', 'ONLINE', '宣讲会', '院级', 'PUBLISHED', 3, '2026-10-15 19:00:00', '2026-10-15 21:00:00', '2026-09-25 00:00:00', '2026-10-13 23:59:59', '线上(腾讯会议)', 400, 15, 0, 'school_approval', 14, 6, '物理科学与技术学院', 0),
+('外语文化节开幕式', '一年一度的外语文化节，展示各国文化风情。', 'OFFLINE', '开放日', '院级', 'PUBLISHED', 3, '2026-10-20 09:00:00', '2026-10-20 17:00:00', '2026-10-01 00:00:00', '2026-10-18 23:59:59', '外国语学院文化广场', 200, 10, 0, 'school_approval', 15, 7, '外国语学院', 1),
+('英语演讲比赛宣讲', '面向全校学生开展英语演讲比赛，提升语言表达能力。', 'OFFLINE', '宣讲会', '院级', 'DRAFT', 1, '2026-11-01 14:00:00', '2026-11-01 17:00:00', '2026-10-15 00:00:00', '2026-10-30 23:59:59', '外国语学院报告厅', 100, 5, 0, 'school_approval', 15, 7, '外国语学院', 0),
+('思政教育实践基地参观', '组织中学生参观思政教育实践基地。', 'OFFLINE', '开放日', '院级', 'PUBLISHED', 1, '2026-10-25 09:00:00', '2026-10-25 12:00:00', '2026-10-10 00:00:00', '2026-10-23 23:59:59', '马克思主义学院实践基地', 60, 5, 5, 'college_school_approval', 14, 8, '马克思主义学院', 0);
+

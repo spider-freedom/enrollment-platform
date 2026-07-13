@@ -426,7 +426,10 @@ async function fetchList() {
     const res = await approvalApi.listSchool(params)
     const data = res?.data || res
 
-    if (data && data.records) {
+    if (data && data.list) {
+      list.value = data.list
+      total.value = data.total ?? 0
+    } else if (data && data.records) {
       list.value = data.records
       total.value = data.total ?? 0
     } else if (Array.isArray(data)) {

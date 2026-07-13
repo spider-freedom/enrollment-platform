@@ -65,10 +65,10 @@
         style="width: 140px; margin-left: 12px"
         @change="handleSearch"
       >
-        <el-option label="报名中" value="报名中" />
-        <el-option label="进行中" value="进行中" />
-        <el-option label="已结束" value="已结束" />
-        <el-option label="草稿" value="草稿" />
+        <el-option label="报名中" value="PUBLISHED" />
+        <el-option label="进行中" value="ONGOING" />
+        <el-option label="已结束" value="ENDED" />
+        <el-option label="草稿" value="DRAFT" />
       </el-select>
       <el-button type="primary" style="margin-left: 12px" @click="handleSearch">搜索</el-button>
       <el-button style="margin-left: 8px" @click="handleReset">重置</el-button>
@@ -97,7 +97,7 @@
       <el-table-column prop="title" label="活动名称" min-width="200" show-overflow-tooltip />
       <el-table-column label="类型" width="110">
         <template #default="{ row }">
-          <el-tag type="info" size="small">{{ row.type }}</el-tag>
+          <el-tag type="info" size="small">{{ row.type === 'ONLINE' ? '线上' : '线下' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="状态" width="100">
@@ -106,7 +106,7 @@
             :type="activityStatusTagType(row.status)"
             size="small"
           >
-            {{ row.status }}
+            {{ statusLabel(row.status) }}
           </el-tag>
         </template>
       </el-table-column>
@@ -193,12 +193,22 @@ const stats = computed(() => {
 // ---- 辅助 ----
 function activityStatusTagType(status: string): string {
   const map: Record<string, string> = {
-    '报名中': 'success',
-    '进行中': '',
-    '已结束': 'info',
-    '草稿': 'warning',
+    PUBLISHED: 'success',
+    ONGOING: '',
+    ENDED: 'info',
+    DRAFT: 'warning',
   }
   return map[status] || 'info'
+}
+
+function statusLabel(status: string): string {
+  const map: Record<string, string> = {
+    PUBLISHED: '报名中',
+    ONGOING: '进行中',
+    ENDED: '已结束',
+    DRAFT: '草稿',
+  }
+  return map[status] || status
 }
 
 function enrollPercent(row: Activity): number {
@@ -220,7 +230,10 @@ async function fetchData() {
     if (filterStatus.value) params.status = filterStatus.value
 
     const res: any = await activityApi.listCollege(params)
-    if (res?.data?.records) {
+    if (res?.data?.list) {
+      list.value = res.data.list
+      total.value = res.data.total || 0
+    } else if (res?.data?.records) {
       list.value = res.data.records
       total.value = res.data.total || 0
     } else if (res?.records) {

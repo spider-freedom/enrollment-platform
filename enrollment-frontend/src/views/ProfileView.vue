@@ -19,7 +19,22 @@
 
     <el-card style="margin-top:20px">
       <template #header><h3>编辑个人信息</h3></template>
-      <el-form :model="profileForm" label-width="100px" style="max-width:500px">
+      <el-form :model="profileForm" label-width="100px" style="max-width:550px">
+        <el-form-item label="姓名">
+          <el-input v-model="profileForm.name" placeholder="请输入姓名" />
+        </el-form-item>
+        <el-form-item label="学院">
+          <el-input v-model="profileForm.collegeName" placeholder="请输入学院名称" />
+        </el-form-item>
+        <el-form-item v-if="store.userInfo?.major !== undefined" label="专业">
+          <el-input v-model="profileForm.major" placeholder="请输入专业" />
+        </el-form-item>
+        <el-form-item v-if="store.userInfo?.grade !== undefined" label="年级">
+          <el-input v-model="profileForm.grade" placeholder="请输入年级" />
+        </el-form-item>
+        <el-form-item v-if="store.userInfo?.gpa !== undefined" label="GPA">
+          <el-input v-model="profileForm.gpa" placeholder="请输入GPA" type="number" step="0.1" />
+        </el-form-item>
         <el-form-item label="邮箱">
           <el-input v-model="profileForm.email" placeholder="请输入邮箱" />
         </el-form-item>
@@ -53,11 +68,18 @@ import { userApi } from '@/api'
 const store = useUserStore()
 const saving = ref(false)
 const pwdForm = reactive({ oldPassword: '', newPassword: '', confirmPassword: '' })
-const profileForm = reactive({ email: '', phone: '' })
+const profileForm = reactive({
+  name: '', collegeName: '', major: '', grade: '', gpa: '', email: '', phone: '',
+})
 
 // Sync profile form from store when userInfo loads
-watch(() => store.userInfo, (info) => {
+watch(() => store.userInfo, (info: any) => {
   if (info) {
+    profileForm.name = info.name || ''
+    profileForm.collegeName = info.collegeName || ''
+    profileForm.major = info.major || ''
+    profileForm.grade = info.grade || ''
+    profileForm.gpa = info.gpa || ''
     profileForm.email = info.email || ''
     profileForm.phone = info.phone || ''
   }
@@ -71,7 +93,15 @@ function roleLabel(role: string) {
 async function handleSaveProfile() {
   saving.value = true
   try {
-    await userApi.updateProfile({ email: profileForm.email, phone: profileForm.phone })
+    await userApi.updateProfile({
+      name: profileForm.name,
+      collegeName: profileForm.collegeName,
+      major: profileForm.major,
+      grade: profileForm.grade,
+      gpa: profileForm.gpa ? Number(profileForm.gpa) : undefined,
+      email: profileForm.email,
+      phone: profileForm.phone,
+    })
     ElMessage.success('个人信息已更新')
     await store.fetchProfile()
   } catch (e: any) {

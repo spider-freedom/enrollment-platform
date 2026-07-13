@@ -27,6 +27,8 @@ public record ActivityVO(
         String workflowKey,
         Long creatorId,
         String creatorName,
+        Long collegeId,
+        String collegeName,
         Integer isBanner,
         LocalDateTime createTime,
         LocalDateTime updateTime
@@ -44,7 +46,8 @@ public record ActivityVO(
                 activity.getLocation(), activity.getMaxStudents(), activity.getMaxTeachers(),
                 activity.getMaxPerSchool(), activity.getBannerUrl(), activity.getBannerLink(),
                 activity.getGroupRule(), activity.getRankRule(), activity.getWorkflowKey(),
-                activity.getCreatorId(), creatorName, activity.getIsBanner(),
+                activity.getCreatorId(), creatorName,
+                activity.getCollegeId(), activity.getCollegeName(), activity.getIsBanner(),
                 activity.getCreateTime(), activity.getUpdateTime()
         );
     }

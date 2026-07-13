@@ -65,7 +65,8 @@ public class ActivityController {
 
     @GetMapping("/list/college")
     public ApiResponse<PageResult<ActivityVO>> listForCollege(ActivityListQuery query) {
-        PageResult<ActivityVO> result = activityService.listForCollege(query);
+        Long userId = Long.valueOf(SecurityUtils.getCurrentUserId());
+        PageResult<ActivityVO> result = activityService.listForCollege(query, userId);
         return ApiResponse.ok(result);
     }
 

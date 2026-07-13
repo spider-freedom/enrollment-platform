@@ -71,6 +71,9 @@ public class Activity {
 
     private Long creatorId;
 
+    private Long collegeId;
+
+    private String collegeName;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;

@@ -37,6 +37,10 @@ public record ActivityRequest(
 
         Integer maxPerSchool,
 
+        Long collegeId,
+
+        String collegeName,
+
         String bannerUrl,
 
         String bannerLink,

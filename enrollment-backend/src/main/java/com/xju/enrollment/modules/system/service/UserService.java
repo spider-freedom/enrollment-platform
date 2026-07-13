@@ -72,11 +72,26 @@ public class UserService {
         if (user == null) {
             throw new BusinessException("用户不存在");
         }
+        if (vo.name() != null) {
+            user.setName(vo.name());
+        }
+        if (vo.major() != null) {
+            user.setMajor(vo.major());
+        }
+        if (vo.grade() != null) {
+            user.setGrade(vo.grade());
+        }
+        if (vo.gpa() != null) {
+            user.setGpa(vo.gpa());
+        }
         if (vo.email() != null) {
             user.setEmail(vo.email());
         }
         if (vo.phone() != null) {
             user.setPhone(vo.phone());
+        }
+        if (vo.collegeName() != null) {
+            user.setCollegeName(vo.collegeName());
         }
         if (vo.avatar() != null) {
             user.setAvatar(vo.avatar());

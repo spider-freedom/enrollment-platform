@@ -83,8 +83,13 @@ public class ActivityService {
         return doPageQuery(query, wrapper);
     }
 
-    public PageResult<ActivityVO> listForCollege(ActivityListQuery query) {
+    public PageResult<ActivityVO> listForCollege(ActivityListQuery query, Long userId) {
         LambdaQueryWrapper<Activity> wrapper = buildBaseQuery(query);
+        User collegeAdmin = userService.getById(userId);
+        if (collegeAdmin.getCollegeId() != null) {
+            wrapper.and(w -> w.eq(Activity::getCollegeId, collegeAdmin.getCollegeId())
+                    .or().isNull(Activity::getCollegeId));
+        }
         return doPageQuery(query, wrapper);
     }
 
@@ -182,6 +187,8 @@ public class ActivityService {
         activity.setBannerLink(request.bannerLink());
         activity.setGroupRule(request.groupRule());
         activity.setRankRule(request.rankRule());
+        activity.setCollegeId(request.collegeId());
+        activity.setCollegeName(request.collegeName());
         activity.setWorkflowKey(request.workflowKey());
     }
 }

@@ -407,7 +407,10 @@ async function fetchData() {
     if (filterActivityId.value) params.activityId = filterActivityId.value
 
     const res: any = await approvalApi.listCollege(params)
-    if (res?.data?.records) {
+    if (res?.data?.list) {
+      list.value = res.data.list
+      total.value = res.data.total || 0
+    } else if (res?.data?.records) {
       list.value = res.data.records
       total.value = res.data.total || 0
       // 提取活动选项

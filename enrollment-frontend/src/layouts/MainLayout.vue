@@ -6,34 +6,47 @@
         <h2>新疆大学招生宣传报名平台</h2>
       </div>
       <div class="header-right">
-        <el-popover placement="bottom-end" :width="340" trigger="click">
+        <el-popover placement="bottom-end" :width="360" trigger="click">
           <template #reference>
-            <el-badge :value="unreadCount" :hidden="unreadCount === 0" style="cursor:pointer">
-              <el-icon :size="22"><Bell /></el-icon>
-            </el-badge>
-          </template>
-          <div style="font-weight:600;padding:4px 0 12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between">
-            消息通知 <span style="font-size:11px;color:#999;cursor:pointer;font-weight:400" @click="markAllRead()">全部已读</span>
-          </div>
-          <div style="max-height:300px;overflow-y:auto">
-            <div v-for="(n,i) in filteredNotifications" :key="i" style="padding:10px 0;border-bottom:1px solid #f5f5f5;cursor:pointer" @click="handleNotifyClick(n)">
-              <div style="font-size:13px;font-weight:500">{{ n.icon }} {{ n.title }}</div>
-              <div style="font-size:12px;color:#999;margin-top:2px">{{ n.desc }}</div>
-              <div style="font-size:11px;color:#bbb;margin-top:2px">{{ n.time }}</div>
+            <div class="notify-btn">
+              <el-badge :value="unreadCount" :hidden="unreadCount === 0">
+                <el-icon :size="20"><Bell /></el-icon>
+              </el-badge>
             </div>
+          </template>
+          <div class="notify-header">
+            <span>消息通知</span>
+            <span class="notify-clear" @click="markAllRead()">全部已读</span>
+          </div>
+          <div class="notify-list">
+            <div v-for="(n,i) in filteredNotifications" :key="i" class="notify-item" @click="handleNotifyClick(n)">
+              <span class="notify-icon">{{ n.icon }}</span>
+              <div class="notify-body">
+                <div class="notify-title">{{ n.title }}</div>
+                <div class="notify-desc">{{ n.desc }}</div>
+                <div class="notify-time">{{ n.time }}</div>
+              </div>
+            </div>
+            <div v-if="filteredNotifications.length === 0" class="notify-empty">暂无消息</div>
           </div>
         </el-popover>
-        <el-tag :type="roleTagType" size="small">{{ roleLabel }}</el-tag>
-        <span class="user-name">{{ store.userInfo?.name || '用户' }}</span>
-        <el-dropdown>
-          <span class="user-info"><el-icon><ArrowDown /></el-icon></span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="$router.push(profilePath)">个人主页</el-dropdown-item>
-              <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+
+        <el-tag :type="roleTagType" size="default" effect="dark">{{ roleLabel }}</el-tag>
+
+        <div class="user-info" @click="$router.push(profilePath)">
+          <el-avatar :size="34" icon="UserFilled" />
+          <span class="user-name">{{ store.userInfo?.name || '用户' }}</span>
+        </div>
+
+        <el-button
+          type="danger"
+          size="small"
+          plain
+          @click="handleLogout"
+          class="logout-btn"
+        >
+          退出
+        </el-button>
       </div>
     </el-header>
     <el-container>
@@ -61,7 +74,7 @@
 import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { Bell, ArrowDown, List, Checked, EditPen, User, DataAnalysis, Plus, Management } from '@element-plus/icons-vue'
+import { Bell, List, Checked, EditPen, User, DataAnalysis, Plus, Management, UserFilled } from '@element-plus/icons-vue'
 import { activityApi, enrollmentApi, feedbackApi, approvalApi } from '@/api'
 
 const store = useUserStore()
@@ -248,43 +261,122 @@ function handleNotifyClick(n: any) {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
+}
+
+/* Notification button */
+.notify-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: #fff;
+}
+.notify-btn:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+/* Notification popover */
+.notify-header {
+  font-weight: 600;
+  padding: 4px 0 12px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+.notify-clear {
+  font-size: 12px;
+  color: #999;
+  cursor: pointer;
+  font-weight: 400;
+}
+.notify-clear:hover { color: #1a56db; }
+.notify-list { max-height: 300px; overflow-y: auto; }
+.notify-item {
+  display: flex;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f5f5;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.notify-item:hover { background: #f8faff; }
+.notify-icon { font-size: 18px; flex-shrink: 0; }
+.notify-body { flex: 1; min-width: 0; }
+.notify-title { font-size: 13px; font-weight: 500; color: #333; }
+.notify-desc { font-size: 12px; color: #888; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.notify-time { font-size: 11px; color: #bbb; margin-top: 2px; }
+.notify-empty { text-align: center; color: #bbb; padding: 24px 0; font-size: 13px; }
+
+/* User info */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+.user-info:hover {
+  background: rgba(255,255,255,0.1);
 }
 .user-name {
-  color: rgba(255, 255, 255, 0.9);
+  color: #fff;
   font-size: 13px;
+  font-weight: 500;
+}
+
+/* Logout button */
+.logout-btn {
+  border-color: rgba(255,255,255,0.4) !important;
+  color: #fff !important;
+  background: transparent !important;
+  font-weight: 500;
+}
+.logout-btn:hover {
+  border-color: #f56c6c !important;
+  color: #f56c6c !important;
+  background: rgba(245,108,108,0.1) !important;
 }
 
 /* ========== Sidebar ========== */
 .el-aside {
-  background: #f8f9fb;
-  border-right: 1px solid #e8eaed;
+  background: linear-gradient(180deg, #0a1628 0%, #111d32 100%);
+  border-right: none;
   display: flex;
   flex-direction: column;
+  color: #fff;
 }
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid #e8eaed;
+  gap: 12px;
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .sidebar-logo {
-  font-size: 28px;
+  font-size: 30px;
   line-height: 1;
 }
 .sidebar-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  color: #1a3a6b;
-  letter-spacing: 1px;
+  color: #fff;
+  letter-spacing: 2px;
 }
 .sidebar-footer {
   margin-top: auto;
   padding: 14px 20px;
   font-size: 11px;
-  color: #9ca3af;
-  border-top: 1px solid #e8eaed;
+  color: rgba(255,255,255,0.3);
+  border-top: 1px solid rgba(255,255,255,0.06);
   text-align: center;
 }
 
@@ -292,28 +384,29 @@ function handleNotifyClick(n: any) {
   border-right: none;
   flex: 1;
   background: transparent;
+  padding: 8px 0;
 }
 .el-menu .el-menu-item {
-  margin: 2px 8px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  margin: 2px 10px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.65);
+  transition: all 0.25s ease;
+  height: 44px;
+  line-height: 44px;
 }
 .el-menu .el-menu-item:hover {
-  background: #e8ecf4 !important;
-  color: #1a56db;
+  background: rgba(255,255,255,0.08) !important;
+  color: #fff !important;
 }
 .el-menu .el-menu-item.is-active {
-  background: linear-gradient(135deg, #1a56db, #2563eb) !important;
+  background: linear-gradient(135deg, #1a56db, #3b82f6) !important;
   color: #fff !important;
-  box-shadow: 0 2px 8px rgba(26, 86, 219, 0.25);
+  box-shadow: 0 4px 12px rgba(26, 86, 219, 0.3);
 }
 
 /* ========== Main Content ========== */
 .el-main {
-  background: #f5f7fa;
-  background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(26, 86, 219, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(26, 86, 219, 0.02) 0%, transparent 50%);
+  background: #f0f2f5;
   padding: 24px;
 }
 

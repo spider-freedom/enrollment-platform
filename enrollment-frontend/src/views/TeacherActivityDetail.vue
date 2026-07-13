@@ -16,7 +16,7 @@
       <div class="hero" :style="{ background: 'linear-gradient(135deg, #1a3a5c, #2d6a9f)' }">
         <h1>{{ activity.title }}</h1>
         <el-tag :type="activityTypeTagType(activity.type)">{{ ACTIVITY_TYPE_MAP[activity.type] || activity.type }}</el-tag>
-        <el-tag :type="activityStatusTagType(activity.status)" style="margin-left:8px">{{ ACTIVITY_STATUS_MAP[activity.status] || activity.status }}</el-tag>
+        <el-tag :type="getDisplayStatusTagType(getDisplayStatus(activity))" style="margin-left:8px">{{ getDisplayStatus(activity) }}</el-tag>
       </div>
       <el-card class="detail-card">
         <el-descriptions :column="2" border>
@@ -33,8 +33,8 @@
         <p>{{ activity.description }}</p>
       </el-card>
       <div style="text-align:center;margin-top:24px">
-        <el-button type="primary" size="large" @click="handleEnroll" :disabled="!canEnroll(activity.status)" :loading="enrolling">
-          {{ canEnroll(activity.status) ? '立即报名' : (activity.status === 'ENDED' ? '已结束' : '未开放报名') }}
+        <el-button type="primary" size="large" @click="handleEnroll" :disabled="!canEnroll(activity)" :loading="enrolling">
+          {{ canEnroll(activity) ? '立即报名' : (getDisplayStatus(activity) === '报名已截止' ? '报名已截止' : '暂不可报名') }}
         </el-button>
       </div>
     </template>
@@ -48,8 +48,8 @@ import { ElMessage } from 'element-plus'
 import { activityApi, enrollmentApi } from '@/api'
 import type { Activity } from '@/types'
 import {
-  ACTIVITY_TYPE_MAP, ACTIVITY_STATUS_MAP, TARGET_AUDIENCE_MAP,
-  activityTypeTagType, activityStatusTagType, canEnroll,
+  ACTIVITY_TYPE_MAP, TARGET_AUDIENCE_MAP,
+  activityTypeTagType, getDisplayStatus, getDisplayStatusTagType, canEnroll,
 } from '@/utils/constants'
 
 const route = useRoute()

@@ -90,10 +90,10 @@
           </div>
           <div class="card-footer">
             <el-tag
-              :type="activityStatusTagType(a.status)"
+              :type="getDisplayStatusTagType(getDisplayStatus(a))"
               size="small"
             >
-              {{ ACTIVITY_STATUS_MAP[a.status] || a.status }}
+              {{ getDisplayStatus(a) }}
             </el-tag>
             <span class="quota">
               {{ a.currentStudents || 0 }}/{{ a.maxStudents }} 人
@@ -147,7 +147,7 @@ import { ElMessage } from 'element-plus'
 import { Search, Calendar, Location } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import type { Activity } from '@/types'
-import { ACTIVITY_TYPE_MAP, ACTIVITY_STATUS_MAP, ACTIVITY_CATEGORY_FILTERS, activityTypeTagType, activityStatusTagType } from '@/utils/constants'
+import { ACTIVITY_TYPE_MAP, ACTIVITY_CATEGORY_FILTERS, activityTypeTagType, getDisplayStatus, getDisplayStatusTagType } from '@/utils/constants'
 
 const bannerGradients = ['linear-gradient(135deg, #1a56db, #6366f1)', 'linear-gradient(135deg, #10b981, #059669)', 'linear-gradient(135deg, #f59e0b, #d97706)', 'linear-gradient(135deg, #6366f1, #8b5cf6)', 'linear-gradient(135deg, #ef4444, #dc2626)']
 const banners = ref<any[]>([])

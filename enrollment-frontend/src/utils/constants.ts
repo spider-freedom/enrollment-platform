@@ -66,9 +66,48 @@ export function enrollStatusTagType(status: string): string {
   return map[status] || 'info'
 }
 
-// 判断能否报名: 活动已发布或进行中
-export function canEnroll(status: string): boolean {
-  return status === 'PUBLISHED' || status === 'ONGOING'
+// 根据日期计算活动显示状态
+export function getDisplayStatus(activity: any): string {
+  if (!activity) return '未知'
+  const status = activity.status || ''
+  if (status === 'DRAFT') return '草稿'
+  const now = new Date()
+  const endTime = activity.endTime ? new Date(activity.endTime) : null
+  const startTime = activity.startTime ? new Date(activity.startTime) : null
+  const enrollStart = activity.enrollStart ? new Date(activity.enrollStart) : null
+  const enrollEnd = activity.enrollEnd ? new Date(activity.enrollEnd) : null
+
+  if (endTime && now > endTime) return '已结束'
+  if (status === 'ENDED') return '已结束'
+  if (startTime && now >= startTime && endTime && now <= endTime) return '进行中'
+  if (enrollStart && now < enrollStart) return '未开始'
+  if (enrollEnd && now > enrollEnd) return '报名已截止'
+  if (enrollStart && enrollEnd && now >= enrollStart && now <= enrollEnd) return '报名中'
+  return ACTIVITY_STATUS_MAP[status] || status
+}
+
+// 判断能否报名: 基于日期而非静态状态
+export function canEnroll(activity: any): boolean {
+  if (!activity) return false
+  const status = activity.status || ''
+  if (status === 'DRAFT' || status === 'ENDED') return false
+  const now = new Date()
+  const enrollStart = activity.enrollStart ? new Date(activity.enrollStart) : null
+  const enrollEnd = activity.enrollEnd ? new Date(activity.enrollEnd) : null
+  if (enrollStart && now < enrollStart) return false
+  if (enrollEnd && now > enrollEnd) return false
+  const maxStudents = activity.maxStudents || 0
+  const currentStudents = activity.currentStudents || 0
+  if (maxStudents > 0 && currentStudents >= maxStudents) return false
+  return true
+}
+
+export function getDisplayStatusTagType(status: string): string {
+  const map: Record<string, string> = {
+    '报名中': 'success', '进行中': 'warning', '未开始': 'info',
+    '报名已截止': 'danger', '已结束': 'info', '草稿': 'info',
+  }
+  return map[status] || 'info'
 }
 
 // 活动分类映射

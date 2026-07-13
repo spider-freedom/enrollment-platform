@@ -103,7 +103,7 @@ import { ElMessage } from 'element-plus'
 import { Search, Location } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import type { Activity } from '@/types'
-import { ACTIVITY_TYPE_MAP, activityTypeTagType } from '@/utils/constants'
+import { ACTIVITY_TYPE_MAP, activityTypeTagType, getDisplayStatus, getDisplayStatusTagType } from '@/utils/constants'
 
 const router = useRouter()
 

@@ -41,11 +41,11 @@
               {{ ACTIVITY_TYPE_MAP[activity.type] || activity.type }}
             </el-tag>
             <el-tag
-              :type="activityStatusTagType(activity.status)"
+              :type="getDisplayStatusTagType(getDisplayStatus(activity))"
               size="default"
               effect="dark"
             >
-              {{ ACTIVITY_STATUS_MAP[activity.status] || activity.status }}
+              {{ getDisplayStatus(activity) }}
             </el-tag>
           </div>
           <h1>{{ activity.title }}</h1>
@@ -151,7 +151,7 @@
               已报名
             </el-button>
             <el-button
-              v-else-if="canEnroll(activity.status)"
+              v-else-if="canEnroll(activity)"
               type="primary"
               size="large"
               style="width: 100%"
@@ -167,7 +167,7 @@
               disabled
               style="width: 100%"
             >
-              {{ activity.status === 'ENDED' ? '已结束' : activity.status === 'DRAFT' ? '未开放报名' : '暂不可报名' }}
+              {{ getDisplayStatus(activity) === '报名已截止' ? '报名已截止' : getDisplayStatus(activity) === '已结束' ? '已结束' : '暂不可报名' }}
             </el-button>
           </div>
 
@@ -251,8 +251,8 @@ import { activityApi, enrollmentApi, aiApi } from '@/api'
 import { useUserStore } from '@/stores/user'
 import type { Activity } from '@/types'
 import {
-  ACTIVITY_TYPE_MAP, ACTIVITY_STATUS_MAP, TARGET_AUDIENCE_MAP,
-  activityTypeTagType, activityStatusTagType, canEnroll,
+  ACTIVITY_TYPE_MAP, TARGET_AUDIENCE_MAP,
+  activityTypeTagType, getDisplayStatus, getDisplayStatusTagType, canEnroll,
 } from '@/utils/constants'
 
 const route = useRoute()

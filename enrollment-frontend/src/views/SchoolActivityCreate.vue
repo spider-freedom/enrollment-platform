@@ -38,16 +38,22 @@
           />
         </el-form-item>
         <el-row :gutter="16">
-          <el-col :span="8">
-            <el-form-item label="活动类型" prop="type">
+          <el-col :span="6">
+            <el-form-item label="线上线下" prop="type">
               <el-select v-model="form.type" placeholder="请选择" style="width: 100%">
-                <el-option label="线下活动" value="OFFLINE" />
                 <el-option label="线上活动" value="ONLINE" />
-                <el-option label="校内活动" value="INTERNAL" />
+                <el-option label="线下活动" value="OFFLINE" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
+            <el-form-item label="活动分类" prop="category">
+              <el-select v-model="form.category" placeholder="请选择分类" style="width: 100%">
+                <el-option v-for="c in categoryOptions" :key="c" :label="c" :value="c" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="活动状态" prop="status">
               <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
                 <el-option label="草稿" value="DRAFT" />
@@ -282,9 +288,11 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete, PictureFilled } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
+import { ACTIVITY_CATEGORY_OPTIONS } from '@/utils/constants'
 
 const router = useRouter()
 const route = useRoute()
+const categoryOptions = ACTIVITY_CATEGORY_OPTIONS
 
 // ============= 模式判断 =============
 const isEdit = ref(false)
@@ -305,6 +313,7 @@ const form = reactive({
   title: '',
   description: '',
   type: 'OFFLINE',
+  category: '宣讲会',
   status: 'DRAFT',
   targetAudience: 'all',
   location: '',
@@ -382,6 +391,7 @@ async function loadActivity(id: number) {
       form.title = data.title || ''
       form.description = data.description || ''
       form.type = data.type || 'OFFLINE'
+      form.category = data.category || '宣讲会'
       form.status = data.status || 'DRAFT'
       form.targetAudience = String(data.targetAudience ?? 'all')
       form.location = data.location || ''
@@ -419,6 +429,7 @@ function buildPayload() {
     title: form.title,
     description: form.description,
     type: form.type,
+    category: form.category,
     status: form.status,
     targetAudience: form.targetAudience === 'student' ? 1 : form.targetAudience === 'teacher' ? 2 : 3,
     location: form.location,

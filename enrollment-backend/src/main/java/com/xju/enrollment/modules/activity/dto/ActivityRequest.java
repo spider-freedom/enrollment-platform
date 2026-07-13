@@ -14,6 +14,8 @@ public record ActivityRequest(
         @NotBlank(message = "活动类型不能为空")
         String type,
 
+        String category,
+
         String status,
 
         @NotNull(message = "目标受众不能为空")

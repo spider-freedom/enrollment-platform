@@ -71,9 +71,34 @@ export function canEnroll(status: string): boolean {
   return status === 'PUBLISHED' || status === 'ONGOING'
 }
 
-// 活动类型筛选选项（学生端只用 线上/线下，不用中文假类型）
-export const ACTIVITY_TYPE_FILTERS = [
-  { label: '全部', value: '' },
-  { label: '线上活动', value: 'ONLINE' },
-  { label: '线下活动', value: 'OFFLINE' },
+// 活动分类映射
+export const ACTIVITY_CATEGORY_MAP: Record<string, string> = {
+  '宣讲会': '宣讲会',
+  '开放日': '开放日',
+  '夏令营': '夏令营',
+  '咨询会': '咨询会',
+  '回访母校': '回访母校',
+  '线上直播': '线上直播',
+  '走访宣讲': '走访宣讲',
+  '招生宣传': '招生宣传',
+  '其他': '其他',
+}
+
+// 活动分类筛选选项
+export const ACTIVITY_CATEGORY_FILTERS = [
+  { label: '全部分类', value: '' },
+  { label: '宣讲会', value: '宣讲会' },
+  { label: '开放日', value: '开放日' },
+  { label: '夏令营', value: '夏令营' },
+  { label: '咨询会', value: '咨询会' },
+  { label: '回访母校', value: '回访母校' },
+  { label: '线上直播', value: '线上直播' },
+  { label: '走访宣讲', value: '走访宣讲' },
+  { label: '招生宣传', value: '招生宣传' },
+  { label: '其他', value: '其他' },
+]
+
+// 活动分类创建选项
+export const ACTIVITY_CATEGORY_OPTIONS = [
+  '宣讲会', '开放日', '夏令营', '咨询会', '回访母校', '线上直播', '走访宣讲', '招生宣传', '其他',
 ]

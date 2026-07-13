@@ -27,6 +27,11 @@ public class Activity {
     private String type;
 
     /**
+     * 宣讲会/开放日/夏令营/咨询会/回访母校/线上直播/其他
+     */
+    private String category;
+
+    /**
      * DRAFT / PUBLISHED / ONGOING / ENDED
      */
     private String status;

@@ -44,14 +44,17 @@
       </el-input>
       <el-select
         v-model="filterType"
-        placeholder="筛选活动类型"
+        placeholder="筛选活动分类"
         clearable
         style="width: 180px"
         @change="handleTypeFilter"
       >
-        <el-option label="全部类型" value="" />
-        <el-option label="线上活动" value="ONLINE" />
-        <el-option label="线下活动" value="OFFLINE" />
+        <el-option
+          v-for="c in ACTIVITY_CATEGORY_FILTERS"
+          :key="c.value"
+          :label="c.label"
+          :value="c.value"
+        />
       </el-select>
     </div>
 
@@ -144,7 +147,7 @@ import { ElMessage } from 'element-plus'
 import { Search, Calendar, Location } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import type { Activity } from '@/types'
-import { ACTIVITY_TYPE_MAP, ACTIVITY_STATUS_MAP, activityTypeTagType, activityStatusTagType } from '@/utils/constants'
+import { ACTIVITY_TYPE_MAP, ACTIVITY_STATUS_MAP, ACTIVITY_CATEGORY_FILTERS, activityTypeTagType, activityStatusTagType } from '@/utils/constants'
 
 const bannerGradients = ['linear-gradient(135deg, #1a56db, #6366f1)', 'linear-gradient(135deg, #10b981, #059669)', 'linear-gradient(135deg, #f59e0b, #d97706)', 'linear-gradient(135deg, #6366f1, #8b5cf6)', 'linear-gradient(135deg, #ef4444, #dc2626)']
 const banners = ref<any[]>([])
@@ -182,31 +185,26 @@ function getActivityEmoji(a: any): string {
   return a.type === 'ONLINE' ? '💻' : '📍'
 }
 
-function buildTypeParam(): string | undefined {
-  // If a specific type is selected in the dropdown, use it
-  if (filterType.value) {
-    return filterType.value
-  }
-  // Otherwise use the tab-based filter
-  if (activeTab.value === 'offline') {
-    return 'OFFLINE'
-  }
-  if (activeTab.value === 'online') {
-    return 'ONLINE'
-  }
-  return undefined
-}
-
 async function fetchActivities() {
   loading.value = true
   errorMessage.value = ''
+  const params: any = {
+    page: page.value,
+    size: pageSize.value,
+    keyword: keyword.value || undefined,
+  }
+  // Tab filter: 线上/线下
+  if (activeTab.value === 'offline') {
+    params.type = 'OFFLINE'
+  } else if (activeTab.value === 'online') {
+    params.type = 'ONLINE'
+  }
+  // Dropdown filter: activity category
+  if (filterType.value) {
+    params.category = filterType.value
+  }
   try {
-    const res: any = await activityApi.listStudent({
-      page: page.value,
-      size: pageSize.value,
-      keyword: keyword.value || undefined,
-      type: buildTypeParam(),
-    })
+    const res: any = await activityApi.listStudent(params)
 
     // Handle different response shapes
     if (res?.data?.list) {

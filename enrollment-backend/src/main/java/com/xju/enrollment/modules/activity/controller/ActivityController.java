@@ -82,7 +82,7 @@ public class ActivityController {
 
     @GetMapping("/export")
     public void export(ActivityListQuery query, HttpServletResponse response) throws IOException {
-        query = new ActivityListQuery(query.keyword(), query.type(), query.status(), 1, 10000);
+        query = new ActivityListQuery(query.keyword(), query.type(), query.category(), query.status(), 1, 10000);
         var result = activityService.listForSchool(query);
         var data = result.list().stream().map(a -> {
             Map<String, Object> row = new java.util.HashMap<>();

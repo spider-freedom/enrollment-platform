@@ -180,7 +180,7 @@
             :close-on-click-modal="false"
           >
             <el-form label-width="80px">
-              <el-form-item label="目标学校" required>
+              <el-form-item label="目标学院" required>
                 <div class="school-suggest-wrapper">
                   <el-input
                     v-model="targetSchool"

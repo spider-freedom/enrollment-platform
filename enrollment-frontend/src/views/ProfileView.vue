@@ -16,6 +16,22 @@
         <el-descriptions-item label="手机">{{ store.userInfo.phone || '-' }}</el-descriptions-item>
       </el-descriptions>
     </el-card>
+
+    <el-card style="margin-top:20px">
+      <template #header><h3>编辑个人信息</h3></template>
+      <el-form :model="profileForm" label-width="100px" style="max-width:500px">
+        <el-form-item label="邮箱">
+          <el-input v-model="profileForm.email" placeholder="请输入邮箱" />
+        </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="profileForm.phone" placeholder="请输入手机号" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :loading="saving" @click="handleSaveProfile">保存修改</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
     <el-card style="margin-top:20px">
       <template #header><h3>修改密码</h3></template>
       <el-form :model="pwdForm" label-width="120px" style="max-width:400px">
@@ -29,17 +45,40 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 import { userApi } from '@/api'
 
 const store = useUserStore()
+const saving = ref(false)
 const pwdForm = reactive({ oldPassword: '', newPassword: '', confirmPassword: '' })
+const profileForm = reactive({ email: '', phone: '' })
+
+// Sync profile form from store when userInfo loads
+watch(() => store.userInfo, (info) => {
+  if (info) {
+    profileForm.email = info.email || ''
+    profileForm.phone = info.phone || ''
+  }
+}, { immediate: true })
 
 function roleLabel(role: string) {
   const map: Record<string, string> = { student:'学生', teacher:'教师', college_admin:'学院管理员', school_admin:'学校管理员', STUDENT:'学生', TEACHER:'教师', COLLEGE_ADMIN:'学院管理员', SCHOOL_ADMIN:'学校管理员' }
   return map[role] || role
+}
+
+async function handleSaveProfile() {
+  saving.value = true
+  try {
+    await userApi.updateProfile({ email: profileForm.email, phone: profileForm.phone })
+    ElMessage.success('个人信息已更新')
+    await store.fetchProfile()
+  } catch (e: any) {
+    ElMessage.error(e?.response?.data?.message || '保存失败')
+  } finally {
+    saving.value = false
+  }
 }
 
 async function handleChangePwd() {

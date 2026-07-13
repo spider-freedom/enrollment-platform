@@ -9,6 +9,7 @@ public record ActivityVO(
         String title,
         String description,
         String type,
+        String category,
         String status,
         Integer targetAudience,
         LocalDateTime startTime,
@@ -37,7 +38,7 @@ public record ActivityVO(
     public static ActivityVO from(Activity activity, String creatorName) {
         return new ActivityVO(
                 activity.getId(), activity.getTitle(), activity.getDescription(),
-                activity.getType(), activity.getStatus(), activity.getTargetAudience(),
+                activity.getType(), activity.getCategory(), activity.getStatus(), activity.getTargetAudience(),
                 activity.getStartTime(), activity.getEndTime(),
                 activity.getEnrollStart(), activity.getEnrollEnd(),
                 activity.getLocation(), activity.getMaxStudents(), activity.getMaxTeachers(),

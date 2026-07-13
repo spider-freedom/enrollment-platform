@@ -3,6 +3,7 @@ package com.xju.enrollment.modules.activity.dto;
 public record ActivityListQuery(
         String keyword,
         String type,
+        String category,
         String status,
         Integer page,
         Integer size

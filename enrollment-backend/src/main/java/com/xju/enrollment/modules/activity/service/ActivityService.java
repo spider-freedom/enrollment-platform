@@ -126,6 +126,9 @@ public class ActivityService {
         if (StringUtils.isNotBlank(query.type())) {
             wrapper.eq(Activity::getType, query.type());
         }
+        if (StringUtils.isNotBlank(query.category())) {
+            wrapper.eq(Activity::getCategory, query.category());
+        }
         if (StringUtils.isNotBlank(query.status())) {
             wrapper.eq(Activity::getStatus, query.status());
         }
@@ -162,6 +165,7 @@ public class ActivityService {
         activity.setTitle(request.title());
         activity.setDescription(request.description());
         activity.setType(request.type());
+        activity.setCategory(request.category());
         if (request.status() != null) {
             activity.setStatus(request.status());
         }

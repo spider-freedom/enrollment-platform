@@ -26,11 +26,11 @@
             </div>
           </div>
           <el-tag
-            :type="fb.status === '已回复' ? 'success' : 'info'"
+            :type="fb.status === 'REPLIED' ? 'success' : 'info'"
             size="default"
             effect="plain"
           >
-            {{ fb.status }}
+            {{ feedbackStatusLabel(fb.status) }}
           </el-tag>
         </div>
 
@@ -99,6 +99,13 @@ import { ElMessage } from 'element-plus'
 import { ChatDotRound } from '@element-plus/icons-vue'
 import { feedbackApi } from '@/api'
 import type { Feedback } from '@/types'
+import { ENROLL_STATUS_MAP } from '@/utils/constants'
+
+const FEEDBACK_STATUS_MAP: Record<string, string> = {
+  SUBMITTED: '已提交',
+  REPLIED: '已回复',
+  CLOSED: '已关闭',
+}
 
 const feedbacks = ref<Feedback[]>([])
 const loading = ref(false)
@@ -106,6 +113,10 @@ const errorMessage = ref('')
 const page = ref(1)
 const pageSize = ref(20)
 const total = ref(0)
+
+function feedbackStatusLabel(status: string): string {
+  return FEEDBACK_STATUS_MAP[status] || status
+}
 
 async function fetchFeedbacks() {
   loading.value = true
@@ -117,7 +128,10 @@ async function fetchFeedbacks() {
     })
 
     // Handle different response shapes
-    if (res?.data?.records) {
+    if (res?.data?.list) {
+      feedbacks.value = res.data.list
+      total.value = res.data.total || 0
+    } else if (res?.data?.records) {
       feedbacks.value = res.data.records
       total.value = res.data.total || 0
     } else if (res?.records) {

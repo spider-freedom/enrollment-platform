@@ -180,11 +180,14 @@
             :close-on-click-modal="false"
           >
             <el-form label-width="80px">
-              <el-form-item label="目标学院" required>
+              <el-form-item label="我的学院" required>
+                <el-input :model-value="myCollege" disabled />
+              </el-form-item>
+              <el-form-item label="招生学校" required>
                 <div class="school-suggest-wrapper">
                   <el-input
                     v-model="targetSchool"
-                    placeholder="请输入目标学校名称"
+                    placeholder="请输入要招生的目标学校名称（高中）"
                     @input="suggestSchool"
                   />
                   <div v-if="schoolSuggestions.length > 0" class="suggest-dropdown">
@@ -245,6 +248,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Calendar, Location, User, Document } from '@element-plus/icons-vue'
 import { activityApi, enrollmentApi, aiApi } from '@/api'
+import { useUserStore } from '@/stores/user'
 import type { Activity } from '@/types'
 import {
   ACTIVITY_TYPE_MAP, ACTIVITY_STATUS_MAP, TARGET_AUDIENCE_MAP,
@@ -253,10 +257,12 @@ import {
 
 const route = useRoute()
 const router = useRouter()
+const store = useUserStore()
 
 const activity = ref<Activity | null>(null)
 const loading = ref(false)
 const enrolling = ref(false)
+const myCollege = computed(() => store.userInfo?.collegeName || '未知学院')
 const errorMessage = ref('')
 const notFound = ref(false)
 const alreadyEnrolled = ref(false)

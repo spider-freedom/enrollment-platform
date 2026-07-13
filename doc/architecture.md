@@ -8,9 +8,21 @@
 
 ### 图 1：系统架构总览图
 
-> 以下文字描述用作千问生成架构图的 Prompt：
->
-> 画一张系统架构图，包含 4 层结构。第一层是客户端，一个浏览器图标，标注"浏览器 localhost:3000"。第二层是前端服务层，一个方块标注"Vite 开发服务器"，旁边标注"Vue 3 + Element Plus"。第三层是后端服务层，一个大方块标注"Spring Boot localhost:8080"，内含多个小模块：安全模块（标注 JWT 认证 + 角色权限）、控制器模块（标注 REST API 11 个 Controller）、服务模块（标注 7 个 Service）、AI 模块（标注 DeepSeek 大模型）。第四层是数据存储层，包含三个小方块：MySQL（标注 6 张业务表）、Redis（标注缓存/Session）、本地磁盘（标注头像/附件）。层与层之间用箭头连接，箭头标注通信方式。
+```mermaid
+flowchart TB
+    Browser["浏览器 localhost:3000"]
+    Vite["Vite 前端服务器"]
+    Backend["Spring Boot localhost:8080"]
+    MySQL[("MySQL 8.0")]
+    Redis[("Redis 7.x")]
+    Disk[("本地磁盘")]
+
+    Browser --> Vite
+    Vite -->|"/api 代理"| Backend
+    Backend -->|"读写"| MySQL
+    Backend -->|"缓存"| Redis
+    Backend -->|"文件"| Disk
+```
 
 **架构说明：**
 
@@ -22,9 +34,29 @@
 
 ### 图 2：前端组件架构图
 
-> 以下文字描述用作千问生成架构图的 Prompt：
->
-> 画一张前端架构图，分 4 层。最顶层是入口层，标注 main.ts + App.vue。第二层是基础设施层，包含三个并列方块：Vue Router（路由导航）、Pinia（状态管理）、Axios（HTTP 请求）。第三层是布局层，一个方块标注 MainLayout.vue，包含左侧深色侧边栏（列出菜单项：活动管理、报名审批、反馈管理、用户管理、数据大屏）和顶部导航栏（包含通知铃铛、角色标签、用户头像、退出按钮）。第四层是页面层，分为 5 列：学生端（6 个页面方块）、教师端（6 个页面方块）、学院管理端（5 个页面方块）、学校管理端（8 个页面方块）、公共页面（3 个页面方块）。用箭头串联各层。
+```mermaid
+flowchart TB
+    Entry["main.ts + App.vue"]
+    Router["Vue Router 路由"]
+    Pinia["Pinia 状态管理"]
+    Axios["Axios 网络请求"]
+    Layout["MainLayout.vue 布局壳"]
+    S["学生端 6 页"]
+    T["教师端 6 页"]
+    C["学院管理 5 页"]
+    H["学校管理 8 页"]
+    P["公共 3 页"]
+
+    Entry --> Router
+    Entry --> Pinia
+    Entry --> Axios
+    Router --> Layout
+    Layout --> S
+    Layout --> T
+    Layout --> C
+    Layout --> H
+    Layout --> P
+```
 
 **架构说明：**
 
@@ -36,7 +68,21 @@
 
 ### 图 3：前端路由结构图
 
-> 画一张路由树形图。根节点是"/"，下面分 5 个一级分支：/login（公开）、/student（需登录，角色=student）、/teacher（需登录，角色=teacher）、/college（需登录，角色=college_admin）、/school（需登录，角色=school_admin）。每个分支下展开子路由：/student 下展开 activities、activities/:id、enrollments、feedback/:enrollmentId、my-feedback、profile；/college 下展开 activities、activities/create、activities/:id、approvals、feedbacks、users、profile；/school 下展开 dashboard、activities、activities/create、activities/:id、approvals、feedbacks、users、profile。标注路由守卫逻辑：检查 token，恢复用户信息，验证角色前缀匹配。
+```mermaid
+flowchart LR
+    Login["/login 公开"]
+    Student["/student/*"]
+    Teacher["/teacher/*"]
+    College["/college/*"]
+    School["/school/*"]
+    Guard["路由守卫"]
+
+    Login --- Guard
+    Guard --- Student
+    Guard --- Teacher
+    Guard --- College
+    Guard --- School
+```
 
 ### 前端技术栈明细
 
@@ -63,11 +109,37 @@
 
 ### 图 4：后端分层架构图
 
-> 画一张后端分层架构图，从上到下分 6 层。第一层：安全过滤层，方块标注"JwtAuthFilter（JWT Token 验证）+ SecurityConfig（URL 角色授权）"。第二层：控制器层，列出 11 个 Controller 方块（AuthController、UserController、CollegeUserController、SchoolUserController、ActivityController、EnrollmentController、FeedbackController、ApprovalController、StatisticsController、AttachmentController、AiController）。第三层：服务层，列出 7 个 Service 方块（UserService、ActivityService、EnrollmentService、FeedbackService、ApprovalService、StatisticsService、AttachmentService）。第四层：数据访问层，方块标注"MyBatis-Plus（BaseMapper + LambdaQueryWrapper + Page 分页）"。第五层：实体层，列出 6 个实体方块（User、Activity、Enrollment、Feedback、FeedbackAttachment、ActivityFieldConfig）。第六层：数据存储层，方块标注"MySQL 8.0（sys_user、activity、enrollment、feedback、feedback_attachment、activity_field_config）"。层之间用箭头连接，箭头标注数据流方向。左侧竖排标注横切关注点：@Transactional 事务、ApiResponse 统一响应、GlobalExceptionHandler 异常处理、MetaObjectHandler 自动填充。
+```mermaid
+flowchart TB
+    Security["安全层: JWT 认证 + 角色权限"]
+    Controller["控制器层: 11 个 Controller"]
+    Service["服务层: 7 个 Service"]
+    DAL["数据访问层: MyBatis-Plus"]
+    Entity["实体层: 6 个 Entity"]
+    DB["MySQL 8.0"]
+
+    Security --> Controller
+    Controller --> Service
+    Service --> DAL
+    DAL --> Entity
+    Entity --> DB
+```
 
 ### 图 5：审批流程状态机图
 
-> 画一张状态流转图。起始节点是"学生提交报名"，箭头指向状态节点"SUBMITTED（待学院审批）"。从 SUBMITTED 分出两条路径：一条箭头标注"学院管理员通过"指向"APPROVING（待学校审批）"，一条箭头标注"学院管理员驳回"指向"REJECTED（已驳回）"。从 APPROVING 分出两条路径：一条箭头标注"学校管理员通过"指向"APPROVED（已通过）"，一条箭头标注"学校管理员驳回"指向"REJECTED（已驳回）"。从 SUBMITTED 和 APPROVING 各画一条箭头标注"学生撤回"指向"WITHDRAWN（已撤回）"。APPROVED、REJECTED、WITHDRAWN 都是终态，用双圈表示。
+```mermaid
+stateDiagram-v2
+    [*] --> SUBMITTED
+    SUBMITTED --> APPROVING: 学院管理员通过
+    SUBMITTED --> REJECTED: 学院管理员驳回
+    SUBMITTED --> WITHDRAWN: 学生撤回
+    APPROVING --> APPROVED: 学校管理员通过
+    APPROVING --> REJECTED: 学校管理员驳回
+    APPROVING --> WITHDRAWN: 学生撤回
+    APPROVED --> [*]
+    REJECTED --> [*]
+    WITHDRAWN --> [*]
+```
 
 ### 后端技术栈明细
 
@@ -99,7 +171,89 @@
 
 ### 图 6：数据库 ER 图
 
-> 画一张数据库 ER 图。中间是 sys_user 表（列出字段：id、username、password、name、role、college_id、college_name、major、grade、gpa、email、phone、avatar、status）。上方是 activity 表（列出字段：id、title、description、type、category、level、status、target_audience、start_time、end_time、enroll_start、enroll_end、location、max_students、max_teachers、max_per_school、college_id、college_name、creator_id）。左侧是 enrollment 表（列出字段：id、activity_id、user_id、status、target_school、college_id、college_name、reject_reason、submitted_at、approved_at）。右侧是 feedback 表（列出字段：id、activity_id、user_id、user_role、content、rating、status、reply、reply_user_id、reply_time）。下方是 feedback_attachment 表（列出字段：id、feedback_id、file_name、file_path、file_size）。sys_user 到 enrollment 画箭头标注"1:N 报名"，sys_user 到 feedback 画箭头标注"1:N 反馈"，sys_user 到 activity 画箭头标注"1:N 创建"。activity 到 enrollment 画箭头标注"1:N 包含"，activity 到 feedback 画箭头标注"1:N 包含"。feedback 到 feedback_attachment 画箭头标注"1:N 附件"。所有箭头都从主键指向外键，标上"1:N"。
+```mermaid
+erDiagram
+    sys_user ||--o{ enrollment : "报名"
+    sys_user ||--o{ feedback : "反馈"
+    sys_user ||--o{ activity : "创建"
+    activity ||--o{ enrollment : "包含"
+    activity ||--o{ feedback : "包含"
+    feedback ||--o{ feedback_attachment : "附件"
+
+    sys_user {
+        bigint id PK
+        varchar username
+        varchar password
+        varchar name
+        varchar role
+        bigint college_id
+        varchar college_name
+        varchar major
+        varchar grade
+        double gpa
+        varchar email
+        varchar phone
+        varchar avatar
+        varchar status
+    }
+
+    activity {
+        bigint id PK
+        varchar title
+        text description
+        varchar type
+        varchar category
+        varchar level
+        varchar status
+        tinyint target_audience
+        datetime start_time
+        datetime end_time
+        datetime enroll_start
+        datetime enroll_end
+        varchar location
+        int max_students
+        int max_teachers
+        int max_per_school
+        bigint college_id
+        varchar college_name
+        bigint creator_id FK
+    }
+
+    enrollment {
+        bigint id PK
+        bigint activity_id FK
+        bigint user_id FK
+        varchar status
+        varchar target_school
+        bigint college_id
+        varchar college_name
+        varchar reject_reason
+        datetime submitted_at
+        datetime approved_at
+    }
+
+    feedback {
+        bigint id PK
+        bigint activity_id FK
+        bigint user_id FK
+        varchar user_role
+        text content
+        int rating
+        varchar status
+        text reply
+        bigint reply_user_id
+        datetime reply_time
+    }
+
+    feedback_attachment {
+        bigint id PK
+        bigint feedback_id FK
+        varchar file_name
+        varchar file_path
+        bigint file_size
+        varchar file_type
+    }
+```
 
 ### 表结构说明
 

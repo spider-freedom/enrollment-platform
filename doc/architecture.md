@@ -9,6 +9,7 @@
 ### 图 1：系统架构总览图
 
 ```mermaid
+%%{init: {'theme': 'default'}}%%
 flowchart TB
     Browser["浏览器 localhost:3000"]
     Vite["Vite 前端服务器"]
@@ -35,6 +36,7 @@ flowchart TB
 ### 图 2：前端组件架构图
 
 ```mermaid
+%%{init: {'theme': 'default'}}%%
 flowchart TB
     Entry["main.ts + App.vue"]
     Router["Vue Router 路由"]
@@ -69,6 +71,7 @@ flowchart TB
 ### 图 3：前端路由结构图
 
 ```mermaid
+%%{init: {'theme': 'default'}}%%
 flowchart LR
     Login["/login 公开"]
     Student["/student/*"]
@@ -110,6 +113,7 @@ flowchart LR
 ### 图 4：后端分层架构图
 
 ```mermaid
+%%{init: {'theme': 'default'}}%%
 flowchart TB
     Security["安全层: JWT 认证 + 角色权限"]
     Controller["控制器层: 11 个 Controller"]
@@ -128,6 +132,7 @@ flowchart TB
 ### 图 5：审批流程状态机图
 
 ```mermaid
+%%{init: {'theme': 'default'}}%%
 stateDiagram-v2
     [*] --> SUBMITTED
     SUBMITTED --> APPROVING: 学院管理员通过
@@ -172,6 +177,7 @@ stateDiagram-v2
 ### 图 6：数据库 ER 图
 
 ```mermaid
+%%{init: {'theme': 'default'}}%%
 erDiagram
     sys_user ||--o{ enrollment : "报名"
     sys_user ||--o{ feedback : "反馈"

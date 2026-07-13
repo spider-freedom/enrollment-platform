@@ -49,12 +49,9 @@
         style="width: 180px"
         @change="handleTypeFilter"
       >
-        <el-option
-          v-for="t in activityTypes"
-          :key="t.value"
-          :label="t.label"
-          :value="t.value"
-        />
+        <el-option label="全部类型" value="" />
+        <el-option label="线上活动" value="ONLINE" />
+        <el-option label="线下活动" value="OFFLINE" />
       </el-select>
     </div>
 
@@ -70,8 +67,8 @@
         <div class="card-image" :class="'gradient-' + (a.id % 5)">
           <div class="card-emoji">{{ getActivityEmoji(a) }}</div>
           <div class="card-type-badge">
-            <el-tag :type="a.type === 'ONLINE' ? 'success' : 'primary'" size="small" effect="dark">
-              {{ a.type === 'ONLINE' ? '线上' : a.type === 'OFFLINE' ? '线下' : a.type }}
+            <el-tag :type="activityTypeTagType(a.type)" size="small" effect="dark">
+              {{ ACTIVITY_TYPE_MAP[a.type] || a.type }}
             </el-tag>
           </div>
         </div>
@@ -90,10 +87,10 @@
           </div>
           <div class="card-footer">
             <el-tag
-              :type="statusTagType(a.status)"
+              :type="activityStatusTagType(a.status)"
               size="small"
             >
-              {{ a.status }}
+              {{ ACTIVITY_STATUS_MAP[a.status] || a.status }}
             </el-tag>
             <span class="quota">
               {{ a.currentStudents || 0 }}/{{ a.maxStudents }} 人
@@ -147,6 +144,7 @@ import { ElMessage } from 'element-plus'
 import { Search, Calendar, Location } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import type { Activity } from '@/types'
+import { ACTIVITY_TYPE_MAP, ACTIVITY_STATUS_MAP, activityTypeTagType, activityStatusTagType } from '@/utils/constants'
 
 const bannerGradients = ['linear-gradient(135deg, #1a56db, #6366f1)', 'linear-gradient(135deg, #10b981, #059669)', 'linear-gradient(135deg, #f59e0b, #d97706)', 'linear-gradient(135deg, #6366f1, #8b5cf6)', 'linear-gradient(135deg, #ef4444, #dc2626)']
 const banners = ref<any[]>([])
@@ -160,16 +158,6 @@ async function fetchBanners() {
   } catch { banners.value = [] }
 }
 
-const activityTypes = [
-  { label: '宣讲会', value: '宣讲会' },
-  { label: '开放日', value: '开放日' },
-  { label: '线上直播', value: '线上直播' },
-  { label: '咨询会', value: '咨询会' },
-]
-
-const onlineTypes = ['线上直播']
-const offlineTypes = ['宣讲会', '开放日', '咨询会']
-
 const activities = ref<Activity[]>([])
 const loading = ref(false)
 const errorMessage = ref('')
@@ -180,17 +168,6 @@ const filterType = ref('')
 const page = ref(1)
 const pageSize = ref(12)
 const total = ref(0)
-
-function statusTagType(status: string): string {
-  const map: Record<string, string> = {
-    '报名中': 'success',
-    '进行中': 'warning',
-    '即将开始': '',
-    '已结束': 'info',
-    '已截止': 'danger',
-  }
-  return map[status] || 'info'
-}
 
 function getActivityEmoji(a: any): string {
   const title = a.title || ''
@@ -275,16 +252,6 @@ function handleTabChange() {
 }
 
 function handleTypeFilter() {
-  if (filterType.value) {
-    // When a specific type is selected, determine if it's online or offline
-    if (onlineTypes.includes(filterType.value)) {
-      activeTab.value = 'online'
-    } else {
-      activeTab.value = 'offline'
-    }
-  } else {
-    activeTab.value = 'all'
-  }
   page.value = 1
   fetchActivities()
 }

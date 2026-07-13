@@ -15,17 +15,17 @@
     <template v-else-if="activity">
       <div class="hero" :style="{ background: 'linear-gradient(135deg, #1a3a5c, #2d6a9f)' }">
         <h1>{{ activity.title }}</h1>
-        <el-tag>{{ activity.type }}</el-tag>
-        <el-tag type="success">{{ activity.status }}</el-tag>
+        <el-tag :type="activityTypeTagType(activity.type)">{{ ACTIVITY_TYPE_MAP[activity.type] || activity.type }}</el-tag>
+        <el-tag :type="activityStatusTagType(activity.status)" style="margin-left:8px">{{ ACTIVITY_STATUS_MAP[activity.status] || activity.status }}</el-tag>
       </div>
       <el-card class="detail-card">
         <el-descriptions :column="2" border>
           <el-descriptions-item label="活动时间">{{ activity.startTime }} ~ {{ activity.endTime }}</el-descriptions-item>
           <el-descriptions-item label="报名时间">{{ activity.enrollStart }} ~ {{ activity.enrollEnd }}</el-descriptions-item>
           <el-descriptions-item label="活动地点">{{ activity.location }}</el-descriptions-item>
-          <el-descriptions-item label="招生对象">{{ activity.targetAudience }}</el-descriptions-item>
-          <el-descriptions-item label="学生名额">{{ activity.currentStudents }}/{{ activity.maxStudents }}</el-descriptions-item>
-          <el-descriptions-item label="教师名额">{{ activity.currentTeachers }}/{{ activity.maxTeachers }}</el-descriptions-item>
+          <el-descriptions-item label="招生对象">{{ TARGET_AUDIENCE_MAP[activity.targetAudience] || activity.targetAudience }}</el-descriptions-item>
+          <el-descriptions-item label="学生名额">{{ activity.currentStudents || 0 }}/{{ activity.maxStudents || 0 }}</el-descriptions-item>
+          <el-descriptions-item label="教师名额">{{ activity.currentTeachers || 0 }}/{{ activity.maxTeachers || 0 }}</el-descriptions-item>
         </el-descriptions>
       </el-card>
       <el-card class="detail-card">
@@ -33,8 +33,8 @@
         <p>{{ activity.description }}</p>
       </el-card>
       <div style="text-align:center;margin-top:24px">
-        <el-button type="primary" size="large" @click="handleEnroll" :disabled="activity.status !== '报名中'" :loading="enrolling">
-          {{ activity.status === '报名中' ? '立即报名' : '已截止' }}
+        <el-button type="primary" size="large" @click="handleEnroll" :disabled="!canEnroll(activity.status)" :loading="enrolling">
+          {{ canEnroll(activity.status) ? '立即报名' : (activity.status === 'ENDED' ? '已结束' : '未开放报名') }}
         </el-button>
       </div>
     </template>
@@ -47,6 +47,10 @@ import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { activityApi, enrollmentApi } from '@/api'
 import type { Activity } from '@/types'
+import {
+  ACTIVITY_TYPE_MAP, ACTIVITY_STATUS_MAP, TARGET_AUDIENCE_MAP,
+  activityTypeTagType, activityStatusTagType, canEnroll,
+} from '@/utils/constants'
 
 const route = useRoute()
 const activity = ref<Activity | null>(null)

@@ -62,6 +62,8 @@ import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { Bell, ArrowDown, List, Checked, EditPen, User, DataAnalysis, Plus, Management } from '@element-plus/icons-vue'
+import { activityApi, enrollmentApi, feedbackApi, approvalApi } from '@/api'
+import { ACTIVITY_STATUS_MAP, ENROLL_STATUS_MAP } from '@/utils/constants'
 
 const store = useUserStore()
 const router = useRouter()
@@ -79,23 +81,81 @@ const roleTagTypeMap: Record<string, string> = {
 const roleLabel = computed(() => roleLabelMap[store.currentRole] || store.currentRole || '未知')
 const roleTagType = computed(() => roleTagTypeMap[store.currentRole] || 'info')
 
-const notifications = ref([
-  { icon:'✅', title:'报名审批通过', desc:'「寒假招生宣传活动」已通过学院审核', time:'2小时前', role:'student', path:'/student/enrollments' },
-  { icon:'📨', title:'反馈收到回复', desc:'管理员回复了您的反馈', time:'1天前', role:'student', path:'/student/my-feedback' },
-  { icon:'📢', title:'新活动发布', desc:'招生办发布了「线上招生政策宣讲」', time:'3天前', role:'all', path:'' },
-  { icon:'📋', title:'有待审批报名', desc:'有新的报名申请等待您审批', time:'1天前', role:'college_admin', path:'/college/approvals' },
-  { icon:'📋', title:'有待审批报名', desc:'有新的报名申请等待学校审批', time:'1天前', role:'school_admin', path:'/school/approvals' },
-  { icon:'📨', title:'有新反馈提交', desc:'有新的活动反馈等待您查看', time:'2天前', role:'college_admin', path:'/college/feedbacks' },
-])
+const notifications = ref<any[]>([])
+
+async function fetchNotifications() {
+  const role = (store.currentRole || '').toLowerCase()
+  const items: any[] = []
+
+  try {
+    if (role === 'student' || role === 'teacher') {
+      // Recent published activities
+      const api = role === 'teacher' ? activityApi.listTeacher : activityApi.listStudent
+      const res: any = await api({ page: 1, size: 3 })
+      const records = res?.data?.records || res?.records || []
+      for (const a of records) {
+        items.push({ icon: '📢', title: '新活动发布', desc: `「${a.title}」已开放报名`, time: a.createTime?.substring(0, 10) || '', role, path: `/${role}/activities/${a.id}` })
+      }
+
+      // Enrollment status changes
+      const enrollRes: any = await enrollmentApi.listMy({ page: 1, size: 5 })
+      const enrolls = enrollRes?.data?.records || enrollRes?.records || []
+      for (const e of enrolls) {
+        if (e.status === 'APPROVED') {
+          items.push({ icon: '✅', title: '报名已通过', desc: `活动报名已通过审核`, time: e.approvedAt?.substring(0, 10) || '', role, path: `/${role}/enrollments` })
+        } else if (e.status === 'REJECTED') {
+          items.push({ icon: '❌', title: '报名被驳回', desc: e.rejectReason ? `原因: ${e.rejectReason}` : '报名未通过审核', time: e.updateTime?.substring(0, 10) || '', role, path: `/${role}/enrollments` })
+        }
+      }
+
+      // Feedback replies
+      const fbRes: any = await feedbackApi.listMy({ page: 1, size: 5 })
+      const fbs = fbRes?.data?.records || fbRes?.records || []
+      for (const f of fbs) {
+        if (f.status === 'REPLIED') {
+          items.push({ icon: '📨', title: '反馈收到回复', desc: '管理员回复了您的活动反馈', time: f.replyTime?.substring(0, 10) || '', role, path: `/${role}/my-feedback` })
+        }
+      }
+    }
+
+    if (role === 'college_admin') {
+      const appRes: any = await approvalApi.listCollege({ page: 1, size: 1 })
+      const pending = appRes?.data?.total || appRes?.total || 0
+      if (pending > 0) items.push({ icon: '📋', title: '有待审批报名', desc: `有 ${pending} 条报名申请等待您审批`, time: '', role: 'college_admin', path: '/college/approvals' })
+
+      const fbRes: any = await feedbackApi.listCollege({ page: 1, size: 1 })
+      const fbTotal = fbRes?.data?.total || fbRes?.total || 0
+      if (fbTotal > 0) items.push({ icon: '📨', title: '反馈管理', desc: `共有 ${fbTotal} 条活动反馈`, time: '', role: 'college_admin', path: '/college/feedbacks' })
+    }
+
+    if (role === 'school_admin') {
+      const appRes: any = await approvalApi.listSchool({ page: 1, size: 1 })
+      const pending = appRes?.data?.total || appRes?.total || 0
+      if (pending > 0) items.push({ icon: '📋', title: '有待审批报名', desc: `有 ${pending} 条报名等待学校审批`, time: '', role: 'school_admin', path: '/school/approvals' })
+
+      const fbRes: any = await feedbackApi.listSchool({ page: 1, size: 1 })
+      const fbTotal = fbRes?.data?.total || fbRes?.total || 0
+      if (fbTotal > 0) items.push({ icon: '📨', title: '反馈管理', desc: `共有 ${fbTotal} 条活动反馈`, time: '', role: 'school_admin', path: '/school/feedbacks' })
+    }
+  } catch { /* silent */ }
+
+  notifications.value = items
+  // Track new notifications vs cached
+  const prevCount = parseInt(localStorage.getItem('notifLastCount') || '0')
+  if (items.length > prevCount) {
+    unreadCount.value = items.length - prevCount
+  }
+  localStorage.setItem('notifLastCount', String(items.length))
+}
 
 const filteredNotifications = computed(() => {
   const role = store.currentRole || ''
-  return notifications.value.filter(n => n.role === 'all' || n.role === role)
+  return notifications.value.filter((n: any) => n.role === 'all' || roleLabelMap[n.role] === roleLabelMap[role] || n.role === role)
 })
 
 function markAllRead() {
   unreadCount.value = 0
-  localStorage.setItem('unreadNotifications', '0')
+  localStorage.setItem('notifLastCount', String(notifications.value.length))
 }
 
 const profilePath = computed(() => {
@@ -147,20 +207,12 @@ function handleLogout() {
 }
 
 onMounted(() => {
-  unreadCount.value = parseInt(localStorage.getItem('unreadNotifications') || '3')
+  fetchNotifications()
 })
 function handleNotifyClick(n: any) {
   unreadCount.value = Math.max(0, unreadCount.value - 1)
-  localStorage.setItem('unreadNotifications', String(unreadCount.value))
-  let path = n.path
-  if (!path) {
-    const role = store.currentRole || ''
-    if (role === 'STUDENT') path = '/student/activities'
-    else if (role === 'TEACHER') path = '/teacher/activities'
-    else if (role === 'COLLEGE_ADMIN') path = '/college/activities'
-    else if (role === 'SCHOOL_ADMIN') path = '/school/activities'
-  }
-  if (path) router.push(path)
+  localStorage.setItem('notifLastCount', String(notifications.value.length - unreadCount.value))
+  if (n.path) router.push(n.path)
 }
 </script>
 

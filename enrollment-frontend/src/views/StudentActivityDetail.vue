@@ -34,18 +34,18 @@
         <div class="hero-content">
           <div class="hero-tags">
             <el-tag
-              :type="activity.type === '线上直播' ? '' : 'primary'"
+              :type="activityTypeTagType(activity.type)"
               size="default"
               effect="dark"
             >
-              {{ activity.type }}
+              {{ ACTIVITY_TYPE_MAP[activity.type] || activity.type }}
             </el-tag>
             <el-tag
-              :type="statusTagType(activity.status)"
+              :type="activityStatusTagType(activity.status)"
               size="default"
               effect="dark"
             >
-              {{ activity.status }}
+              {{ ACTIVITY_STATUS_MAP[activity.status] || activity.status }}
             </el-tag>
           </div>
           <h1>{{ activity.title }}</h1>
@@ -133,8 +133,8 @@
                 </div>
               </div>
               <div class="quota-item">
-                <span class="quota-label">每校限额</span>
-                <span class="quota-value">{{ activity.maxPerSchool || '不限' }} 人</span>
+                <span class="quota-label">每所学校最多报名</span>
+                <span class="quota-value">{{ activity.maxPerSchool ? activity.maxPerSchool + ' 人' : '不限人数' }}</span>
               </div>
             </div>
           </el-card>
@@ -151,7 +151,7 @@
               已报名
             </el-button>
             <el-button
-              v-else-if="activity.status === '报名中'"
+              v-else-if="canEnroll(activity.status)"
               type="primary"
               size="large"
               style="width: 100%"
@@ -167,7 +167,7 @@
               disabled
               style="width: 100%"
             >
-              {{ activity.status === '已截止' || activity.status === '已结束' ? '已截止' : '暂不可报名' }}
+              {{ activity.status === 'ENDED' ? '已结束' : activity.status === 'DRAFT' ? '未开放报名' : '暂不可报名' }}
             </el-button>
           </div>
 
@@ -246,6 +246,10 @@ import { ElMessage } from 'element-plus'
 import { Calendar, Location, User, Document } from '@element-plus/icons-vue'
 import { activityApi, enrollmentApi, aiApi } from '@/api'
 import type { Activity } from '@/types'
+import {
+  ACTIVITY_TYPE_MAP, ACTIVITY_STATUS_MAP, TARGET_AUDIENCE_MAP,
+  activityTypeTagType, activityStatusTagType, canEnroll,
+} from '@/utils/constants'
 
 const route = useRoute()
 const router = useRouter()
@@ -267,13 +271,11 @@ const suggestLoading = ref(false)
 const heroGradient = 'linear-gradient(135deg, #1a3a5c 0%, #1a56db 40%, #4f46e5 100%)'
 
 const targetAudienceLabel = computed(() => {
-  const map: Record<string, string> = {
-    student: '仅学生',
-    teacher: '仅教师',
-    all: '全校师生',
-    both: '全校师生',
+  const v = activity.value?.targetAudience
+  if (v !== undefined && v !== null) {
+    return TARGET_AUDIENCE_MAP[v] || String(v)
   }
-  return map[activity.value?.targetAudience || ''] || activity.value?.targetAudience || '-'
+  return '-'
 })
 
 const studentPercent = computed(() => {

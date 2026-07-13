@@ -34,7 +34,9 @@
         style="width: 160px"
         @change="handleSearch"
       >
-        <el-option v-for="t in types" :key="t" :label="t" :value="t" />
+        <el-option label="全部类型" value="" />
+        <el-option label="线上活动" value="ONLINE" />
+        <el-option label="线下活动" value="OFFLINE" />
       </el-select>
       <el-button type="primary" @click="handleSearch">搜索</el-button>
     </div>
@@ -63,7 +65,7 @@
               <h3 class="card-title">{{ a.title }}</h3>
               <p class="card-desc">{{ a.description?.substring(0, 80) }}{{ a.description?.length > 80 ? '...' : '' }}</p>
               <div class="card-meta">
-                <el-tag size="small" :type="tagType(a.type)">{{ a.type }}</el-tag>
+                <el-tag size="small" :type="activityTypeTagType(a.type)">{{ ACTIVITY_TYPE_MAP[a.type] || a.type }}</el-tag>
                 <span class="card-location">
                   <el-icon><Location /></el-icon>
                   {{ a.location }}
@@ -101,6 +103,7 @@ import { ElMessage } from 'element-plus'
 import { Search, Location } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import type { Activity } from '@/types'
+import { ACTIVITY_TYPE_MAP, activityTypeTagType } from '@/utils/constants'
 
 const router = useRouter()
 
@@ -117,17 +120,6 @@ const pageSize = 12
 const total = ref(0)
 const loading = ref(false)
 const activities = ref<Activity[]>([])
-const types = ['宣讲会', '开放日', '线上直播', '咨询会']
-
-function tagType(type: string): string {
-  const map: Record<string, string> = {
-    '宣讲会': 'primary',
-    '开放日': 'success',
-    '线上直播': 'warning',
-    '咨询会': 'info',
-  }
-  return map[type] || ''
-}
 
 function getEmoji(a: any): string {
   const t = a.title || ''

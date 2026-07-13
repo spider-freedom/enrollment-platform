@@ -87,7 +87,7 @@
                 type="datetime"
                 placeholder="选择活动开始时间"
                 format="YYYY-MM-DD HH:mm"
-                value-format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DDTHH:mm:ss"
                 style="width: 100%"
               />
             </el-form-item>
@@ -99,7 +99,7 @@
                 type="datetime"
                 placeholder="选择活动结束时间"
                 format="YYYY-MM-DD HH:mm"
-                value-format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DDTHH:mm:ss"
                 style="width: 100%"
               />
             </el-form-item>
@@ -408,6 +408,13 @@ async function loadActivity(id: number) {
 
 // ============= 提交 =============
 function buildPayload() {
+  const toDateTime = (val: string) => {
+    if (!val) return ''
+    // Already ISO format with T
+    if (val.includes('T')) return val
+    // Date-only string, append time
+    return val + 'T00:00:00'
+  }
   return {
     title: form.title,
     description: form.description,
@@ -417,8 +424,8 @@ function buildPayload() {
     location: form.location,
     startTime: form.startTime,
     endTime: form.endTime,
-    enrollStart: form.enrollStart,
-    enrollEnd: form.enrollEnd,
+    enrollStart: toDateTime(form.enrollStart),
+    enrollEnd: toDateTime(form.enrollEnd),
     maxStudents: form.maxStudents,
     maxTeachers: form.maxTeachers,
     maxPerSchool: form.maxPerSchool,

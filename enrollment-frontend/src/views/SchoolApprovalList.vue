@@ -523,6 +523,7 @@ async function confirmDialog() {
   try {
     const payload = {
       enrollmentId: currentRow.value?.enrollmentId,
+      action: dialogAction.value === 'approve' ? 'APPROVE' : 'REJECT',
       comment: dialogForm.comment,
     }
 

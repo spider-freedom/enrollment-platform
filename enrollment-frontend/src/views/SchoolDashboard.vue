@@ -236,21 +236,6 @@ const defaultCollege = {
   values: [320, 260, 180, 150, 120, 90],
 }
 
-const defaultRating: Record<string, number> = {
-  '5分': 580,
-  '4分': 320,
-  '3分': 150,
-  '2分': 80,
-  '1分': 30,
-}
-
-const defaultTypes: { name: string; label: string; value: number }[] = [
-  { name: 'OFFLINE', label: '线下宣讲', value: 18 },
-  { name: 'ONLINE', label: '线上直播', value: 8 },
-  { name: 'OPEN_DAY', label: '开放日', value: 5 },
-  { name: 'INTERVIEW', label: '面试', value: 3 },
-]
-
 // ============= 图表初始化 =============
 function createLineOption(
   categories: string[],
@@ -410,21 +395,13 @@ function initCharts() {
 
   if (ratingChartRef.value) {
     ratingInstance = echarts.init(ratingChartRef.value)
-    const ratingData = Object.entries(defaultRating).map(([k, v]) => ({
-      value: v,
-      name: k,
-    }))
-    ratingInstance.setOption(createPieOption(ratingData))
+    ratingInstance.setOption(createPieOption([{ value: 1, name: '加载中...' }]))
   }
 
   if (typeChartRef.value) {
     typeInstance = echarts.init(typeChartRef.value)
-    const typeData = defaultTypes.map((t) => ({
-      value: t.value,
-      name: t.label,
-    }))
     typeInstance.setOption(
-      createPieOption(typeData, { radius: '65%', center: ['50%', '50%'] }),
+      createPieOption([{ value: 1, name: '加载中...' }], { radius: '65%', center: ['50%', '50%'] }),
     )
   }
 }

@@ -99,7 +99,6 @@ import { ElMessage } from 'element-plus'
 import { ChatDotRound } from '@element-plus/icons-vue'
 import { feedbackApi } from '@/api'
 import type { Feedback } from '@/types'
-import { ENROLL_STATUS_MAP } from '@/utils/constants'
 
 const FEEDBACK_STATUS_MAP: Record<string, string> = {
   SUBMITTED: '已提交',

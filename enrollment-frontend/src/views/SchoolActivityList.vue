@@ -54,10 +54,9 @@
               style="width: 140px"
             >
               <el-option label="草稿" value="DRAFT" />
-              <el-option label="报名中" value="ENROLLING" />
+              <el-option label="报名中" value="PUBLISHED" />
               <el-option label="进行中" value="ONGOING" />
-              <el-option label="已结束" value="FINISHED" />
-              <el-option label="已取消" value="CANCELLED" />
+              <el-option label="已结束" value="ENDED" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -210,7 +209,7 @@ function workflowLabel(key?: string) {
 
 function statusLabel(status: string) {
   const map: Record<string, string> = {
-    DRAFT: '草稿', PUBLISHED: '已发布', ONGOING: '进行中', ENDED: '已结束',
+    DRAFT: '草稿', PUBLISHED: '报名中', ONGOING: '进行中', ENDED: '已结束',
   }
   return map[status] || status || '-'
 }

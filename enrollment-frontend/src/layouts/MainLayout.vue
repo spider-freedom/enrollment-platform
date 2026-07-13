@@ -63,7 +63,6 @@ import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { Bell, ArrowDown, List, Checked, EditPen, User, DataAnalysis, Plus, Management } from '@element-plus/icons-vue'
 import { activityApi, enrollmentApi, feedbackApi, approvalApi } from '@/api'
-import { ACTIVITY_STATUS_MAP, ENROLL_STATUS_MAP } from '@/utils/constants'
 
 const store = useUserStore()
 const router = useRouter()

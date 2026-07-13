@@ -61,6 +61,7 @@ public class FeedbackService {
         }
 
         User user = userMapper.selectById(userId);
+        if (user == null) throw new BusinessException("用户不存在");
         Integer audience = activity.getTargetAudience();
         if (audience != null) {
             boolean isStudent = "STUDENT".equals(user.getRole());

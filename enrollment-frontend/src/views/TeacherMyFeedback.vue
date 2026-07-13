@@ -31,10 +31,10 @@
             </span>
           </div>
           <el-tag
-            :type="fb.status === '已回复' ? 'success' : 'info'"
+            :type="fb.status === 'REPLIED' ? 'success' : 'info'"
             size="small"
           >
-            {{ fb.status || '待回复' }}
+            {{ fb.status === 'SUBMITTED' ? '待回复' : fb.status === 'REPLIED' ? '已回复' : fb.status || '待回复' }}
           </el-tag>
         </div>
 
@@ -72,7 +72,9 @@ async function fetchFeedbacks() {
   loading.value = true
   try {
     const res: any = await feedbackApi.listMy()
-    if (res?.data?.records) {
+    if (res?.data?.list) {
+      feedbacks.value = res.data.list
+    } else if (res?.data?.records) {
       feedbacks.value = res.data.records
     } else if (res?.records) {
       feedbacks.value = res.records

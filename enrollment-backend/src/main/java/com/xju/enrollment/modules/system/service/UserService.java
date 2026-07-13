@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
 
     private final UserMapper userMapper;
@@ -67,6 +69,7 @@ public class UserService {
         return UserVO.from(user);
     }
 
+    @Transactional
     public void updateProfile(Long userId, UserVO vo) {
         User user = userMapper.selectById(userId);
         if (user == null) {
@@ -114,6 +117,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public void register(RegisterRequest request) {
         // Only STUDENT or TEACHER can register
         if (!"STUDENT".equals(request.role()) && !"TEACHER".equals(request.role())) {
@@ -151,6 +155,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public void promoteToAdmin(Long userId, Long operatorCollegeId) {
         User user = userMapper.selectById(userId);
         if (user == null) {
@@ -181,6 +186,7 @@ public class UserService {
         userMapper.updateById(user);
     }
 
+    @Transactional
     public void deleteUser(Long userId, Long operatorCollegeId) {
         User user = userMapper.selectById(userId);
         if (user == null) {
@@ -193,6 +199,7 @@ public class UserService {
         userMapper.updateById(user);
     }
 
+    @Transactional
     public void toggleUserStatus(Long userId, String status, Long operatorId) {
         User target = userMapper.selectById(userId);
         if (target == null) throw new BusinessException("用户不存在");
@@ -216,6 +223,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public void resetPassword(Long userId, Long operatorId) {
         User target = userMapper.selectById(userId);
         if (target == null) throw new BusinessException("用户不存在");
@@ -275,6 +283,7 @@ public class UserService {
         return userMapper.selectList(null);
     }
 
+    @Transactional
     public void promoteToRole(Long userId, String role) {
         User user = userMapper.selectById(userId);
         if (user == null) throw new BusinessException("用户不存在");
@@ -291,6 +300,7 @@ public class UserService {
         userMapper.updateById(user);
     }
 
+    @Transactional
     public void setUserStatus(Long userId, String status) {
         User user = userMapper.selectById(userId);
         if (user == null) throw new BusinessException("用户不存在");
@@ -298,6 +308,7 @@ public class UserService {
         userMapper.updateById(user);
     }
 
+    @Transactional
     public void resetPasswordByAdmin(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null) throw new BusinessException("用户不存在");
@@ -305,6 +316,7 @@ public class UserService {
         userMapper.updateById(user);
     }
 
+    @Transactional
     public void softDeleteUser(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null) throw new BusinessException("用户不存在");

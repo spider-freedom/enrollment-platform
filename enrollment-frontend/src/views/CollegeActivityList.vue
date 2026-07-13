@@ -187,10 +187,10 @@ const typeOptions = ref<string[]>([])
 
 // ---- 统计 ----
 const stats = computed(() => {
-  const totalCount = list.value.length
-  const active = list.value.filter((a) => a.status === '进行中').length
-  const enrolling = list.value.filter((a) => a.status === '报名中').length
-  const ended = list.value.filter((a) => a.status === '已结束').length
+  const totalCount = total.value
+  const active = list.value.filter((a) => a.status === 'ONGOING').length
+  const enrolling = list.value.filter((a) => a.status === 'PUBLISHED').length
+  const ended = list.value.filter((a) => a.status === 'ENDED').length
   return { total: totalCount, active, enrolling, ended }
 })
 

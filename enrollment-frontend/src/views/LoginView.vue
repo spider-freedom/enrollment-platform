@@ -98,6 +98,7 @@ const roleMap: Record<string, string> = {
 async function handleLogin() {
   if (!form.username) { ElMessage.warning('请输入用户名'); return }
   if (!form.password) { ElMessage.warning('请输入密码'); return }
+  if (!selectedRole.value) { ElMessage.warning('请选择身份'); return }
   loading.value = true
   try {
     await store.login(form.username, form.password)

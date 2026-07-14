@@ -6,7 +6,7 @@
       <div class="policy-list">
         <div v-for="p in filteredPolicies" :key="p.id" class="policy-item">
           <div class="policy-item-left"><div class="policy-icon">📋</div><div class="policy-info"><h3>{{ p.title }}</h3><span class="policy-meta">{{ p.date }} · <span :class="'policy-badge-'+(p.type==='章程'?'red':'gold')">{{ p.type }}</span></span></div></div>
-          <button class="policy-dl-btn">查看详情</button>
+          <a :href="p.url" target="_blank" class="policy-dl-btn">查看详情</a>
         </div>
       </div>
 
@@ -84,15 +84,15 @@ function getTypeClass(t: string) {
 }
 
 const policies = [
-  { id:1, title:'新疆大学2026年普通本科招生章程', type:'章程', date:'2026-04-15', year:2026 },
-  { id:2, title:'新疆大学2026年艺术类专业招生简章', type:'简章', date:'2026-01-10', year:2026 },
-  { id:3, title:'新疆大学2026年高水平运动队招生办法', type:'办法', date:'2026-02-20', year:2026 },
-  { id:4, title:'新疆大学2026年"国家专项计划"招生简章', type:'简章', date:'2026-05-01', year:2026 },
-  { id:5, title:'新疆大学2026年少数民族预科班招生办法', type:'办法', date:'2026-05-15', year:2026 },
-  { id:6, title:'新疆大学2025年录取分数线统计', type:'数据', date:'2025-08-01', year:2025 },
-  { id:7, title:'新疆大学2025年普通本科招生章程', type:'章程', date:'2025-04-10', year:2025 },
-  { id:8, title:'新疆大学2024年录取分数线统计', type:'数据', date:'2024-08-01', year:2024 },
-  { id:9, title:'新疆大学2024年普通本科招生章程', type:'章程', date:'2024-04-10', year:2024 },
+  { id:1, title:'新疆大学2026年普通本科招生章程', type:'章程', date:'2026-05-26', url:'https://welcome.xju.edu.cn/Web/Home/NewsList?r8v36aU_HzL1vTB-ishxkQihEeEVBNgiyu6OIfA6mqA=.shtml' },
+  { id:2, title:'新疆大学2025年普通本科招生章程', type:'章程', date:'2025-05-06', url:'https://welcome.xju.edu.cn/Web/home/Detail?w1_V5THB3TJlfCNztg6Yvq0cSSbgBNpRUMVsWpe2c5g=.shtml' },
+  { id:3, title:'新疆大学2024年普通本科招生章程', type:'章程', date:'2024-05-20', url:'https://welcome.xju.edu.cn/Web/Home/NewsList?r8v36aU_HzL1vTB-ishxkQihEeEVBNgiyu6OIfA6mqA=.shtml' },
+  { id:4, title:'新疆大学2025年艺术类专业招生简章', type:'简章', date:'2025-01-15', url:'https://welcome.xju.edu.cn/' },
+  { id:5, title:'新疆大学2025年高水平运动队招生简章', type:'简章', date:'2025-02-20', url:'https://welcome.xju.edu.cn/' },
+  { id:6, title:'新疆大学2025年"国家专项计划"招生通知', type:'通知', date:'2025-06-01', url:'https://welcome.xju.edu.cn/' },
+  { id:7, title:'新疆大学2025年少数民族预科班招生办法', type:'办法', date:'2025-05-15', url:'https://welcome.xju.edu.cn/' },
+  { id:8, title:'新疆大学2026年第二学士学位招生简章', type:'简章', date:'2026-04-10', url:'https://welcome.xju.edu.cn/' },
+  { id:9, title:'2025年新疆大学各省录取分数统计', type:'数据', date:'2025-08-15', url:'https://welcome.xju.edu.cn/' },
 ]
 const filteredPolicies = policies
 

@@ -91,15 +91,27 @@ const rolePathMap: Record<string, string> = {
   college_admin:'/college/activities', school_admin:'/school/dashboard',
 }
 
+const roleMap: Record<string, string> = {
+  student:'STUDENT', teacher:'TEACHER', college_admin:'COLLEGE_ADMIN', school_admin:'SCHOOL_ADMIN',
+}
+
 async function handleLogin() {
   if (!form.username) { ElMessage.warning('请输入用户名'); return }
   if (!form.password) { ElMessage.warning('请输入密码'); return }
   loading.value = true
   try {
     await store.login(form.username, form.password)
+    const actualRole = store.currentRole
+    if (selectedRole.value && roleMap[selectedRole.value]) {
+      if (roleMap[selectedRole.value] !== actualRole?.toUpperCase()) {
+        store.logout()
+        ElMessage.error('身份不匹配！请选择正确的身份登录')
+        loading.value = false
+        return
+      }
+    }
     ElMessage.success('登录成功')
-    const role = store.currentRole
-    router.push(role ? (rolePathMap[role] || '/student/activities') : '/student/activities')
+    router.push(actualRole ? (rolePathMap[actualRole] || '/student/activities') : '/student/activities')
   } catch (e: any) {
     ElMessage.error(e?.response?.data?.message || e?.message || '登录失败')
   } finally {

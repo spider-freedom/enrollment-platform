@@ -63,9 +63,14 @@
 
 <style scoped>
 /* Hero */
-.hero { position:relative; height:560px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-.hero-bg { position:absolute; inset:0; background:linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%); }
-.hero-bg::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 20%,rgba(163,31,52,0.3),transparent 60%),radial-gradient(circle at 70% 80%,rgba(201,169,110,0.15),transparent 50%); }
+.hero { position:relative; height:600px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.hero-bg { position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%),
+    linear-gradient(135deg, #1a1a2e 0%, #0f2744 25%, #1a3a5c 50%, #2d5a87 75%, #0f3460 100%),
+    radial-gradient(ellipse at 25% 30%, rgba(255,255,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 75% 70%, rgba(201,169,110,0.12) 0%, transparent 50%);
+}
 .hero-content { position:relative; z-index:2; text-align:center; max-width:720px; padding:0 24px; }
 .hero-title { font-size:48px; font-weight:800; color:#fff; margin:0 0 16px; line-height:1.2; }
 .hero-gold { color:#C9A96E; }

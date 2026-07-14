@@ -209,7 +209,7 @@
         <el-descriptions :column="2" border size="small">
           <el-descriptions-item label="提交人">{{ viewRow.userName }}</el-descriptions-item>
           <el-descriptions-item label="角色">
-            {{ viewRow.userRole === 'student' ? '学生' : viewRow.userRole === 'teacher' ? '教师' : viewRow.userRole || '-' }}
+            {{ viewRow.userRole === 'STUDENT' ? '学生' : viewRow.userRole === 'TEACHER' ? '教师' : viewRow.userRole || '-' }}
           </el-descriptions-item>
           <el-descriptions-item label="学院">{{ viewRow.college }}</el-descriptions-item>
           <el-descriptions-item label="活动">{{ viewRow.activityTitle || '-' }}</el-descriptions-item>

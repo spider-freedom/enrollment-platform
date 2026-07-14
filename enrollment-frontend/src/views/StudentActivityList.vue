@@ -177,12 +177,8 @@ function getActivityEmoji(a: any): string {
   if (title.includes('直播') || title.includes('线上')) return '📡'
   if (title.includes('校园') || title.includes('开放日')) return '🏫'
   if (title.includes('夏令营') || title.includes('暑期')) return '⛺'
-  if (title.includes('高考') || title.includes('志愿')) return '📝'
-  if (title.includes('南疆') || title.includes('北疆')) return '🗺️'
-  if (title.includes('短视频') || title.includes('征集')) return '🎬'
-  if (title.includes('总结') || title.includes('表彰')) return '🏆'
   if (title.includes('回访') || title.includes('母校')) return '🎓'
-  return a.type === 'ONLINE' ? '💻' : '📍'
+  return a.type === 'ONLINE' ? '📡' : '🏫'
 }
 
 async function fetchActivities() {

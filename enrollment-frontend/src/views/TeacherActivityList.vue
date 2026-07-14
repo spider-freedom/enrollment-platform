@@ -131,7 +131,7 @@ function getEmoji(a: any): string {
   if (t.includes('短视频')||t.includes('征集')) return '🎬'
   if (t.includes('总结')||t.includes('表彰')) return '🏆'
   if (t.includes('回访')||t.includes('母校')) return '🎓'
-  return a.type === 'ONLINE' ? '💻' : '📍'
+  return a.type === 'ONLINE' ? '📡' : '🏫'
 }
 
 async function fetchActivities() {

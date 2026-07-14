@@ -4,16 +4,19 @@ import { useUserStore } from '@/stores/user'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', redirect: '/login' },
     {
-      path: '/login',
-      name: 'Login',
-      component: () => import('@/views/LoginView.vue'),
-    },
-    {
-      path: '/register',
-      name: 'Register',
-      component: () => import('@/views/RegisterView.vue'),
+      path: '/',
+      component: () => import('@/layouts/PublicLayout.vue'),
+      children: [
+        { path: '', name: 'Home', component: () => import('@/views/HomeView.vue') },
+        { path: 'about', name: 'About', component: () => import('@/views/PlaceholderView.vue') },
+        { path: 'policy', name: 'Policy', component: () => import('@/views/PlaceholderView.vue') },
+        { path: 'majors', name: 'Majors', component: () => import('@/views/PlaceholderView.vue') },
+        { path: 'activities', name: 'Activities', component: () => import('@/views/StudentActivityList.vue') },
+        { path: 'ai-assistant', name: 'AIAssistant', component: () => import('@/views/PlaceholderView.vue') },
+        { path: 'login', name: 'Login', component: () => import('@/views/LoginView.vue') },
+        { path: 'register', name: 'Register', component: () => import('@/views/RegisterView.vue') },
+      ],
     },
     {
       path: '/student',
@@ -75,28 +78,20 @@ const router = createRouter({
 
 router.beforeEach(async (to, _from, next) => {
   const store = useUserStore()
-  if (to.path === '/login' || to.path === '/register') {
-    next()
-    return
-  }
-  if (!store.isLoggedIn) {
-    next('/login')
-    return
-  }
-  // On page refresh, restore user info from token
+  if (to.path === '/login' || to.path === '/register') { next(); return }
+  // Public routes don't require auth
+  const publicPaths = ['/', '/about', '/policy', '/majors', '/activities', '/ai-assistant']
+  if (publicPaths.includes(to.path)) { next(); return }
+  if (!store.isLoggedIn) { next('/login'); return }
   if (!store.userInfo) {
     try { await store.fetchProfile() } catch { store.logout(); next('/login'); return }
   }
   const roleRouteMap: Record<string, string> = {
-    student: '/student',
-    teacher: '/teacher',
-    college_admin: '/college',
-    school_admin: '/school',
+    student:'/student', teacher:'/teacher', college_admin:'/college', school_admin:'/school',
   }
   const allowedPrefix = roleRouteMap[store.currentRole]
   if (allowedPrefix && !to.path.startsWith(allowedPrefix)) {
-    next(allowedPrefix + '/activities')
-    return
+    next(allowedPrefix + '/activities'); return
   }
   next()
 })

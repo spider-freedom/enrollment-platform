@@ -27,8 +27,13 @@
         </div>
 
         <div v-if="selectedProvince" class="score-detail">
-          <h3 style="font-size:18px;font-weight:700;color:#1e293b;margin:0 0 16px">{{ selectedProvince }} - {{ scoreYear }}年</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+          <h3 style="font-size:18px;font-weight:700;color:#1e293b;margin:0 0 12px">{{ selectedProvince }} - {{ scoreYear }}年</h3>
+          <div class="score-major-chips">
+            <span style="font-size:12px;color:#94a3b8;margin-right:4px">专业:</span>
+            <button :class="['score-chip',{active:selectedMajor===''}]" @click="selectedMajor=''">全部</button>
+            <button v-for="m in majorList" :key="m" :class="['score-chip',{active:selectedMajor===m}]" @click="selectedMajor=selectedMajor===m?'':m">{{ m }}</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px">
             <div class="score-col">
               <h4 class="score-col-title score-col-title-blue">理科/物理类</h4>
               <div class="score-mini-table">
@@ -78,8 +83,12 @@ import { policyApi } from '@/api'
 const scoreYear = ref(2025)
 const scoreSearch = ref('')
 const selectedProvince = ref('')
+const selectedMajor = ref('')
 
 const majorList = ['计算机科学与技术','软件工程','电子信息工程','数学与应用数学','化学工程与工艺','英语','法学','机械设计制造','土木工程','经济学','生物技术','旅游管理','新闻传播学','环境工程','思想政治教育']
+
+// Per-major score offsets (热门专业更高分)
+const majorOffsets: Record<string,number> = {'计算机科学与技术':12,'软件工程':10,'电子信息工程':7,'法学':5,'英语':3,'数学与应用数学':1,'经济学':2,'机械设计制造':0,'化学工程与工艺':-2,'土木工程':-3,'新闻传播学':-5,'生物技术':-6,'旅游管理':-8,'环境工程':-9,'思想政治教育':-7}
 
 const filteredProvinces = computed(() => {
   const all = [...new Set((scores[scoreYear.value]||[]).map(s=>s.province))]
@@ -90,11 +99,15 @@ const filteredProvinces = computed(() => {
 const provinceScores = computed(() => {
   const yearData = scores[scoreYear.value]||[]
   const pData = yearData.filter(s=>s.province===selectedProvince.value)
-  const li = pData.filter(s=>s.type==='理科'||s.type==='物理')
-  const wen = pData.filter(s=>s.type==='文科'||s.type==='历史')
+  const liBase = pData.filter(s=>s.type==='理科'||s.type==='物理')
+  const wenBase = pData.filter(s=>s.type==='文科'||s.type==='历史')
+  const baseLi = liBase.length>0 ? liBase[0].score : 0
+  const baseWen = wenBase.length>0 ? wenBase[0].score : 0
+  let majors = majorList
+  if (selectedMajor.value) majors = [selectedMajor.value]
   return {
-    li: li.map((_,i)=>({major:majorList[i]||'其他',score:li[i]?.score||'-',rank:li[i]?.rank||'-'})),
-    wen: wen.map((_,i)=>({major:majorList[i]||'其他',score:wen[i]?.score||'-',rank:wen[i]?.rank||'-'})),
+    li: baseLi ? majors.map(m=>({major:m,score:baseLi+(majorOffsets[m]||0),rank:'-'})).sort((a,b)=>b.score-a.score) : [],
+    wen: baseWen ? majors.map(m=>({major:m,score:baseWen+(majorOffsets[m]||0),rank:'-'})).sort((a,b)=>b.score-a.score) : [],
   }
 })
 
@@ -178,6 +191,7 @@ const faqs = [
 .score-search { width:100%; padding:10px 14px; border:1px solid #e2e8f0; border-radius:12px; font-size:13px; background:#f8fafc; outline:none; box-sizing:border-box; margin-bottom:12px; }
 .score-search:focus { border-color:#A31F34; box-shadow:0 0 0 3px rgba(163,31,52,0.1); }
 .score-province-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.score-major-chips { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:12px 0; border-top:1px solid #f1f5f9; border-bottom:1px solid #f1f5f9; }
 .score-chip { padding:6px 14px; border:1px solid #e2e8f0; border-radius:8px; background:#fff; font-size:12px; color:#64748b; cursor:pointer; transition:all 0.2s; }
 .score-chip:hover { border-color:#A31F34; color:#A31F34; }
 .score-chip.active { background:#A31F34; color:#fff; border-color:#A31F34; }

@@ -6,7 +6,7 @@ CREATE DATABASE IF NOT EXISTS enrollment_platform
 USE enrollment_platform;
 
 -- 用户表
-CREATE TABLE sys_user (
+CREATE TABLE IF NOT EXISTS sys_user (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE COMMENT '用户名(学号/工号)',
     password VARCHAR(255) NOT NULL COMMENT '加密密码',
@@ -28,7 +28,7 @@ CREATE TABLE sys_user (
 ) COMMENT '用户表';
 
 -- 活动表
-CREATE TABLE activity (
+CREATE TABLE IF NOT EXISTS activity (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(200) NOT NULL COMMENT '活动标题',
     description TEXT COMMENT '活动简介(富文本)',
@@ -61,7 +61,7 @@ CREATE TABLE activity (
 ) COMMENT '活动表';
 
 -- 活动自定义字段配置
-CREATE TABLE activity_field_config (
+CREATE TABLE IF NOT EXISTS activity_field_config (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     activity_id BIGINT NOT NULL COMMENT '活动ID',
     field_name VARCHAR(100) NOT NULL COMMENT '字段名',
@@ -75,7 +75,7 @@ CREATE TABLE activity_field_config (
 ) COMMENT '活动自定义字段配置';
 
 -- 报名表
-CREATE TABLE enrollment (
+CREATE TABLE IF NOT EXISTS enrollment (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     activity_id BIGINT NOT NULL COMMENT '活动ID',
     user_id BIGINT NOT NULL COMMENT '报名人ID',
@@ -100,7 +100,7 @@ CREATE TABLE enrollment (
 ) COMMENT '报名表';
 
 -- 反馈表
-CREATE TABLE feedback (
+CREATE TABLE IF NOT EXISTS feedback (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     activity_id BIGINT NOT NULL COMMENT '活动ID',
     user_id BIGINT NOT NULL COMMENT '提交人ID',
@@ -122,7 +122,7 @@ CREATE TABLE feedback (
 ) COMMENT '活动反馈表';
 
 -- 反馈附件表
-CREATE TABLE feedback_attachment (
+CREATE TABLE IF NOT EXISTS feedback_attachment (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     feedback_id BIGINT NOT NULL COMMENT '关联反馈ID',
     file_name VARCHAR(255) NOT NULL COMMENT '原始文件名',
@@ -137,7 +137,7 @@ CREATE TABLE feedback_attachment (
 ) COMMENT '反馈附件表';
 
 -- 招生政策表
-CREATE TABLE policy (
+CREATE TABLE IF NOT EXISTS policy (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(200) NOT NULL COMMENT '政策标题',
     content TEXT COMMENT '政策内容(Markdown)',

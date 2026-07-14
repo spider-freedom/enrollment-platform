@@ -10,7 +10,7 @@ const router = createRouter({
       children: [
         { path: '', name: 'Home', component: () => import('@/views/HomeView.vue') },
         { path: 'about', name: 'About', component: () => import('@/views/AboutView.vue') },
-        { path: 'policy', name: 'Policy', component: () => import('@/views/PlaceholderView.vue') },
+        { path: 'policy', name: 'Policy', component: () => import('@/views/PolicyView.vue') },
         { path: 'majors', name: 'Majors', component: () => import('@/views/MajorsView.vue') },
         { path: 'activities', name: 'Activities', component: () => import('@/views/StudentActivityList.vue') },
         { path: 'ai-assistant', name: 'AIAssistant', component: () => import('@/views/AIAssistantView.vue') },

@@ -52,15 +52,13 @@ public class ActivityController {
 
     @GetMapping("/list/student")
     public ApiResponse<PageResult<ActivityVO>> listForStudent(ActivityListQuery query) {
-        Long userId = Long.valueOf(SecurityUtils.getCurrentUserId());
-        PageResult<ActivityVO> result = activityService.listForStudent(query, userId);
+        PageResult<ActivityVO> result = activityService.listForStudent(query, null);
         return ApiResponse.ok(result);
     }
 
     @GetMapping("/list/teacher")
     public ApiResponse<PageResult<ActivityVO>> listForTeacher(ActivityListQuery query) {
-        Long userId = Long.valueOf(SecurityUtils.getCurrentUserId());
-        PageResult<ActivityVO> result = activityService.listForTeacher(query, userId);
+        PageResult<ActivityVO> result = activityService.listForTeacher(query, null);
         return ApiResponse.ok(result);
     }
 

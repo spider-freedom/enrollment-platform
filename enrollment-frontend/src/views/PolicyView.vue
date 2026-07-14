@@ -19,10 +19,8 @@
             <button v-for="y in [2025,2024,2023]" :key="y" :class="['score-tab',{active:scoreYear===y}]" @click="scoreYear=y">{{ y }}年</button>
           </div>
           <div style="display:flex;gap:8px">
-            <button :class="['score-tab',{active:scoreType==='全部'}]" @click="scoreType='全部'">全部</button>
-            <button :class="['score-tab score-tab-blue',{active:scoreType==='物理'||scoreType==='理科'}]" @click="scoreType='物理'">物理/理科</button>
-            <button :class="['score-tab score-tab-red',{active:scoreType==='历史'||scoreType==='文科'}]" @click="scoreType='历史'">历史/文科</button>
-            <button :class="['score-tab',{active:scoreType==='综合'}]" @click="scoreType='综合'">综合</button>
+            <button :class="['score-tab score-tab-blue',{active:scoreType==='物理'}]" @click="scoreType='物理'">物理/理科</button>
+            <button :class="['score-tab score-tab-red',{active:scoreType==='历史'}]" @click="scoreType='历史'">历史/文科</button>
           </div>
         </div>
         <div class="score-table-wrap">

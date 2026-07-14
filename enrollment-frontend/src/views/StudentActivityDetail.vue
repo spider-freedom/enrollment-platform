@@ -183,25 +183,6 @@
               <el-form-item label="我的学院" required>
                 <el-input :model-value="myCollege" disabled />
               </el-form-item>
-              <el-form-item label="招生学校" required>
-                <div class="school-suggest-wrapper">
-                  <el-input
-                    v-model="targetSchool"
-                    placeholder="请输入要招生的目标学校名称（高中）"
-                    @input="suggestSchool"
-                  />
-                  <div v-if="schoolSuggestions.length > 0" class="suggest-dropdown">
-                    <div
-                      v-for="(school, idx) in schoolSuggestions"
-                      :key="idx"
-                      class="suggest-item"
-                      @click="selectSchool(school)"
-                    >
-                      {{ school }}
-                    </div>
-                  </div>
-                </div>
-              </el-form-item>
               <el-form-item label="个人简介">
                 <el-input
                   v-model="briefIntro"

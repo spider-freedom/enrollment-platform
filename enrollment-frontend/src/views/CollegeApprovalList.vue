@@ -117,7 +117,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="activityTitle" label="活动" min-width="180" show-overflow-tooltip />
-      <el-table-column prop="targetSchool" label="招生学校" width="160" show-overflow-tooltip />
       <el-table-column prop="gpa" label="GPA" width="80">
         <template #default="{ row }">
           {{ row.gpa != null ? row.gpa : '-' }}

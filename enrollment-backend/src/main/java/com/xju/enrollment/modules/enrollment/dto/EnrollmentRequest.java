@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record EnrollmentRequest(
         @NotNull Long activityId,
-        @NotBlank String targetSchool,
+        String targetSchool,
         String intro,
         String contact
 ) {

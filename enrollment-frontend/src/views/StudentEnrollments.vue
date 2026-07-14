@@ -13,7 +13,6 @@
     >
       <el-table-column prop="activityTitle" label="活动名称" min-width="200" />
       <el-table-column prop="collegeName" label="学院" width="160" />
-      <el-table-column prop="targetSchool" label="招生学校" width="180" />
       <el-table-column prop="status" label="状态" width="100">
         <template #default="{ row }">
           <el-tag :type="statusType(row.status)">{{ statusLabel(row.status) }}</el-tag>

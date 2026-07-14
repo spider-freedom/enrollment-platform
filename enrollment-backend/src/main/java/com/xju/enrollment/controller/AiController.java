@@ -3,10 +3,14 @@ package com.xju.enrollment.controller;
 import com.xju.enrollment.ai.FeedbackAnalyzer;
 import com.xju.enrollment.ai.SchoolNameNormalizer;
 import com.xju.enrollment.common.ApiResponse;
+import com.xju.enrollment.entity.Policy;
+import com.xju.enrollment.mapper.PolicyMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +23,13 @@ public class AiController {
     private final SchoolNameNormalizer schoolNameNormalizer;
     private final FeedbackAnalyzer feedbackAnalyzer;
     private final ChatLanguageModel chatLanguageModel;
+    private final PolicyMapper policyMapper;
+
+    @GetMapping("/policy/list")
+    public ApiResponse<List<Policy>> policyList() {
+        return ApiResponse.ok(policyMapper.selectList(
+            new LambdaQueryWrapper<Policy>().orderByDesc(Policy::getCreateTime)));
+    }
 
     @GetMapping("/school/suggest")
     public ApiResponse<List<String>> suggest(@RequestParam(defaultValue = "") String keyword) {

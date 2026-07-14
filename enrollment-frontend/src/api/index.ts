@@ -94,8 +94,8 @@ export const collegeUserApi = {
 
 // Policy
 export const policyApi = {
-  list: () => request.get('/policy/list'),
-  getById: (id: number) => request.get(`/policy/${id}`),
+  list: () => request.get('/ai/policy/list'),
+  getById: (id: number) => request.get(`/ai/policy/${id}`),
   create: (data: any) => request.post('/policy/create', data),
   update: (id: number, data: any) => request.put(`/policy/update/${id}`, data),
   delete: (id: number) => request.delete(`/policy/delete/${id}`),

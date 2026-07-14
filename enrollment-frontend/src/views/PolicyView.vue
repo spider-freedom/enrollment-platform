@@ -60,8 +60,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { policyApi } from '@/api'
+import { ref, computed } from 'vue'
+import policiesData from '@/data/policies.json'
 
 const scoreYear = ref(2025)
 const scoreType = ref('全部')
@@ -95,16 +95,12 @@ function getTypeClass(t: string) {
   return 'score-badge-gold'
 }
 
-const policies = ref<any[]>([])
+const policies = ref<any[]>(policiesData)
 const detailVisible = ref(false)
 const detailPolicy = ref<any>(null)
 const renderedContent = computed(() => {
   if (!detailPolicy.value?.content) return ''
   return detailPolicy.value.content.replace(/\n/g,'<br>').replace(/## (.*)/g,'<h3>$1</h3>')
-})
-
-onMounted(async () => {
-  try { const res: any = await policyApi.list(); policies.value = res?.data||res||[] } catch {}
 })
 
 function openDetail(p: any) {

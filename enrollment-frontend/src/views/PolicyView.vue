@@ -3,13 +3,6 @@
     <div class="policy-hero"><h1>招生政策</h1><p>新疆大学2026年本科招生政策与历年录取参考</p></div>
     <div class="policy-body">
 
-      <!-- Policy Filter -->
-      <div class="policy-filter">
-        <div class="policy-filter-label">年份筛选</div>
-        <div class="policy-filter-chips">
-          <button v-for="y in years" :key="y" :class="['policy-chip',{active:selected===y}]" @click="selected=y">{{ y }}年</button>
-        </div>
-      </div>
       <div class="policy-list">
         <div v-for="p in filteredPolicies" :key="p.id" class="policy-item">
           <div class="policy-item-left"><div class="policy-icon">📋</div><div class="policy-info"><h3>{{ p.title }}</h3><span class="policy-meta">{{ p.date }} · <span :class="'policy-badge-'+(p.type==='章程'?'red':'gold')">{{ p.type }}</span></span></div></div>
@@ -52,9 +45,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-const selected = ref(2026)
 const scoreYear = ref(2025)
-const years = [2026, 2025, 2024]
 
 // 真实数据来源: 各省教育考试院 2023-2025
 const scores: Record<number, {province:string,type:string,score:number,rank:string}[]> = {
@@ -82,7 +73,7 @@ const policies = [
   { id:8, title:'新疆大学2024年录取分数线统计', type:'数据', date:'2024-08-01', year:2024 },
   { id:9, title:'新疆大学2024年普通本科招生章程', type:'章程', date:'2024-04-10', year:2024 },
 ]
-const filteredPolicies = computed(() => policies.filter(p=>p.year===selected))
+const filteredPolicies = policies
 
 const faqs = [
   { q:'新疆大学是一所什么样的大学？', a:'新疆大学是国家"双一流"建设高校（马克思主义理论、化学、计算机科学与技术三个双一流学科）、部省合建高校、国家"211工程"重点建设高校。学校始建于1924年，是新疆办学规模最大、学科门类最齐全的综合性大学。' },

@@ -1,6 +1,6 @@
 # 新疆大学招生宣传报名平台
 
-基于 **Spring Boot + Vue 3** 的招生宣传报名管理系统，支撑活动发布、报名、审批、反馈全流程，集成 AI 辅助分析。
+基于 **Spring Boot + Vue 3** 的招生宣传报名管理系统，含公开招生网站 + 内部管理后台，支撑活动发布、报名、审批、反馈全流程，集成 AI 辅助分析。
 
 ## 技术栈
 
@@ -8,10 +8,11 @@
 |------|------|------|
 | 后端语言 | Java | 17 |
 | 后端框架 | Spring Boot | 3.2.5 |
-| 安全框架 | Spring Security + JWT | — |
+| 安全框架 | Spring Security + JWT (JJWT) | 0.12.5 |
 | ORM | MyBatis Plus | 3.5.7 |
 | AI 框架 | LangChain4j (DeepSeek) | 0.35.0 |
 | API 文档 | Knife4j (Swagger) | 4.5.0 |
+| Excel | Apache POI | 5.2.5 |
 | 前端框架 | Vue 3 + TypeScript | 3.4+ / 5.4+ |
 | UI 组件 | Element Plus | 2.7+ |
 | 图表 | ECharts | 5.5+ |
@@ -38,7 +39,7 @@ mysql -u root -p123456 < database/init.sql
 
 ```bash
 cd enrollment-backend
-mvn spring-boot:run
+mvn clean spring-boot:run
 # 启动于 http://localhost:8080
 ```
 
@@ -55,43 +56,48 @@ npm run dev
 
 | 服务 | 地址 |
 |------|------|
-| 前端界面 | http://localhost:3000 |
+| 公开首页 | http://localhost:3000 |
+| 登录 | http://localhost:3000/login |
 | 后端 API | http://localhost:8080 |
 | 接口文档 | http://localhost:8080/doc.html |
-| 健康检查 | http://localhost:8080/actuator/health |
 
 ## 项目结构
 
 ```
 enrollment-platform/
 ├── database/
-│   └── init.sql                       # 数据库初始化（6 张表 + 种子数据）
-├── enrollment-backend/                # Spring Boot 后端
+│   └── init.sql                         # 数据库初始化（7 张表 + 种子数据）
+├── doc/
+│   ├── architecture.md                  # 架构设计文档
+│   └── sprint-plan.md                   # 团队开发计划
+├── enrollment-backend/                  # Spring Boot 后端
 │   └── src/main/java/com/xju/enrollment/
-│       ├── ai/                        # AI 模块（LangChain4j + DeepSeek）
-│       ├── common/                    # 通用类（ApiResponse / PageResult / 异常处理）
-│       ├── config/                    # 配置（CORS / MyBatisPlus / MetaObjectHandler）
-│       ├── controller/                # AI 控制器
-│       ├── entity/                    # 6 个实体类
-│       ├── mapper/                    # MyBatis-Plus Mapper 接口
+│       ├── ai/                          # AI 模块（LangChain4j + DeepSeek）
+│       ├── common/                      # 通用类（响应/分页/异常/Excel）
+│       ├── config/                      # 配置（CORS/MyBatisPlus/MetaHandler/WebMvc）
+│       ├── controller/                  # 控制器（AI控制器含政策接口）
+│       ├── entity/                      # 7 个实体类（含 Policy）
+│       ├── mapper/                      # 7 个 Mapper 接口
 │       ├── modules/
-│       │   ├── activity/              # 活动管理（CRUD + 分类 + 级别 + Banner）
-│       │   ├── enrollment/            # 报名管理（提交 / 撤回 / 导出）
-│       │   ├── feedback/              # 反馈管理（提交 / 回复 / 附件 / 导出）
-│       │   ├── statistics/            # 数据大屏（仪表盘 / 学院分布 / 评分）
-│       │   ├── system/                # 用户管理 + 认证 + 注册
-│       │   └── workflow/              # 审批流程（院级 → 校级两级审批）
-│       └── security/                  # JWT + Spring Security（无状态会话）
-├── enrollment-frontend/               # Vue 3 前端
+│       │   ├── activity/                # 活动管理（CRUD + 分类 + 级别 + Banner）
+│       │   ├── enrollment/              # 报名管理（提交/撤回/导出）
+│       │   ├── feedback/                # 反馈管理（提交/回复/附件/导出）
+│       │   ├── statistics/              # 数据统计（仪表盘/学院分布/评分）
+│       │   ├── system/                  # 用户管理 + 认证 + 注册
+│       │   └── workflow/                # 审批流程（院级→校级两级审批）
+│       └── security/                    # JWT + Spring Security
+├── enrollment-frontend/                 # Vue 3 前端
 │   └── src/
-│       ├── api/                       # Axios 封装 + 11 个 API 模块
-│       ├── layouts/                   # MainLayout（侧边栏 / 导航 / 通知）
-│       ├── router/                    # 路由 + 角色守卫
-│       ├── stores/                    # Pinia 用户状态管理
-│       ├── types/                     # TypeScript 接口定义
-│       ├── utils/                     # 常量工具（状态 / 类型 / 角色映射）
-│       └── views/                     # 31 个页面组件
-└── doc/                               # 文档资源
+│       ├── api/                         # Axios 封装 + 12 个 API 模块
+│       ├── data/                        # 政策 JSON 数据
+│       ├── layouts/                     # PublicLayout(公开) + MainLayout(管理)
+│       ├── router/                      # 路由（公开 + 4 角色 + 守卫）
+│       ├── stores/                      # Pinia 用户状态
+│       ├── styles/                      # 主题 CSS（XJU 红色系）
+│       ├── types/                       # TS 接口
+│       ├── utils/                       # 常量（状态映射 + 日期驱动）
+│       └── views/                       # 38 个页面组件
+└── start.bat
 ```
 
 ## 数据库设计
@@ -99,46 +105,55 @@ enrollment-platform/
 | 表 | 说明 | 关键字段 |
 |------|------|------|
 | `sys_user` | 用户表 | username, role(STUDENT/TEACHER/COLLEGE_ADMIN/SCHOOL_ADMIN), college_id |
-| `activity` | 活动表 | type(ONLINE/OFFLINE), category(宣讲会/开放日/…), level(院级/校级), status(DRAFT/PUBLISHED/ONGOING/ENDED), college_id |
-| `activity_field_config` | 活动自定义字段 | field_name, field_type, required |
-| `enrollment` | 报名表 | activity_id, user_id, status(SUBMITTED/APPROVING/APPROVED/REJECTED/WITHDRAWN), target_school |
-| `feedback` | 反馈表 | activity_id, user_id, content, rating(1-5), status(SUBMITTED/REPLIED/CLOSED) |
+| `activity` | 活动表 | type(ONLINE/OFFLINE), category(9种), level(院级/校级), college_id |
+| `enrollment` | 报名表 | activity_id, user_id, status(SUBMITTED→APPROVING→APPROVED) |
+| `feedback` | 反馈表 | content, rating(1-5), status(SUBMITTED/REPLIED/CLOSED) |
 | `feedback_attachment` | 反馈附件表 | feedback_id, file_name, file_path |
+| `activity_field_config` | 活动自定义字段 | field_name, field_type, required |
+| `policy` | 招生政策表 | title, content, type(章程/简章/通知/办法/数据) |
 
 ## 种子数据
 
-- **45 个用户**：8 名学生 + 3 名教师 + 10 名学院管理员 + 2 名学校管理员（+ 旧数据 22 个）
-- **24 个活动**：16 个院级活动（覆盖 8 个学院）+ 8 个校级活动
-- **21 条报名记录**：覆盖 SUBMITTED / APPROVING / APPROVED / REJECTED 各状态
+- **45 个用户**：11 名学生 + 5 名教师 + 12 名学院管理员 + 2 名学校管理员
+- **24 个活动**：16 个院级（8 个学院）+ 8 个校级
+- **21 条报名记录**：覆盖 SUBMITTED / APPROVING / APPROVED / REJECTED
 - **7 条反馈**：含已回复和未回复
+- **6 条政策**：2024-2026 年招生章程、简章、通知（新疆大学官网真实数据）
 
-## 功能模块
+## 页面结构
 
-### 学生端 / 教师端
-- 活动列表（Banner 轮播 + 分类筛选 + 搜索 + 分页）
-- 活动详情（名额进度条 + 每校限额 + 活动级别）
-- 报名提交（目标学院 + 个人简介 + AI 学校名建议）
-- 已报名活动（查看审批进度 + 撤回报名）
-- 提交反馈（评分 + 内容 + 院系信息）
-- 我的反馈（查看管理员回复）
+### 公开前台（无需登录）
 
-### 学院管理员端
-- **活动管理**：创建 / 编辑 / 删除本院院级活动（自动挂载学院归属）
-- **报名审批**：审批本院学生报名（通过 / 驳回 + 批量操作 + AI 建议）
-- **反馈管理**：查看本院反馈 + 回复 + 附件上传
-- **用户管理**：本院用户增删改查 + 提升 / 降级管理员 + 状态开关 + CSV 导入 + 分页
+| 路径 | 页面 | 说明 |
+|------|------|------|
+| `/` | 首页 | Hero 大屏 + 统计数字 + 特色卡片 + CTA |
+| `/about` | 学校概况 | 校史 + 三大校区 + 校训 |
+| `/policy` | 招生政策 | 政策列表（数据库）+ 详情弹窗 + 历年录取分数（省份/年份/文理切换） |
+| `/majors` | 专业查询 | 搜索 + 学院筛选 chips + 3 列卡片 |
+| `/activities` | 活动报名 | 公开活动列表（浏览无需登录，报名需登录） |
+| `/ai-assistant` | AI 咨询 | 聊天界面（气泡 + 建议 chips + 输入框） |
+| `/login` | 登录 | 角色选择器（必须选身份）+ 密码显示切换 |
+| `/register` | 注册 | 学生/教师注册 |
 
-### 学校管理员端（招生办）
-- **数据大屏**：统计卡片 + 活动分类统计 + 学院报名分布 + 评分分布
-- **活动管理**：全校活动 CRUD + 院级/校级设置 + Banner 轮播 + Excel 导出
-- **报名审批**：全校范围审批（院级审批通过后流转至校级）+ 按学院筛选
-- **反馈管理**：全校反馈查看 + 回复 + AI 情感分析
-- **用户管理**：全校用户 + 权限提升（学院/学校管理员）+ 分页
+### 管理后台（需登录）
 
-### AI 功能（LangChain4j + DeepSeek API）
-- 学校名称 NLP 标准化 / 模糊匹配建议
-- AI 审批建议（分析 GPA + 目标学校 + 报名数据给出建议 / 理由 / 风险）
-- 反馈情感分析 + 摘要提取
+| 角色 | 路径 | 功能 |
+|------|------|------|
+| 学生 | `/student` | 个人主页（头像横幅 + 我的活动 + 我的反馈） |
+| | `/student/activities` | 活动列表 + 报名 |
+| | `/student/enrollments` | 已报名活动 + 撤回 |
+| | `/student/my-feedback` | 我的反馈 + 查看回复 |
+| | `/student/profile` | 个人信息 + 头像上传 + 密码修改 |
+| 教师 | `/teacher/*` | 同学生端结构 |
+| 学院管理员 | `/college/activities` | 本院院级活动 CRUD |
+| | `/college/approvals` | 审批本院报名（通过/驳回/批量） |
+| | `/college/feedbacks` | 本院反馈管理 + 回复 |
+| | `/college/users` | 本院用户管理 + CSV 导入 |
+| 学校管理员 | `/school/dashboard` | 数据大屏（统计卡片 + 反馈 + 热门活动） |
+| | `/school/activities` | 全校活动 CRUD + 院级/校级 + Banner + 导出 |
+| | `/school/approvals` | 全校审批（APPROVING 状态） |
+| | `/school/feedbacks` | 全校反馈管理 + 回复 |
+| | `/school/users` | 全校用户管理 + 权限设置 |
 
 ### 审批流程
 ```
@@ -146,6 +161,16 @@ enrollment-platform/
               ↓ 驳回                    ↓ 驳回
           REJECTED                  REJECTED
 ```
+
+### AI 功能（LangChain4j + DeepSeek，需配置 API Key）
+- 学校名称 NLP 标准化 / 模糊匹配建议
+- AI 审批建议（GPA + 目标学校 + 报名数据分析）
+- 反馈情感分析 + 摘要提取
+
+### 设计系统
+- 主色：新疆大学红 `#A31F34` | 辅色：金 `#C9A96E` | 蓝 `#2E7FB9`
+- 公开前台：红色顶栏 + 白色内容 + 深灰页脚
+- 管理后台：白色侧边栏 + 角色色激活态 + 红色顶栏（日期显示）
 
 ## 测试账号
 
@@ -160,6 +185,7 @@ enrollment-platform/
 | `tch02` | 教师 | 数学与系统科学学院 |
 | `col01` | 学院管理员 | 计算机科学与技术学院 |
 | `col02` | 学院管理员 | 数学与系统科学学院 |
+| `col_cs` | 学院管理员 | 计算机科学与技术学院 |
 | `col_math` | 学院管理员 | 数学与系统科学学院 |
 | `col_info` | 学院管理员 | 信息科学与工程学院 |
 | `col_chem` | 学院管理员 | 化学化工学院 |

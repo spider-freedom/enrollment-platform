@@ -23,6 +23,7 @@ const router = createRouter({
       component: () => import('@/layouts/MainLayout.vue'),
       meta: { role: 'student' },
       children: [
+        { path: '', name: 'StudentDashboard', component: () => import('@/views/StudentDashboard.vue') },
         { path: 'activities', name: 'StudentActivities', component: () => import('@/views/StudentActivityList.vue') },
         { path: 'activities/:id', name: 'StudentActivityDetail', component: () => import('@/views/StudentActivityDetail.vue') },
         { path: 'enrollments', name: 'StudentEnrollments', component: () => import('@/views/StudentEnrollments.vue') },
@@ -63,7 +64,7 @@ const router = createRouter({
       component: () => import('@/layouts/MainLayout.vue'),
       meta: { role: 'school_admin' },
       children: [
-        { path: 'dashboard', name: 'SchoolDashboard', component: () => import('@/views/SchoolDashboard.vue') },
+        { path: 'dashboard', name: 'SchoolDashboard', component: () => import('@/views/AdminDashboard.vue') },
         { path: 'activities', name: 'SchoolActivities', component: () => import('@/views/SchoolActivityList.vue') },
         { path: 'activities/:id', name: 'SchoolActivityDetail', component: () => import('@/views/SchoolActivityCreate.vue') },
         { path: 'activities/create', name: 'SchoolActivityCreate', component: () => import('@/views/SchoolActivityCreate.vue') },

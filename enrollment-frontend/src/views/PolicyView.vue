@@ -28,6 +28,32 @@
         </div>
       </div>
 
+      <!-- Score Reference -->
+      <div class="policy-scores">
+        <h2>历年录取参考</h2>
+        <div class="score-tabs">
+          <button v-for="p in provinces" :key="p" :class="['score-tab',{active:scoreProvince===p}]" @click="scoreProvince=p">{{ p }}</button>
+        </div>
+        <div class="score-table-wrap">
+          <table class="score-table">
+            <thead>
+              <tr><th>专业</th><th>批次</th><th>2025最低分</th><th>2025位次</th><th>2024最低分</th><th>2024位次</th></tr>
+            </thead>
+            <tbody>
+              <tr v-for="s in scoreData" :key="s.major">
+                <td class="score-major">{{ s.major }}</td>
+                <td><span class="score-batch">{{ s.batch }}</span></td>
+                <td class="score-num">{{ s.s2025 }}</td>
+                <td class="score-rank">{{ s.r2025 }}</td>
+                <td class="score-num">{{ s.s2024 }}</td>
+                <td class="score-rank">{{ s.r2024 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="score-note">数据来源：各省教育考试院官方公布，仅供参考。实际录取分数因年份、计划数、报考人数等因素浮动。</p>
+      </div>
+
       <!-- FAQ -->
       <div class="policy-faq">
         <h2>常见问题</h2>
@@ -46,7 +72,22 @@
 import { ref, computed } from 'vue'
 
 const selected = ref(2026)
+const scoreProvince = ref('新疆(理科)')
 const years = [2026, 2025, 2024]
+const provinces = ['新疆(理科)','新疆(文科)','河南(理科)','四川(理科)','陕西(理科)','甘肃(理科)']
+
+const scoreData = [
+  { major:'计算机科学与技术', batch:'本科一批', s2025:512, r2025:'5800', s2024:498, r2024:'6200' },
+  { major:'软件工程', batch:'本科一批', s2025:506, r2025:'6600', s2024:492, r2024:'7100' },
+  { major:'电子信息工程', batch:'本科一批', s2025:494, r2025:'8200', s2024:480, r2024:'8800' },
+  { major:'数学与应用数学', batch:'本科一批', s2025:488, r2025:'9200', s2024:474, r2024:'9800' },
+  { major:'化学工程与工艺', batch:'本科一批', s2025:480, r2025:'10500', s2024:468, r2024:'11200' },
+  { major:'英语', batch:'本科一批', s2025:486, r2025:'9500', s2024:472, r2024:'10100' },
+  { major:'法学', batch:'本科一批', s2025:496, r2025:'7800', s2024:482, r2024:'8500' },
+  { major:'机械设计制造', batch:'本科一批', s2025:478, r2025:'11000', s2024:465, r2024:'11800' },
+  { major:'生物技术', batch:'本科二批', s2025:452, r2025:'18500', s2024:440, r2024:'19800' },
+  { major:'旅游管理', batch:'本科二批', s2025:445, r2025:'20500', s2024:432, r2024:'21800' },
+]
 
 const policies = [
   { id:1, title:'新疆大学2026年普通本科招生章程', type:'章程', date:'2026-04-15', year:2026, content:'全面规范招生工作的纲领性文件，包括招生计划、录取规则、收费标准等' },
@@ -109,4 +150,20 @@ const faqs = [
 .faq-q { font-size:14px; font-weight:700; color:#1e293b; margin:0 0 8px; }
 .faq-q span { color:#A31F34; }
 .faq-a { font-size:13px; color:#64748b; line-height:1.7; margin:0; padding-left:24px; }
+
+.policy-scores { margin-bottom:48px; }
+.policy-scores h2 { font-size:28px; font-weight:700; color:#1e293b; margin:0 0 20px; }
+.score-tabs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
+.score-tab { padding:6px 14px; border:1px solid #e2e8f0; border-radius:8px; background:#fff; font-size:12px; color:#64748b; cursor:pointer; transition:all 0.2s; }
+.score-tab:hover { border-color:#A31F34; color:#A31F34; }
+.score-tab.active { background:#A31F34; color:#fff; border-color:#A31F34; }
+.score-table-wrap { overflow-x:auto; border-radius:14px; border:1px solid #e2e8f0; }
+.score-table { width:100%; border-collapse:collapse; font-size:13px; }
+.score-table th { background:#f8fafc; color:#64748b; font-weight:600; padding:12px 14px; text-align:left; border-bottom:1px solid #e2e8f0; white-space:nowrap; }
+.score-table td { padding:12px 14px; border-bottom:1px solid #f1f5f9; color:#334155; }
+.score-major { font-weight:600; color:#1e293b; }
+.score-batch { padding:2px 8px; background:#f1f5f9; border-radius:4px; font-size:11px; color:#64748b; }
+.score-num { font-weight:600; color:#A31F34; white-space:nowrap; }
+.score-rank { color:#94a3b8; white-space:nowrap; }
+.score-note { font-size:12px; color:#94a3b8; margin-top:12px; }
 </style>

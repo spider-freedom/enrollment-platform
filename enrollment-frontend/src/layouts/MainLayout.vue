@@ -1,80 +1,90 @@
 <template>
-  <el-container class="main-layout">
-    <el-header class="header">
-      <div class="header-left">
-        <span class="header-logo">🏫</span>
-        <h2>新疆大学招生宣传报名平台</h2>
-      </div>
-      <div class="header-right">
-        <el-popover placement="bottom-end" :width="360" trigger="click">
-          <template #reference>
-            <div class="notify-btn">
-              <el-badge :value="unreadCount" :hidden="unreadCount === 0">
-                <el-icon :size="20"><Bell /></el-icon>
-              </el-badge>
-            </div>
-          </template>
-          <div class="notify-header">
-            <span>消息通知</span>
-            <span class="notify-clear" @click="markAllRead()">全部已读</span>
-          </div>
-          <div class="notify-list">
-            <div v-for="(n,i) in filteredNotifications" :key="i" class="notify-item" @click="handleNotifyClick(n)">
-              <span class="notify-icon">{{ n.icon }}</span>
-              <div class="notify-body">
-                <div class="notify-title">{{ n.title }}</div>
-                <div class="notify-desc">{{ n.desc }}</div>
-                <div class="notify-time">{{ n.time }}</div>
-              </div>
-            </div>
-            <div v-if="filteredNotifications.length === 0" class="notify-empty">暂无消息</div>
-          </div>
-        </el-popover>
-
-        <el-tag :type="roleTagType" size="default" effect="dark">{{ roleLabel }}</el-tag>
-
-        <div class="user-info" @click="$router.push(profilePath)">
-          <el-avatar :size="34" :src="store.userInfo?.avatar || ''" icon="UserFilled" />
-          <span class="user-name">{{ store.userInfo?.name || '用户' }}</span>
+  <div style="display:flex;height:100vh;background:#f8f9fa;font-family:'PingFang SC','Microsoft YaHei',sans-serif;overflow:hidden">
+    <!-- Sidebar -->
+    <aside :style="{width:'240px',background:'#fff',borderRight:'1px solid #e2e8f0',display:'flex',flexDirection:'column',flexShrink:'0'}">
+      <div style="padding:20px 20px 16px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:10px">
+        <div style="width:40px;height:40px;background:#A31F34;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;flex-shrink:0">X</div>
+        <div>
+          <div style="font-weight:700;font-size:15px;color:#1e293b">新疆大学</div>
+          <div style="font-size:11px;color:#94a3b8">招生宣传平台</div>
         </div>
+      </div>
 
-        <el-button
-          type="danger"
-          size="small"
-          plain
-          @click="handleLogout"
-          class="logout-btn"
+      <nav style="flex:1;padding:12px;overflow-y:auto">
+        <router-link
+          v-for="item in menuItems"
+          :key="item.path"
+          :to="item.path"
+          class="nav-item"
+          :class="{ active: isActive(item.path) }"
+          :style="navItemStyle(item.path)"
         >
-          退出
+          <el-icon :size="18"><component :is="item.icon" /></el-icon>
+          <span style="font-weight:500;font-size:14px">{{ item.label }}</span>
+        </router-link>
+      </nav>
+
+      <div style="padding:12px;border-top:1px solid #f1f5f9">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px;margin-bottom:8px">
+          <el-avatar :size="36" :src="store.userInfo?.avatar||''" icon="UserFilled" />
+          <div style="flex:1;overflow:hidden">
+            <div style="font-size:13px;font-weight:600;color:#334155;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ store.userInfo?.name }}</div>
+            <div style="font-size:11px;color:#94a3b8">{{ roleLabel }}</div>
+          </div>
+        </div>
+        <el-button style="width:100%;color:#64748b;border-color:#e2e8f0" size="small" @click="handleLogout">
+          <el-icon :size="14"><SwitchButton /></el-icon>
+          <span style="margin-left:4px">退出登录</span>
         </el-button>
       </div>
-    </el-header>
-    <el-container>
-      <el-aside width="220px">
-        <div class="sidebar-brand">
-          <span class="sidebar-logo">🏫</span>
-          <span class="sidebar-title">XJU</span>
+    </aside>
+
+    <!-- Main Area -->
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+      <header :style="{height:'56px',background:'#A31F34',color:'#fff',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 24px',flexShrink:'0'}">
+        <div style="display:flex;align-items:center;gap:16px">
+          <span style="font-weight:700;font-size:16px">{{ pageTitle }}</span>
         </div>
-        <el-menu :default-active="activeMenu" router :ellipsis="false">
-          <el-menu-item v-for="item in menuItems" :key="item.path" :index="item.path">
-            <el-icon><component :is="item.icon" /></el-icon>
-            <span>{{ item.label }}</span>
-          </el-menu-item>
-        </el-menu>
-        <div class="sidebar-footer">© 2026 新疆大学</div>
-      </el-aside>
-      <el-main>
+        <div style="display:flex;align-items:center;gap:20px">
+          <div class="header-date">{{ currentDate }}</div>
+          <div class="notify-wrapper">
+            <el-popover placement="bottom-end" :width="340" trigger="click">
+              <template #reference>
+                <el-badge :value="unreadCount" :hidden="unreadCount===0">
+                  <el-icon :size="18" color="#fff" style="cursor:pointer"><Bell /></el-icon>
+                </el-badge>
+              </template>
+              <div style="font-weight:600;padding:4px 0 12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;font-size:14px">
+                消息通知 <span style="font-size:12px;color:#999;cursor:pointer" @click="markAllRead()">全部已读</span>
+              </div>
+              <div style="max-height:260px;overflow-y:auto">
+                <div v-for="(n,i) in filteredNotifications" :key="i" style="display:flex;gap:8px;padding:10px 0;border-bottom:1px solid #f5f5f5;cursor:pointer" @click="handleNotifyClick(n)">
+                  <span style="font-size:16px;flex-shrink:0">{{ n.icon }}</span>
+                  <div>
+                    <div style="font-size:13px;font-weight:500">{{ n.title }}</div>
+                    <div style="font-size:12px;color:#888">{{ n.desc }}</div>
+                    <div style="font-size:11px;color:#bbb">{{ n.time }}</div>
+                  </div>
+                </div>
+              </div>
+              <div v-if="filteredNotifications.length===0" style="text-align:center;color:#bbb;padding:20px 0">暂无消息</div>
+            </el-popover>
+          </div>
+        </div>
+      </header>
+
+      <main style="flex:1;overflow-y:auto;padding:20px 24px;background:#f8f9fa">
         <router-view />
-      </el-main>
-    </el-container>
-  </el-container>
+      </main>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { Bell, List, Checked, EditPen, User, DataAnalysis, Plus, Management, UserFilled } from '@element-plus/icons-vue'
+import { Bell, List, Checked, EditPen, User, DataAnalysis, Plus, Management, UserFilled, SwitchButton } from '@element-plus/icons-vue'
 import { activityApi, enrollmentApi, feedbackApi, approvalApi } from '@/api'
 
 const store = useUserStore()
@@ -83,365 +93,210 @@ const route = useRoute()
 const unreadCount = ref(0)
 
 const roleLabelMap: Record<string, string> = {
-  STUDENT: '学生', TEACHER: '教师', COLLEGE_ADMIN: '学院管理员', SCHOOL_ADMIN: '学校管理员',
-  student: '学生', teacher: '教师', college_admin: '学院管理员', school_admin: '学校管理员',
+  STUDENT:'学生', TEACHER:'教师', COLLEGE_ADMIN:'学院管理员', SCHOOL_ADMIN:'学校管理员',
+  student:'学生', teacher:'教师', college_admin:'学院管理员', school_admin:'学校管理员',
 }
-const roleTagTypeMap: Record<string, string> = {
-  STUDENT: 'info', TEACHER: 'success', COLLEGE_ADMIN: 'warning', SCHOOL_ADMIN: 'danger'
+const roleTagColors: Record<string, string> = {
+  SCHOOL_ADMIN:'#A31F34', COLLEGE_ADMIN:'#2E7FB9', TEACHER:'#2E7FB9', STUDENT:'#C9A96E',
 }
-
 const roleLabel = computed(() => roleLabelMap[store.currentRole] || store.currentRole || '未知')
-const roleTagType = computed(() => roleTagTypeMap[store.currentRole] || 'info')
 
-const notifications = ref<any[]>([])
-
-async function fetchNotifications() {
-  const role = (store.currentRole || '').toLowerCase()
-  const items: any[] = []
-
-  try {
-    if (role === 'student' || role === 'teacher') {
-      // Recent published activities
-      const api = role === 'teacher' ? activityApi.listTeacher : activityApi.listStudent
-      const res: any = await api({ page: 1, size: 3 })
-      const records = res?.data?.records || res?.records || []
-      for (const a of records) {
-        items.push({ icon: '📢', title: '新活动发布', desc: `「${a.title}」已开放报名`, time: a.createTime?.substring(0, 10) || '', role, path: `/${role}/activities/${a.id}` })
-      }
-
-      // Enrollment status changes
-      const enrollRes: any = await enrollmentApi.listMy({ page: 1, size: 5 })
-      const enrolls = enrollRes?.data?.records || enrollRes?.records || []
-      for (const e of enrolls) {
-        if (e.status === 'APPROVED') {
-          items.push({ icon: '✅', title: '报名已通过', desc: `活动报名已通过审核`, time: e.approvedAt?.substring(0, 10) || '', role, path: `/${role}/enrollments` })
-        } else if (e.status === 'REJECTED') {
-          items.push({ icon: '❌', title: '报名被驳回', desc: e.rejectReason ? `原因: ${e.rejectReason}` : '报名未通过审核', time: e.updateTime?.substring(0, 10) || '', role, path: `/${role}/enrollments` })
-        }
-      }
-
-      // Feedback replies
-      const fbRes: any = await feedbackApi.listMy({ page: 1, size: 5 })
-      const fbs = fbRes?.data?.records || fbRes?.records || []
-      for (const f of fbs) {
-        if (f.status === 'REPLIED') {
-          items.push({ icon: '📨', title: '反馈收到回复', desc: '管理员回复了您的活动反馈', time: f.replyTime?.substring(0, 10) || '', role, path: `/${role}/my-feedback` })
-        }
-      }
-    }
-
-    if (role === 'college_admin') {
-      const appRes: any = await approvalApi.listCollege({ page: 1, size: 1 })
-      const pending = appRes?.data?.total || appRes?.total || 0
-      if (pending > 0) items.push({ icon: '📋', title: '有待审批报名', desc: `有 ${pending} 条报名申请等待您审批`, time: '', role: 'college_admin', path: '/college/approvals' })
-
-      const fbRes: any = await feedbackApi.listCollege({ page: 1, size: 1 })
-      const fbTotal = fbRes?.data?.total || fbRes?.total || 0
-      if (fbTotal > 0) items.push({ icon: '📨', title: '反馈管理', desc: `共有 ${fbTotal} 条活动反馈`, time: '', role: 'college_admin', path: '/college/feedbacks' })
-    }
-
-    if (role === 'school_admin') {
-      const appRes: any = await approvalApi.listSchool({ page: 1, size: 1 })
-      const pending = appRes?.data?.total || appRes?.total || 0
-      if (pending > 0) items.push({ icon: '📋', title: '有待审批报名', desc: `有 ${pending} 条报名等待学校审批`, time: '', role: 'school_admin', path: '/school/approvals' })
-
-      const fbRes: any = await feedbackApi.listSchool({ page: 1, size: 1 })
-      const fbTotal = fbRes?.data?.total || fbRes?.total || 0
-      if (fbTotal > 0) items.push({ icon: '📨', title: '反馈管理', desc: `共有 ${fbTotal} 条活动反馈`, time: '', role: 'school_admin', path: '/school/feedbacks' })
-    }
-  } catch { /* silent */ }
-
-  notifications.value = items
-  // Track new notifications vs cached
-  const prevCount = parseInt(localStorage.getItem('notifLastCount') || '0')
-  if (items.length > prevCount) {
-    unreadCount.value = items.length - prevCount
-  }
-  localStorage.setItem('notifLastCount', String(items.length))
-}
-
-const filteredNotifications = computed(() => {
-  const role = store.currentRole || ''
-  return notifications.value.filter((n: any) => n.role === 'all' || roleLabelMap[n.role] === roleLabelMap[role] || n.role === role)
+const activeColor = computed(() => {
+  const r = (store.currentRole||'').toLowerCase()
+  if (r==='school_admin') return '#A31F34'
+  if (r==='college_admin'||r==='teacher') return '#2E7FB9'
+  if (r==='student') return '#C9A96E'
+  return '#A31F34'
 })
 
-function markAllRead() {
-  unreadCount.value = 0
-  localStorage.setItem('notifLastCount', String(notifications.value.length))
-}
+const currentDate = computed(() => {
+  const d = new Date()
+  const w = ['日','一','二','三','四','五','六']
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${w[d.getDay()]}`
+})
+
+const pageTitle = computed(() => {
+  const p = route.path
+  if (p.includes('/dashboard')) return '数据大屏'
+  if (p.includes('/activities/create')) return '创建活动'
+  if (p.includes('/activities')) return '活动管理'
+  if (p.includes('/approvals')) return '报名审批'
+  if (p.includes('/feedbacks')) return '反馈管理'
+  if (p.includes('/users')) return '用户管理'
+  if (p.includes('/enrollments')) return '已报名活动'
+  if (p.includes('/my-feedback')) return '我的反馈'
+  if (p.includes('/profile')) return '个人主页'
+  return '新疆大学招生宣传平台'
+})
 
 const profilePath = computed(() => {
-  let role = (store.currentRole || 'student').toLowerCase()
-  return '/' + role.replace('_admin', '') + '/profile'
+  const r = (store.currentRole||'student').toLowerCase()
+  return '/' + r.replace('_admin','') + '/profile'
 })
 
-const activeMenu = computed(() => route.path)
+function isActive(path: string) {
+  if (path === route.path) return true
+  return route.path.startsWith(path + '/')
+}
+
+function navItemStyle(path: string) {
+  if (isActive(path)) {
+    return { background: activeColor.value, color: '#fff' }
+  }
+  return { color: '#475569' }
+}
 
 const roleMenuMap: Record<string, { path: string; label: string; icon: any }[]> = {
   student: [
-    { path: '/student/activities', label: '活动列表', icon: List },
-    { path: '/student/enrollments', label: '已报名活动', icon: Checked },
-    { path: '/student/my-feedback', label: '我的反馈', icon: EditPen },
-    { path: '/student/profile', label: '个人主页', icon: User },
+    { path:'/student/activities', label:'活动列表', icon:List },
+    { path:'/student/enrollments', label:'已报名活动', icon:Checked },
+    { path:'/student/my-feedback', label:'我的反馈', icon:EditPen },
+    { path:'/student/profile', label:'个人主页', icon:User },
   ],
   teacher: [
-    { path: '/teacher/activities', label: '活动列表', icon: List },
-    { path: '/teacher/enrollments', label: '已报名活动', icon: Checked },
-    { path: '/teacher/my-feedback', label: '我的反馈', icon: EditPen },
-    { path: '/teacher/profile', label: '个人主页', icon: User },
+    { path:'/teacher/activities', label:'活动列表', icon:List },
+    { path:'/teacher/enrollments', label:'已报名活动', icon:Checked },
+    { path:'/teacher/my-feedback', label:'我的反馈', icon:EditPen },
+    { path:'/teacher/profile', label:'个人主页', icon:User },
   ],
   college_admin: [
-    { path: '/college/activities', label: '活动管理', icon: Management },
-    { path: '/college/approvals', label: '报名审批', icon: Checked },
-    { path: '/college/feedbacks', label: '反馈管理', icon: EditPen },
-    { path: '/college/users', label: '用户管理', icon: User },
-    { path: '/college/profile', label: '个人主页', icon: User },
+    { path:'/college/activities', label:'活动管理', icon:Management },
+    { path:'/college/approvals', label:'报名审批', icon:Checked },
+    { path:'/college/feedbacks', label:'反馈管理', icon:EditPen },
+    { path:'/college/users', label:'用户管理', icon:User },
+    { path:'/college/profile', label:'个人主页', icon:User },
   ],
   school_admin: [
-    { path: '/school/dashboard', label: '数据大屏', icon: DataAnalysis },
-    { path: '/school/activities', label: '活动管理', icon: Management },
-    { path: '/school/activities/create', label: '创建活动', icon: Plus },
-    { path: '/school/approvals', label: '报名审批', icon: Checked },
-    { path: '/school/feedbacks', label: '反馈管理', icon: EditPen },
-    { path: '/school/users', label: '用户管理', icon: User },
-    { path: '/school/profile', label: '个人主页', icon: User },
+    { path:'/school/dashboard', label:'数据大屏', icon:DataAnalysis },
+    { path:'/school/activities', label:'活动管理', icon:Management },
+    { path:'/school/approvals', label:'报名审批', icon:Checked },
+    { path:'/school/feedbacks', label:'反馈管理', icon:EditPen },
+    { path:'/school/users', label:'用户管理', icon:User },
+    { path:'/school/profile', label:'个人主页', icon:User },
   ],
 }
 
 const menuItems = computed(() => {
-  const role = (store.currentRole || '').toLowerCase()
-  return roleMenuMap[role] || []
+  return roleMenuMap[(store.currentRole||'').toLowerCase()] || []
 })
 
-function handleLogout() {
-  store.logout()
-  router.push('/login')
+// -- Notifications --
+const notifications = ref<any[]>([])
+
+async function fetchNotifications() {
+  const role = (store.currentRole||'').toLowerCase()
+  const items: any[] = []
+  try {
+    if (role==='student'||role==='teacher') {
+      const api = role==='teacher' ? activityApi.listTeacher : activityApi.listStudent
+      const res: any = await api({ page:1, size:3 })
+      const recs = res?.data?.records || res?.records || []
+      for (const a of recs) items.push({ icon:'📢', title:'新活动发布', desc:`「${a.title}」已开放报名`, time:a.createTime?.substring(0,10)||'', path:`/${role}/activities/${a.id}` })
+      const eRes: any = await enrollmentApi.listMy({ page:1, size:5 })
+      const es = eRes?.data?.records || eRes?.records || []
+      for (const e of es) {
+        if (e.status==='APPROVED') items.push({ icon:'✅', title:'报名已通过', desc:'活动报名已通过审核', time:e.approvedAt?.substring(0,10)||'', path:`/${role}/enrollments` })
+        else if (e.status==='REJECTED') items.push({ icon:'❌', title:'报名被驳回', desc:e.rejectReason?`原因:${e.rejectReason}`:'报名未通过审核', time:e.updateTime?.substring(0,10)||'', path:`/${role}/enrollments` })
+      }
+      const fRes: any = await feedbackApi.listMy({ page:1, size:5 })
+      const fs = fRes?.data?.records || fRes?.records || []
+      for (const f of fs) {
+        if (f.status==='REPLIED') items.push({ icon:'📨', title:'反馈收到回复', desc:'管理员回复了您的活动反馈', time:f.replyTime?.substring(0,10)||'', path:`/${role}/my-feedback` })
+      }
+    }
+    if (role==='college_admin') {
+      const aRes: any = await approvalApi.listCollege({ page:1, size:1 })
+      const pending = aRes?.data?.total || aRes?.total || 0
+      if (pending>0) items.push({ icon:'📋', title:'有待审批报名', desc:`有 ${pending} 条报名申请等待您审批`, path:'/college/approvals' })
+      const fRes: any = await feedbackApi.listCollege({ page:1, size:1 })
+      const ft = fRes?.data?.total || fRes?.total || 0
+      if (ft>0) items.push({ icon:'📨', title:'反馈管理', desc:`共有 ${ft} 条活动反馈`, path:'/college/feedbacks' })
+    }
+    if (role==='school_admin') {
+      const aRes: any = await approvalApi.listSchool({ page:1, size:1 })
+      const pending = aRes?.data?.total || aRes?.total || 0
+      if (pending>0) items.push({ icon:'📋', title:'有待审批报名', desc:`有 ${pending} 条报名等待学校审批`, path:'/school/approvals' })
+      const fRes: any = await feedbackApi.listSchool({ page:1, size:1 })
+      const ft = fRes?.data?.total || fRes?.total || 0
+      if (ft>0) items.push({ icon:'📨', title:'反馈管理', desc:`共有 ${ft} 条活动反馈`, path:'/school/feedbacks' })
+    }
+  } catch {}
+  notifications.value = items
+  const prev = parseInt(localStorage.getItem('notifLastCount')||'0')
+  if (items.length>prev) unreadCount.value = items.length-prev
+  localStorage.setItem('notifLastCount', String(items.length))
 }
-
-onMounted(() => {
-  fetchNotifications()
+const filteredNotifications = computed(() => {
+  const r = store.currentRole || ''
+  return notifications.value.filter((n:any) => roleLabelMap[n.role]===roleLabelMap[r] || n.role===r)
 })
-function handleNotifyClick(n: any) {
-  unreadCount.value = Math.max(0, unreadCount.value - 1)
-  localStorage.setItem('notifLastCount', String(notifications.value.length - unreadCount.value))
+function markAllRead() { unreadCount.value=0; localStorage.setItem('notifLastCount',String(notifications.value.length)) }
+
+function handleLogout() { store.logout(); router.push('/login') }
+function handleNotifyClick(n:any) {
+  unreadCount.value = Math.max(0, unreadCount.value-1)
+  localStorage.setItem('notifLastCount', String(notifications.value.length-unreadCount.value))
   if (n.path) router.push(n.path)
 }
+
+onMounted(() => { fetchNotifications() })
 </script>
 
-<style scoped>
-.main-layout { height: 100vh; }
-
-/* ========== Header ========== */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 50%, #1a56db 100%);
-  color: #fff;
-  padding: 0 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
-  z-index: 10;
-  position: relative;
-}
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.header-logo {
-  font-size: 26px;
-  line-height: 1;
-}
-.header-left h2 {
-  font-size: 18px;
-  margin: 0;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-/* Notification button */
-.notify-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s;
-  color: #fff;
-}
-.notify-btn:hover {
-  background: rgba(255,255,255,0.22);
-}
-
-/* Notification popover */
-.notify-header {
-  font-weight: 600;
-  padding: 4px 0 12px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-}
-.notify-clear {
-  font-size: 12px;
-  color: #999;
-  cursor: pointer;
-  font-weight: 400;
-}
-.notify-clear:hover { color: #1a56db; }
-.notify-list { max-height: 300px; overflow-y: auto; }
-.notify-item {
-  display: flex;
-  gap: 10px;
-  padding: 12px 0;
-  border-bottom: 1px solid #f5f5f5;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.notify-item:hover { background: #f8faff; }
-.notify-icon { font-size: 18px; flex-shrink: 0; }
-.notify-body { flex: 1; min-width: 0; }
-.notify-title { font-size: 13px; font-weight: 500; color: #333; }
-.notify-desc { font-size: 12px; color: #888; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.notify-time { font-size: 11px; color: #bbb; margin-top: 2px; }
-.notify-empty { text-align: center; color: #bbb; padding: 24px 0; font-size: 13px; }
-
-/* User info */
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 20px;
-  transition: background 0.2s;
-}
-.user-info:hover {
-  background: rgba(255,255,255,0.1);
-}
-.user-name {
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-/* Logout button */
-.logout-btn {
-  border-color: rgba(255,255,255,0.4) !important;
-  color: #fff !important;
-  background: transparent !important;
-  font-weight: 500;
-}
-.logout-btn:hover {
-  border-color: #f56c6c !important;
-  color: #f56c6c !important;
-  background: rgba(245,108,108,0.1) !important;
-}
-
-/* ========== Sidebar ========== */
-.el-aside {
-  background: linear-gradient(180deg, #0a1628 0%, #111d32 100%);
-  border-right: none;
-  display: flex;
-  flex-direction: column;
-  color: #fff;
-}
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 24px 20px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.sidebar-logo {
-  font-size: 30px;
-  line-height: 1;
-}
-.sidebar-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 2px;
-}
-.sidebar-footer {
-  margin-top: auto;
-  padding: 14px 20px;
-  font-size: 11px;
-  color: rgba(255,255,255,0.3);
-  border-top: 1px solid rgba(255,255,255,0.06);
-  text-align: center;
-}
-
-.el-menu {
-  border-right: none;
-  flex: 1;
-  background: transparent;
-  padding: 8px 0;
-}
-.el-menu .el-menu-item {
-  margin: 2px 10px;
-  border-radius: 10px;
-  color: rgba(255,255,255,0.65);
-  transition: all 0.25s ease;
-  height: 44px;
-  line-height: 44px;
-}
-.el-menu .el-menu-item:hover {
-  background: rgba(255,255,255,0.08) !important;
-  color: #fff !important;
-}
-.el-menu .el-menu-item.is-active {
-  background: linear-gradient(135deg, #1a56db, #3b82f6) !important;
-  color: #fff !important;
-  box-shadow: 0 4px 12px rgba(26, 86, 219, 0.3);
-}
-
-/* ========== Main Content ========== */
-.el-main {
-  background: #f0f2f5;
-  padding: 24px;
-}
-
-/* ========== Global overrides (unscoped) ========== */
-</style>
-
 <style>
-/* Better card shadows and rounded corners for all el-card children in main */
-.el-main .el-card {
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+/* Global styles for navbar items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 2px;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
-.el-main .el-card.is-always-shadow:hover,
-.el-main .el-card.is-hover-shadow:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+.nav-item:hover:not(.active) {
+  background: #f1f5f9;
+}
+.nav-item.active {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
-/* Table header styling */
+/* Header date */
+.header-date {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+/* Notify wrapper */
+.notify-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* Main content cards */
+.el-main .el-card {
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
 .el-main .el-table th.el-table__cell {
-  background: #f1f5f9;
-  color: #374151;
+  background: #f8fafc;
+  color: #475569;
   font-weight: 600;
 }
-
-/* Button consistent radius */
 .el-main .el-button {
   border-radius: 8px;
 }
-
-/* Input / Select consistent radius */
 .el-main .el-input__wrapper,
 .el-main .el-select .el-input__wrapper {
   border-radius: 8px;
+}
+
+/* Page title in views */
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 20px;
 }
 </style>

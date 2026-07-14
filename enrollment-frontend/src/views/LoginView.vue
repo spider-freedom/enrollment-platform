@@ -76,7 +76,7 @@ async function handleLogin() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #060e1f 0%, #0f1d3d 30%, #13294b 50%, #1a3a6b 70%, #1a56db 100%);
+  background: linear-gradient(135deg, #7a1727 0%, #A31F34 40%, #b8253c 70%, #8B1A2B 100%);
   position: relative;
   overflow: hidden;
 }
@@ -115,7 +115,7 @@ async function handleLogin() {
 }
 .login-accent-bar {
   height: 4px;
-  background: linear-gradient(90deg, #1a56db, #3b82f6, #60a5fa);
+  background: linear-gradient(90deg, #A31F34, #C9A96E);
 }
 .login-logo {
   font-size: 42px;
@@ -144,6 +144,6 @@ async function handleLogin() {
   padding: 0 40px 32px;
   font-size: 13px;
 }
-.login-links a { color: #1a56db; text-decoration: none; }
+.login-links a { color: #A31F34; text-decoration: none; }
 .login-links a:hover { text-decoration: underline; }
 </style>

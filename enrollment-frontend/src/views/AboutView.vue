@@ -36,7 +36,7 @@
         </div>
         <div class="ab-campus-card">
           <div class="ab-campus-icon">🏗</div>
-          <h3>河马泉校区</h3>
+          <h3>博达校区</h3>
           <p>新校区，现代化教学设施，美丽的校园环境，位于水磨沟区</p>
         </div>
         <div class="ab-campus-card">

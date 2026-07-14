@@ -1,23 +1,61 @@
 <template>
   <div class="login-page">
     <div class="login-card">
-      <div class="login-accent-bar" />
-      <div class="login-logo">🏫</div>
-      <h1 class="login-title">新疆大学招生宣传报名平台</h1>
-      <p class="login-sub">统一身份认证登录</p>
-      <el-form ref="formRef" :model="form" :rules="rules" @keyup.enter="handleLogin">
-        <el-form-item prop="username">
-          <el-input v-model="form.username" placeholder="学号/工号" size="large" prefix-icon="User" clearable />
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" placeholder="密码" size="large" prefix-icon="Lock" show-password clearable />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" :loading="loading" @click="handleLogin" size="large" style="width:100%">登 录</el-button>
-        </el-form-item>
-      </el-form>
-      <div class="login-links">
-        <router-link to="/register">没有账号？立即注册</router-link>
+      <div class="login-top">
+        <div class="login-icon-box">
+          <span class="login-icon-text">X</span>
+        </div>
+        <h1 class="login-title">欢迎登录</h1>
+        <p class="login-sub">新疆大学招生宣传平台</p>
+      </div>
+
+      <!-- Role selector -->
+      <div class="role-selector">
+        <button
+          v-for="r in roles"
+          :key="r.value"
+          :class="['role-btn', { active: selectedRole === r.value }]"
+          @click="selectedRole = r.value"
+        >{{ r.label }}</button>
+      </div>
+
+      <div class="form-wrap">
+        <div class="input-group">
+          <el-icon :size="18" class="input-icon"><User /></el-icon>
+          <input
+            v-model="form.username"
+            class="login-input"
+            placeholder="学号 / 工号"
+            @keyup.enter="handleLogin"
+          />
+        </div>
+        <div class="input-group">
+          <el-icon :size="18" class="input-icon"><Lock /></el-icon>
+          <input
+            v-model="form.password"
+            :type="showPwd ? 'text' : 'password'"
+            class="login-input"
+            placeholder="密码"
+            @keyup.enter="handleLogin"
+          />
+          <el-icon :size="18" class="input-eye" @click="showPwd=!showPwd" style="cursor:pointer">
+            <component :is="showPwd ? 'View' : 'Hide'" />
+          </el-icon>
+        </div>
+
+        <el-button
+          type="primary"
+          size="large"
+          :loading="loading"
+          @click="handleLogin"
+          style="width:100%;height:48px;font-size:16px;font-weight:600;margin-bottom:16px"
+        >
+          登 录
+        </el-button>
+
+        <div class="login-links">
+          <router-link to="/register">还没有账号？立即注册</router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -28,42 +66,42 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+import { User, Lock, View, Hide } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const store = useUserStore()
 const formRef = ref()
 const loading = ref(false)
+const showPwd = ref(false)
+const selectedRole = ref('')
+
+const roles = [
+  { label: '学生', value: 'student' },
+  { label: '教师', value: 'teacher' },
+  { label: '学院管理员', value: 'college_admin' },
+  { label: '学校管理员', value: 'school_admin' },
+]
 
 const form = reactive({ username: '', password: '' })
-const rules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-}
 
 const rolePathMap: Record<string, string> = {
-  STUDENT: '/student/activities',
-  TEACHER: '/teacher/activities',
-  COLLEGE_ADMIN: '/college/activities',
-  SCHOOL_ADMIN: '/school/dashboard',
-  student: '/student/activities',
-  teacher: '/teacher/activities',
-  college_admin: '/college/activities',
-  school_admin: '/school/dashboard',
+  STUDENT:'/student/activities', TEACHER:'/teacher/activities',
+  COLLEGE_ADMIN:'/college/activities', SCHOOL_ADMIN:'/school/dashboard',
+  student:'/student/activities', teacher:'/teacher/activities',
+  college_admin:'/college/activities', school_admin:'/school/dashboard',
 }
 
 async function handleLogin() {
-  const valid = await formRef.value.validate().catch(() => false)
-  if (!valid) return
+  if (!form.username) { ElMessage.warning('请输入用户名'); return }
+  if (!form.password) { ElMessage.warning('请输入密码'); return }
   loading.value = true
   try {
     await store.login(form.username, form.password)
     ElMessage.success('登录成功')
     const role = store.currentRole
-    const path = role ? rolePathMap[role] : null
-    router.push(path || '/student/activities')
+    router.push(role ? (rolePathMap[role] || '/student/activities') : '/student/activities')
   } catch (e: any) {
-    const msg = e?.response?.data?.message || e?.message || '登录失败'
-    ElMessage.error(msg)
+    ElMessage.error(e?.response?.data?.message || e?.message || '登录失败')
   } finally {
     loading.value = false
   }
@@ -72,78 +110,116 @@ async function handleLogin() {
 
 <style scoped>
 .login-page {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #7a1727 0%, #A31F34 40%, #b8253c 70%, #8B1A2B 100%);
-  position: relative;
-  overflow: hidden;
-}
-.login-page::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background:
-    radial-gradient(circle at 20% 50%, rgba(26, 86, 219, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 60% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 40% 30%, rgba(139, 92, 246, 0.06) 0%, transparent 35%);
-  animation: bg-drift 20s ease-in-out infinite;
-}
-@keyframes bg-drift {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(2%, 1%) rotate(1deg); }
-  66% { transform: translate(-1%, -2%) rotate(-1deg); }
+  background: linear-gradient(135deg, #821829 0%, #A31F34 50%, #c23d4f 100%);
+  padding: 20px;
 }
 .login-card {
-  position: relative;
-  background: #fff;
-  border-radius: 16px;
-  padding: 0;
   width: 420px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
   overflow: hidden;
-  animation: card-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-@keyframes card-in {
-  from { opacity: 0; transform: translateY(30px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.login-accent-bar {
-  height: 4px;
-  background: linear-gradient(90deg, #A31F34, #C9A96E);
-}
-.login-logo {
-  font-size: 42px;
+.login-top {
   text-align: center;
-  margin-top: 32px;
-  line-height: 1;
+  padding: 36px 40px 8px;
+}
+.login-icon-box {
+  width: 56px; height: 56px;
+  background: #A31F34;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(163,31,52,0.3);
+  margin-bottom: 16px;
+}
+.login-icon-text {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
 }
 .login-title {
-  font-size: 21px;
-  text-align: center;
-  margin: 12px 40px 4px;
-  color: #1f2937;
+  font-size: 24px;
   font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 6px;
 }
 .login-sub {
-  text-align: center;
-  color: #9ca3af;
   font-size: 13px;
-  margin: 0 40px 28px;
+  color: #94a3b8;
+  margin: 0;
 }
-.login-card .el-form {
-  padding: 0 40px 24px;
+
+/* Role selector */
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 40px 20px;
 }
-.login-links {
-  text-align: center;
-  padding: 0 40px 32px;
+.role-btn {
+  padding: 8px 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #64748b;
   font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
 }
+.role-btn:hover { border-color: #A31F34; color: #A31F34; }
+.role-btn.active {
+  background: #A31F34;
+  color: #fff;
+  border-color: #A31F34;
+  box-shadow: 0 2px 8px rgba(163,31,52,0.2);
+}
+
+.form-wrap { padding: 0 40px 32px; }
+.input-group {
+  position: relative;
+  margin-bottom: 16px;
+}
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  z-index: 1;
+}
+.input-eye {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  z-index: 1;
+}
+.login-input {
+  width: 100%;
+  padding: 12px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  color: #334155;
+}
+.login-input::placeholder { color: #94a3b8; }
+.login-input:focus {
+  border-color: #A31F34;
+  box-shadow: 0 0 0 3px rgba(163,31,52,0.1);
+}
+.login-links { text-align: center; font-size: 13px; }
 .login-links a { color: #A31F34; text-decoration: none; }
 .login-links a:hover { text-decoration: underline; }
 </style>

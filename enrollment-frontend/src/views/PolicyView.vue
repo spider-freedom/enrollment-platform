@@ -14,8 +14,16 @@
       <div class="policy-scores">
         <h2>历年录取参考</h2>
         <p style="color:#94a3b8;font-size:13px;margin:0 0 20px">数据来源：各省教育考试院官方公布，为本科一批/本科批最低录取分数</p>
-        <div class="score-tabs">
-          <button v-for="y in [2025,2024,2023]" :key="y" :class="['score-tab',{active:scoreYear===y}]" @click="scoreYear=y">{{ y }}年</button>
+        <div class="score-tabs" style="display:flex;gap:20px;flex-wrap:wrap">
+          <div style="display:flex;gap:8px">
+            <button v-for="y in [2025,2024,2023]" :key="y" :class="['score-tab',{active:scoreYear===y}]" @click="scoreYear=y">{{ y }}年</button>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button :class="['score-tab',{active:scoreType==='全部'}]" @click="scoreType='全部'">全部</button>
+            <button :class="['score-tab score-tab-blue',{active:scoreType==='物理'||scoreType==='理科'}]" @click="scoreType='物理'">物理/理科</button>
+            <button :class="['score-tab score-tab-red',{active:scoreType==='历史'||scoreType==='文科'}]" @click="scoreType='历史'">历史/文科</button>
+            <button :class="['score-tab',{active:scoreType==='综合'}]" @click="scoreType='综合'">综合</button>
+          </div>
         </div>
         <div class="score-table-wrap">
           <table class="score-table">
@@ -23,7 +31,7 @@
             <tbody>
               <tr v-for="s in filteredScores" :key="s.province+s.type">
                 <td class="score-province">{{ s.province }}</td>
-                <td><span :class="s.type==='物理'?'score-badge-blue':'score-badge-red'">{{ s.type }}</span></td>
+                <td><span :class="getTypeClass(s.type)">{{ s.type }}</span></td>
                 <td class="score-num">{{ s.score }}</td>
                 <td class="score-rank">{{ s.rank||'-' }}</td>
               </tr>
@@ -46,6 +54,7 @@
 import { ref, computed } from 'vue'
 
 const scoreYear = ref(2025)
+const scoreType = ref('全部')
 
 // 真实数据来源: 各省教育考试院 2023-2025
 const scores: Record<number, {province:string,type:string,score:number,rank:string}[]> = {
@@ -60,7 +69,21 @@ const scores: Record<number, {province:string,type:string,score:number,rank:stri
   ],
 }
 
-const filteredScores = computed(() => scores[scoreYear.value] || scores[2025])
+const typeKeys: Record<string,string[]> = {
+  '物理':['物理','理科'], '历史':['历史','文科'], '综合':['综合'],
+}
+const filteredScores = computed(() => {
+  let data = scores[scoreYear.value] || scores[2025]
+  if (scoreType.value !== '全部') {
+    data = data.filter(s => typeKeys[scoreType.value]?.includes(s.type) || s.type === scoreType.value)
+  }
+  return data
+})
+function getTypeClass(t: string) {
+  if (t==='物理'||t==='理科') return 'score-badge-blue'
+  if (t==='历史'||t==='文科') return 'score-badge-red'
+  return 'score-badge-gold'
+}
 
 const policies = [
   { id:1, title:'新疆大学2026年普通本科招生章程', type:'章程', date:'2026-04-15', year:2026 },

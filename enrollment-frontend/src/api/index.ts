@@ -92,6 +92,19 @@ export const collegeUserApi = {
   },
 }
 
+// Policy
+export const policyApi = {
+  list: () => request.get('/policy/list'),
+  getById: (id: number) => request.get(`/policy/${id}`),
+  create: (data: any) => request.post('/policy/create', data),
+  update: (id: number, data: any) => request.put(`/policy/update/${id}`, data),
+  delete: (id: number) => request.delete(`/policy/delete/${id}`),
+  upload: (file: File) => {
+    const fd = new FormData(); fd.append('file', file)
+    return request.post('/policy/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+  },
+}
+
 // AI
 export const aiApi = {
   suggestSchool: (keyword: string) => request.get('/ai/suggest-school', { params: { keyword } }),

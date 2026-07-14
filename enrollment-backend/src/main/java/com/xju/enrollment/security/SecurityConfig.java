@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/doc.html", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/activity/list/student", "/api/activity/list/teacher", "/api/activity/banners", "/api/activity/{id}").permitAll()
+                        .requestMatchers("/api/policy/list", "/api/policy/{id}").permitAll()
                         .requestMatchers("/api/ai/school/suggest", "/api/ai/school/normalize").permitAll()
                         .requestMatchers("/api/college/**").hasAuthority("COLLEGE_ADMIN")
                         .requestMatchers("/api/school/**").hasAuthority("SCHOOL_ADMIN")

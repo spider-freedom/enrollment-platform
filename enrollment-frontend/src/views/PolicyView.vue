@@ -4,9 +4,9 @@
     <div class="policy-body">
 
       <div class="policy-list">
-        <div v-for="p in filteredPolicies" :key="p.id" class="policy-item">
-          <div class="policy-item-left"><div class="policy-icon">📋</div><div class="policy-info"><h3>{{ p.title }}</h3><span class="policy-meta">{{ p.date }} · <span :class="'policy-badge-'+(p.type==='章程'?'red':'gold')">{{ p.type }}</span></span></div></div>
-          <a :href="p.url" target="_blank" class="policy-dl-btn">查看详情</a>
+        <div v-for="p in policies" :key="p.id" class="policy-item">
+          <div class="policy-item-left"><div class="policy-icon">📋</div><div class="policy-info"><h3>{{ p.title }}</h3><span class="policy-meta">{{ (p.createTime||'').substring(0,10) }} ·<span :class="'policy-badge-'+(p.type==='章程'?'red':'gold')">{{ p.type }}</span></span></div></div>
+          <button class="policy-dl-btn" @click="openDetail(p)">查看详情</button>
         </div>
       </div>
 
@@ -38,6 +38,17 @@
         </div>
       </div>
 
+      <!-- Detail Modal -->
+      <div v-if="detailVisible" class="policy-modal-overlay" @click.self="detailVisible=false">
+        <div class="policy-modal">
+          <div class="policy-modal-header">
+            <h2>{{ detailPolicy?.title }}</h2>
+            <button class="policy-modal-close" @click="detailVisible=false">✕</button>
+          </div>
+          <div class="policy-modal-body" v-html="renderedContent"></div>
+        </div>
+      </div>
+
       <!-- FAQ -->
       <div class="policy-faq"><h2>常见问题</h2>
         <div class="policy-faq-grid">
@@ -49,7 +60,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { policyApi } from '@/api'
 
 const scoreYear = ref(2025)
 const scoreType = ref('全部')
@@ -83,18 +95,22 @@ function getTypeClass(t: string) {
   return 'score-badge-gold'
 }
 
-const policies = [
-  { id:1, title:'新疆大学2026年普通本科招生章程', type:'章程', date:'2026-05-26', url:'https://welcome.xju.edu.cn/Web/Home/NewsList?r8v36aU_HzL1vTB-ishxkQihEeEVBNgiyu6OIfA6mqA=.shtml' },
-  { id:2, title:'新疆大学2025年普通本科招生章程', type:'章程', date:'2025-05-06', url:'https://welcome.xju.edu.cn/Web/home/Detail?w1_V5THB3TJlfCNztg6Yvq0cSSbgBNpRUMVsWpe2c5g=.shtml' },
-  { id:3, title:'新疆大学2024年普通本科招生章程', type:'章程', date:'2024-05-20', url:'https://welcome.xju.edu.cn/Web/Home/NewsList?r8v36aU_HzL1vTB-ishxkQihEeEVBNgiyu6OIfA6mqA=.shtml' },
-  { id:4, title:'新疆大学2025年艺术类专业招生简章', type:'简章', date:'2025-01-15', url:'https://welcome.xju.edu.cn/' },
-  { id:5, title:'新疆大学2025年高水平运动队招生简章', type:'简章', date:'2025-02-20', url:'https://welcome.xju.edu.cn/' },
-  { id:6, title:'新疆大学2025年"国家专项计划"招生通知', type:'通知', date:'2025-06-01', url:'https://welcome.xju.edu.cn/' },
-  { id:7, title:'新疆大学2025年少数民族预科班招生办法', type:'办法', date:'2025-05-15', url:'https://welcome.xju.edu.cn/' },
-  { id:8, title:'新疆大学2026年第二学士学位招生简章', type:'简章', date:'2026-04-10', url:'https://welcome.xju.edu.cn/' },
-  { id:9, title:'2025年新疆大学各省录取分数统计', type:'数据', date:'2025-08-15', url:'https://welcome.xju.edu.cn/' },
-]
-const filteredPolicies = policies
+const policies = ref<any[]>([])
+const detailVisible = ref(false)
+const detailPolicy = ref<any>(null)
+const renderedContent = computed(() => {
+  if (!detailPolicy.value?.content) return ''
+  return detailPolicy.value.content.replace(/\n/g,'<br>').replace(/## (.*)/g,'<h3>$1</h3>')
+})
+
+onMounted(async () => {
+  try { const res: any = await policyApi.list(); policies.value = res?.data||res||[] } catch {}
+})
+
+function openDetail(p: any) {
+  detailPolicy.value = p
+  detailVisible.value = true
+}
 
 const faqs = [
   { q:'新疆大学是一所什么样的大学？', a:'新疆大学是国家"双一流"建设高校（马克思主义理论、化学、计算机科学与技术三个双一流学科）、部省合建高校、国家"211工程"重点建设高校。学校始建于1924年，是新疆办学规模最大、学科门类最齐全的综合性大学。' },
@@ -155,4 +171,13 @@ const faqs = [
 .faq-q { font-size:14px; font-weight:700; color:#1e293b; margin:0 0 8px; }
 .faq-q span { color:#A31F34; }
 .faq-a { font-size:13px; color:#64748b; line-height:1.7; margin:0; padding-left:24px; }
+
+.policy-modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px; }
+.policy-modal { background:#fff;border-radius:16px;max-width:720px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden; }
+.policy-modal-header { display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid #e2e8f0; }
+.policy-modal-header h2 { font-size:18px;font-weight:700;color:#1e293b;margin:0;flex:1; }
+.policy-modal-close { border:none;background:none;font-size:20px;cursor:pointer;color:#94a3b8;padding:4px 8px; }
+.policy-modal-close:hover { color:#A31F34; }
+.policy-modal-body { padding:24px;overflow-y:auto;font-size:14px;line-height:1.8;color:#334155; }
+.policy-modal-body h3 { font-size:16px;font-weight:700;color:#1e293b;margin:20px 0 8px; }
 </style>

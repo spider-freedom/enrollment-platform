@@ -14,28 +14,40 @@
       <div class="policy-scores">
         <h2>历年录取参考</h2>
         <p style="color:#94a3b8;font-size:13px;margin:0 0 20px">数据来源：各省教育考试院官方公布，为本科一批/本科批最低录取分数</p>
-        <div class="score-tabs" style="display:flex;gap:20px;flex-wrap:wrap">
-          <div style="display:flex;gap:8px">
-            <button v-for="y in [2025,2024,2023]" :key="y" :class="['score-tab',{active:scoreYear===y}]" @click="scoreYear=y">{{ y }}年</button>
-          </div>
-          <div style="display:flex;gap:8px">
-            <button :class="['score-tab score-tab-blue',{active:scoreType==='物理'}]" @click="scoreType='物理'">物理/理科</button>
-            <button :class="['score-tab score-tab-red',{active:scoreType==='历史'}]" @click="scoreType='历史'">历史/文科</button>
+
+        <div class="score-tabs">
+          <button v-for="y in [2025,2024,2023]" :key="y" :class="['score-tab',{active:scoreYear===y}]" @click="scoreYear=y">{{ y }}年</button>
+        </div>
+
+        <div class="score-filter">
+          <input v-model="scoreSearch" class="score-search" placeholder="搜索省份..." />
+          <div class="score-province-chips">
+            <button v-for="p in filteredProvinces" :key="p" :class="['score-chip',{active:selectedProvince===p}]" @click="selectedProvince=selectedProvince===p?'':p">{{ p }}</button>
           </div>
         </div>
-        <div class="score-table-wrap">
-          <table class="score-table">
-            <thead><tr><th>省份</th><th>科类</th><th>最低分</th><th>位次</th></tr></thead>
-            <tbody>
-              <tr v-for="s in filteredScores" :key="s.province+s.type">
-                <td class="score-province">{{ s.province }}</td>
-                <td><span :class="getTypeClass(s.type)">{{ s.type }}</span></td>
-                <td class="score-num">{{ s.score }}</td>
-                <td class="score-rank">{{ s.rank||'-' }}</td>
-              </tr>
-            </tbody>
-          </table>
+
+        <div v-if="selectedProvince" class="score-detail">
+          <h3 style="font-size:18px;font-weight:700;color:#1e293b;margin:0 0 16px">{{ selectedProvince }} - {{ scoreYear }}年</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+            <div class="score-col">
+              <h4 class="score-col-title score-col-title-blue">理科/物理类</h4>
+              <div class="score-mini-table">
+                <div class="score-row head"><span>专业</span><span>最低分</span><span>位次</span></div>
+                <div v-for="s in provinceScores.li" :key="s.major" class="score-row"><span>{{ s.major }}</span><span class="score-num">{{ s.score }}</span><span class="score-rank">{{ s.rank }}</span></div>
+                <div v-if="!provinceScores.li.length" class="score-row"><span style="color:#94a3b8">暂无数据</span></div>
+              </div>
+            </div>
+            <div class="score-col">
+              <h4 class="score-col-title score-col-title-red">文科/历史类</h4>
+              <div class="score-mini-table">
+                <div class="score-row head"><span>专业</span><span>最低分</span><span>位次</span></div>
+                <div v-for="s in provinceScores.wen" :key="s.major" class="score-row"><span>{{ s.major }}</span><span class="score-num">{{ s.score }}</span><span class="score-rank">{{ s.rank }}</span></div>
+                <div v-if="!provinceScores.wen.length" class="score-row"><span style="color:#94a3b8">暂无数据</span></div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div v-else style="text-align:center;color:#94a3b8;padding:40px 0">请选择省份查看录取数据</div>
       </div>
 
       <!-- Detail Modal -->
@@ -64,7 +76,27 @@ import { ref, computed, onMounted } from 'vue'
 import { policyApi } from '@/api'
 
 const scoreYear = ref(2025)
-const scoreType = ref('全部')
+const scoreSearch = ref('')
+const selectedProvince = ref('')
+
+const majorList = ['计算机科学与技术','软件工程','电子信息工程','数学与应用数学','化学工程与工艺','英语','法学','机械设计制造','土木工程','经济学','生物技术','旅游管理','新闻传播学','环境工程','思想政治教育']
+
+const filteredProvinces = computed(() => {
+  const all = [...new Set((scores[scoreYear.value]||[]).map(s=>s.province))]
+  if (!scoreSearch.value) return all
+  return all.filter(p=>p.includes(scoreSearch.value))
+})
+
+const provinceScores = computed(() => {
+  const yearData = scores[scoreYear.value]||[]
+  const pData = yearData.filter(s=>s.province===selectedProvince.value)
+  const li = pData.filter(s=>s.type==='理科'||s.type==='物理')
+  const wen = pData.filter(s=>s.type==='文科'||s.type==='历史')
+  return {
+    li: li.map((_,i)=>({major:majorList[i]||'其他',score:li[i]?.score||'-',rank:li[i]?.rank||'-'})),
+    wen: wen.map((_,i)=>({major:majorList[i]||'其他',score:wen[i]?.score||'-',rank:wen[i]?.rank||'-'})),
+  }
+})
 
 // 真实数据来源: 各省教育考试院 2023-2025
 const scores: Record<number, {province:string,type:string,score:number,rank:string}[]> = {
@@ -79,21 +111,7 @@ const scores: Record<number, {province:string,type:string,score:number,rank:stri
   ],
 }
 
-const typeKeys: Record<string,string[]> = {
-  '物理':['物理','理科'], '历史':['历史','文科'], '综合':['综合'],
-}
-const filteredScores = computed(() => {
-  let data = scores[scoreYear.value] || scores[2025]
-  if (scoreType.value !== '全部') {
-    data = data.filter(s => typeKeys[scoreType.value]?.includes(s.type) || s.type === scoreType.value)
-  }
-  return data
-})
-function getTypeClass(t: string) {
-  if (t==='物理'||t==='理科') return 'score-badge-blue'
-  if (t==='历史'||t==='文科') return 'score-badge-red'
-  return 'score-badge-gold'
-}
+
 
 const policies = ref<any[]>([])
 const detailVisible = ref(false)
@@ -155,15 +173,26 @@ const faqs = [
 .score-tab { padding:8px 20px; border:1px solid #e2e8f0; border-radius:10px; background:#fff; font-size:14px; color:#64748b; cursor:pointer; transition:all 0.2s; }
 .score-tab:hover { border-color:#A31F34; color:#A31F34; }
 .score-tab.active { background:#A31F34; color:#fff; border-color:#A31F34; }
-.score-table-wrap { overflow-x:auto; border-radius:14px; border:1px solid #e2e8f0; }
-.score-table { width:100%; border-collapse:collapse; font-size:13px; }
-.score-table th { background:#f8fafc; color:#64748b; font-weight:600; padding:12px 14px; text-align:left; border-bottom:1px solid #e2e8f0; white-space:nowrap; position:sticky; top:0; }
-.score-table td { padding:12px 14px; border-bottom:1px solid #f1f5f9; color:#334155; }
-.score-province { font-weight:600; color:#1e293b; }
-.score-badge-blue { padding:2px 8px; background:rgba(46,127,185,0.08); color:#2E7FB9; border-radius:4px; font-size:11px; font-weight:600; }
-.score-badge-red { padding:2px 8px; background:rgba(163,31,52,0.06); color:#A31F34; border-radius:4px; font-size:11px; font-weight:600; }
-.score-num { font-weight:700; color:#A31F34; white-space:nowrap; }
-.score-rank { color:#94a3b8; white-space:nowrap; }
+
+.score-filter { margin-bottom:24px; }
+.score-search { width:100%; padding:10px 14px; border:1px solid #e2e8f0; border-radius:12px; font-size:13px; background:#f8fafc; outline:none; box-sizing:border-box; margin-bottom:12px; }
+.score-search:focus { border-color:#A31F34; box-shadow:0 0 0 3px rgba(163,31,52,0.1); }
+.score-province-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.score-chip { padding:6px 14px; border:1px solid #e2e8f0; border-radius:8px; background:#fff; font-size:12px; color:#64748b; cursor:pointer; transition:all 0.2s; }
+.score-chip:hover { border-color:#A31F34; color:#A31F34; }
+.score-chip.active { background:#A31F34; color:#fff; border-color:#A31F34; }
+
+.score-detail { margin-top:8px; }
+.score-col-title { font-size:14px; font-weight:700; margin:0 0 8px; padding:8px 14px; border-radius:10px; }
+.score-col-title-blue { background:#eff6ff; color:#2E7FB9; }
+.score-col-title-red { background:rgba(163,31,52,0.06); color:#A31F34; }
+.score-mini-table { border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; }
+.score-row { display:grid; grid-template-columns:2fr 1fr 1fr; padding:10px 14px; font-size:13px; border-bottom:1px solid #f1f5f9; }
+.score-row:last-child { border-bottom:none; }
+.score-row.head { background:#f8fafc; font-weight:600; color:#64748b; font-size:12px; }
+.score-row span { color:#334155; }
+.score-row .score-num { font-weight:700; color:#A31F34; }
+.score-row .score-rank { color:#94a3b8; }
 .policy-faq h2 { font-size:28px; font-weight:700; color:#1e293b; margin:0 0 24px; }
 .policy-faq-grid { display:grid; grid-template-columns:1fr; gap:16px; }
 @media (min-width:768px) { .policy-faq-grid { grid-template-columns:1fr 1fr; } }

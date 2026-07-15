@@ -4,35 +4,7 @@
 
 ---
 
-## 项目截图
-
-### 公开前台
-
-| 首页 | 登录 |
-|------|------|
-| ![首页](screenshots/home.png) | ![登录](screenshots/login.png) |
-
-| 招生政策 | 专业查询 |
-|----------|----------|
-| ![政策](screenshots/policy.png) | ![专业](screenshots/majors.png) |
-
-| 学校概况 | AI 咨询 |
-|----------|---------|
-| ![概况](screenshots/about.png) | ![AI](screenshots/ai.png) |
-
-### 管理后台
-
-| 学生主页 | 活动列表 |
-|----------|----------|
-| ![学生](screenshots/student.png) | ![活动](screenshots/activities.png) |
-
-| 学院审批 | 数据大屏 |
-|----------|----------|
-| ![审批](screenshots/approvals.png) | ![大屏](screenshots/dashboard.png) |
-
-| 用户管理 | 个人信息 |
-|----------|----------|
-| ![用户](screenshots/users.png) | ![个人](screenshots/profile.png) |
+## 页面清单
 
 ---
 

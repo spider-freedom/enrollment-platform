@@ -1,0 +1,4 @@
+# Tell GitHub this is a Java project
+*.java linguist-language=Java
+*.vue linguist-detectable=false
+*.css linguist-detectable=false

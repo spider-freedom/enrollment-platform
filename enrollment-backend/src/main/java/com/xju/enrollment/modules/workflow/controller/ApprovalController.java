@@ -25,6 +25,7 @@ public class ApprovalController {
     @GetMapping("/college")
     public ApiResponse<PageResult<ApprovalVO>> getPendingListForCollege(
             @RequestParam(required = false) Long activityId,
+            @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
         Long userId = getCurrentUserIdAsLong();
@@ -36,7 +37,7 @@ public class ApprovalController {
             throw new BusinessException(403, "仅学院管理员可访问");
         }
         PageResult<ApprovalVO> result = approvalService.getPendingListForCollege(
-                user.getCollegeId(), activityId, page, size);
+                user.getCollegeId(), activityId, status, page, size);
         return ApiResponse.ok(result);
     }
 
@@ -44,6 +45,7 @@ public class ApprovalController {
     public ApiResponse<PageResult<ApprovalVO>> getPendingListForSchool(
             @RequestParam(required = false) Long collegeId,
             @RequestParam(required = false) Long activityId,
+            @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
         Long userId = getCurrentUserIdAsLong();
@@ -52,7 +54,7 @@ public class ApprovalController {
             throw new BusinessException(403, "仅校级管理员可访问");
         }
         PageResult<ApprovalVO> result = approvalService.getPendingListForSchool(
-                collegeId, activityId, page, size);
+                collegeId, activityId, status, page, size);
         return ApiResponse.ok(result);
     }
 

@@ -32,19 +32,21 @@ public class ApprovalService {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    public PageResult<ApprovalVO> getPendingListForCollege(Long collegeId, Long activityId, int page, int size) {
+    public PageResult<ApprovalVO> getPendingListForCollege(Long collegeId, Long activityId, String status, int page, int size) {
         LambdaQueryWrapper<Enrollment> w = new LambdaQueryWrapper<>();
         w.eq(Enrollment::getCollegeId, collegeId);
-        w.eq(Enrollment::getStatus, "SUBMITTED");
+        if (status != null && !status.isBlank()) w.eq(Enrollment::getStatus, status);
+        else w.eq(Enrollment::getStatus, "SUBMITTED");
         if (activityId != null) w.eq(Enrollment::getActivityId, activityId);
         w.orderByDesc(Enrollment::getCreateTime);
         Page<Enrollment> p = enrollmentMapper.selectPage(new Page<>(page, size), w);
         return PageResult.of(p.getRecords().stream().map(this::toVO).toList(), p.getTotal(), page, size);
     }
 
-    public PageResult<ApprovalVO> getPendingListForSchool(Long collegeId, Long activityId, int page, int size) {
+    public PageResult<ApprovalVO> getPendingListForSchool(Long collegeId, Long activityId, String status, int page, int size) {
         LambdaQueryWrapper<Enrollment> w = new LambdaQueryWrapper<>();
-        w.eq(Enrollment::getStatus, "APPROVING");
+        if (status != null && !status.isBlank()) w.eq(Enrollment::getStatus, status);
+        else w.eq(Enrollment::getStatus, "APPROVING");
         if (activityId != null) w.eq(Enrollment::getActivityId, activityId);
         if (collegeId != null) w.eq(Enrollment::getCollegeId, collegeId);
         w.orderByDesc(Enrollment::getCreateTime);

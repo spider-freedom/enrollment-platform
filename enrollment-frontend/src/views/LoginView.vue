@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
@@ -96,6 +96,10 @@ const rolePathMap: Record<string, string> = {
 const roleMap: Record<string, string> = {
   student:'STUDENT', teacher:'TEACHER', college_admin:'COLLEGE_ADMIN', school_admin:'SCHOOL_ADMIN',
 }
+
+onMounted(() => {
+  form.username = ''; form.password = ''; selectedRole.value = ''
+})
 
 async function handleLogin() {
   if (!form.username) { ElMessage.warning('请输入用户名'); return }

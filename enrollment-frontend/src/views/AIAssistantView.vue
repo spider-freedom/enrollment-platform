@@ -84,10 +84,11 @@ function scrollDown() {
 </script>
 
 <style scoped>
-.ai-page { min-height:calc(100vh - 64px); display:flex; align-items:center; justify-content:center; padding:24px; }
-.ai-container { width:100%; max-width:800px; height:calc(100vh - 160px); background:#fff; border-radius:24px; border:1px solid #e2e8f0; box-shadow:0 4px 24px rgba(0,0,0,0.06); display:flex; flex-direction:column; overflow:hidden; }
+.ai-page { min-height:calc(100vh - 64px); display:flex; align-items:center; justify-content:center; padding:24px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('/images/campus-library.jpg') center/cover no-repeat fixed; }
+.ai-container { width:100%; max-width:800px; height:calc(100vh - 160px); background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); border-radius:24px; border:1px solid rgba(255,255,255,0.3); box-shadow:0 8px 40px rgba(0,0,0,0.12); display:flex; flex-direction:column; overflow:hidden; }
 
-.ai-header { padding:20px 24px; background:#A31F34; color:#fff; display:flex; align-items:center; }
+.ai-header { padding:20px 24px; background:linear-gradient(135deg,#A31F34,#c23d4f); color:#fff; display:flex; align-items:center; }
 .ai-header-left { display:flex; align-items:center; gap:12px; }
 .ai-header-icon { width:36px;height:36px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#A31F34;font-weight:800;font-size:16px; }
 .ai-header h2 { font-size:16px;font-weight:700;margin:0; }

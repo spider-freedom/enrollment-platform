@@ -30,17 +30,23 @@
       <div class="section-divider"></div>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon red">★</div>
+          <div class="feature-icon red">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 4 3 6 3s6-1 6-3v-5"/></svg>
+          </div>
           <h3>学术顶尖</h3>
           <p>双一流建设高校，拥有多个国家级重点学科和科研平台，师资力量雄厚</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon gold">◆</div>
+          <div class="feature-icon gold">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          </div>
           <h3>专业多元</h3>
           <p>涵盖理、工、文、法、经、管等多个学科门类，90+本科专业供你选择</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon blue">●</div>
+          <div class="feature-icon blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+          </div>
           <h3>校园生活</h3>
           <p>现代化宿舍、图书馆、体育馆等设施一应俱全，多彩社团活动等你参与</p>
         </div>

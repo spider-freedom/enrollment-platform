@@ -73,7 +73,7 @@
         </div>
       </header>
 
-      <main style="flex:1;overflow-y:auto;padding:20px 24px;background:#f8f9fa">
+      <main style="flex:1;overflow-y:auto;padding:20px 24px;background:linear-gradient(180deg,#f8fafc 0%,#f0f4f8 100%)">
         <router-view />
       </main>
     </div>

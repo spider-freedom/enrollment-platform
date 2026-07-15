@@ -18,7 +18,7 @@
         <el-descriptions-item label="用户名">{{ store.userInfo.username }}</el-descriptions-item>
         <el-descriptions-item label="姓名">{{ store.userInfo.name }}</el-descriptions-item>
         <el-descriptions-item label="角色">
-          <el-tag>{{ roleLabel(store.userInfo.role) }}</el-tag>
+          <span>{{ roleLabel(store.userInfo.role) }}</span>
         </el-descriptions-item>
         <el-descriptions-item label="学院">{{ store.userInfo.collegeName || '-' }}</el-descriptions-item>
         <el-descriptions-item v-if="store.userInfo.major" label="专业">{{ store.userInfo.major }}</el-descriptions-item>

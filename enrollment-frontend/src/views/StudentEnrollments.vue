@@ -99,10 +99,10 @@ const pageSize = ref(10)
 const total = ref(0)
 
 const statusMap: Record<string, string> = {
-  SUBMITTED: '待审核',
-  APPROVING: '审批中',
-  APPROVED: '已通过',
-  REJECTED: '已拒绝',
+  SUBMITTED: '等待学院审批',
+  APPROVING: '等待学校审批',
+  APPROVED: '审批已通过',
+  REJECTED: '已驳回',
   WITHDRAWN: '已撤回',
   DRAFT: '草稿',
 }

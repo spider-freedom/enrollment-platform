@@ -26,6 +26,7 @@
             v-model="form.username"
             class="login-input"
             placeholder="学号 / 工号"
+            autocomplete="off"
             @keyup.enter="handleLogin"
           />
         </div>
@@ -36,6 +37,7 @@
             :type="showPwd ? 'text' : 'password'"
             class="login-input"
             placeholder="密码"
+            autocomplete="new-password"
             @keyup.enter="handleLogin"
           />
           <el-icon :size="18" class="input-eye" @click="showPwd=!showPwd" style="cursor:pointer">

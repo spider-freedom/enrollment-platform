@@ -228,7 +228,7 @@ import {
   Paperclip,
   Upload,
 } from '@element-plus/icons-vue'
-import { feedbackApi } from '@/api'
+import { feedbackApi, activityApi } from '@/api'
 import request from '@/api/request'
 import type { Feedback } from '@/types'
 import type { UploadFile, UploadRequestOptions } from 'element-plus'
@@ -336,6 +336,23 @@ async function fetchData() {
       label,
       value,
     }))
+    // Also load activities from the activity API
+    loadActivityOptions()
+  } catch { list.value = []; total.value = 0 }
+}
+
+async function loadActivityOptions() {
+  try {
+    const res: any = await activityApi.listCollege({ page:1, size:100 })
+    const list = res?.data?.list || res?.data?.records || []
+    const seen = new Set(activityOptions.value.map((a:any)=>a.value))
+    for (const a of list) {
+      if (!seen.has(a.id)) {
+        activityOptions.value.push({ label:a.title, value:a.id })
+        seen.add(a.id)
+      }
+    }
+  } catch {}
   } catch (err: any) {
     errorMsg.value = err?.response?.data?.message || err?.message || '加载反馈数据失败，请稍后重试'
     list.value = []

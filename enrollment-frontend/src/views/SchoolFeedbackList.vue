@@ -366,7 +366,7 @@ async function loadActivities() {
   try {
     const res = await activityApi.listSchool({ page: 1, size: 200 })
     const data = res?.data || res
-    const records = data?.records || (Array.isArray(data) ? data : [])
+    const records = data?.list || data?.records || (Array.isArray(data) ? data : [])
     activityOptions.value = records.map((a: any) => ({
       id: a.id,
       title: a.title,

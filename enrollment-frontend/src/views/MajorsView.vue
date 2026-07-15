@@ -28,11 +28,29 @@
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
           <span v-for="t in (m.tags||[])" :key="t" class="majors-tag">{{ t }}</span>
         </div>
-        <button class="majors-card-btn">查看详情</button>
+        <button class="majors-card-btn" @click="selectedMajor=m">查看详情</button>
       </div>
       <div v-if="filteredMajors.length===0" style="grid-column:1/-1;text-align:center;padding:64px 0;color:#94a3b8">
-        <div style="font-size:48px;margin-bottom:16px">🔍</div>
+        <div style="font-size:48px;margin-bottom:16px">📖</div>
         <p style="font-size:15px">没有找到匹配的专业</p>
+      </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div v-if="selectedMajor" class="modal-overlay" @click.self="selectedMajor=null">
+      <div class="modal-card">
+        <h2>{{ selectedMajor.name }}</h2>
+        <span class="modal-college">{{ selectedMajor.college }}</span>
+        <p class="modal-desc">{{ selectedMajor.desc }}</p>
+        <div class="modal-tags">
+          <span v-for="t in (selectedMajor.tags||[])" :key="t" class="majors-tag">{{ t }}</span>
+        </div>
+        <div class="modal-info">
+          <div><b>学制</b>：4年</div>
+          <div><b>学位</b>：学士</div>
+          <div><b>招生类别</b>：理工类</div>
+        </div>
+        <button class="modal-close-btn" @click="selectedMajor=null">关闭</button>
       </div>
     </div>
   </div>
@@ -43,6 +61,7 @@ import { ref, computed } from 'vue'
 
 const search = ref('')
 const selected = ref('')
+const selectedMajor = ref<any>(null)
 
 const colleges = ['全部','计算机科学与技术学院','数学与系统科学学院','信息科学与工程学院','化学化工学院','生命科学与技术学院','物理科学与技术学院','外国语学院','马克思主义学院']
 
@@ -97,4 +116,14 @@ const filteredMajors = computed(() => {
 .majors-tag { font-size:10px;padding:4px 8px;background:#f8fafc;color:#64748b;border-radius:6px;border:1px solid #f1f5f9; }
 .majors-card-btn { width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;color:#475569;font-size:14px;cursor:pointer;transition:all 0.2s; }
 .majors-card-btn:hover { background:#A31F34;color:#fff;border-color:#A31F34; }
+
+.modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px; }
+.modal-card { background:#fff;border-radius:20px;padding:40px;max-width:480px;width:100%;text-align:center; }
+.modal-card h2 { font-size:22px;font-weight:700;color:#1e293b;margin:0 0 8px; }
+.modal-college { display:inline-block;padding:4px 12px;background:rgba(201,169,110,0.1);color:#C9A96E;border-radius:9999px;font-size:12px;font-weight:600;margin-bottom:16px; }
+.modal-desc { font-size:14px;color:#64748b;line-height:1.7;margin:0 0 20px; }
+.modal-tags { display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:20px; }
+.modal-info { display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px; }
+.modal-info div { padding:12px;background:#f8fafc;border-radius:10px;font-size:13px;color:#475569; }
+.modal-close-btn { padding:10px 36px;background:#A31F34;color:#fff;border:none;border-radius:12px;font-size:14px;cursor:pointer; }
 </style>

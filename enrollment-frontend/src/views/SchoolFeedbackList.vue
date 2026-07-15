@@ -84,7 +84,8 @@
               clearable
               style="width: 140px"
             >
-              <el-option label="待回复" value="PENDING" />
+              <el-option label="全部状态" value="" />
+              <el-option label="待回复" value="SUBMITTED" />
               <el-option label="已回复" value="REPLIED" />
             </el-select>
           </el-form-item>

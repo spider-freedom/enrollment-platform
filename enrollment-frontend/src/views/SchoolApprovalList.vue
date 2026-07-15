@@ -84,12 +84,11 @@
               clearable
               style="width: 140px"
             >
+              <el-option label="全部状态" value="" />
               <el-option label="待学院审批" value="SUBMITTED" />
               <el-option label="待学校审批" value="APPROVING" />
               <el-option label="已通过" value="APPROVED" />
               <el-option label="已驳回" value="REJECTED" />
-              <el-option label="已通过" value="APPROVED" />
-              <el-option label="已拒绝" value="REJECTED" />
             </el-select>
           </el-form-item>
           <el-form-item>

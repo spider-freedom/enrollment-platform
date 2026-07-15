@@ -1,6 +1,7 @@
 # Backend
 enrollment-backend/target/
 enrollment-backend/.env
+enrollment-backend/src/main/resources/application-dev.yml
 *.class
 *.jar
 *.log

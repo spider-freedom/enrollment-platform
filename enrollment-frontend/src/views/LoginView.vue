@@ -3,7 +3,7 @@
     <div class="login-card">
       <div class="login-top">
         <div class="login-icon-box">
-          <span class="login-icon-text">X</span>
+          <img src="/images/xju-logo.png" style="width:48px;height:auto;filter:brightness(0) invert(1)" alt="新疆大学" />
         </div>
         <h1 class="login-title">欢迎登录</h1>
         <p class="login-sub">新疆大学招生宣传平台</p>

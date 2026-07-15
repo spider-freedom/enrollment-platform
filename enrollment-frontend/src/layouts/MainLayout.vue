@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <aside :style="{width:'240px',background:'#fff',borderRight:'1px solid #e2e8f0',display:'flex',flexDirection:'column',flexShrink:'0'}">
       <div style="padding:20px 20px 16px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:10px">
-        <div style="width:40px;height:40px;background:#A31F34;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;flex-shrink:0">X</div>
+        <img src="/images/xju-logo.png" style="width:40px;height:auto;flex-shrink:0" alt="新疆大学" />
         <div>
           <div style="font-weight:700;font-size:15px;color:#1e293b">新疆大学</div>
           <div style="font-size:11px;color:#94a3b8">招生宣传平台</div>

@@ -4,7 +4,7 @@
     <header class="pub-header">
       <div class="pub-header-inner">
         <router-link to="/" class="pub-logo">
-          <div class="pub-logo-circle">X</div>
+          <img src="/images/xju-logo.png" style="width:36px;height:auto" alt="新疆大学" />
           <div class="pub-logo-text">
             <span class="pub-logo-main">新疆大学</span>
             <span class="pub-logo-sub">2026招生宣传系统</span>

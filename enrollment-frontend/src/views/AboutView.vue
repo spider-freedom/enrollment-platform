@@ -60,17 +60,13 @@
 </template>
 
 <style scoped>
-.ab-header { background:#A31F34; padding:80px 24px; text-align:center; position:relative; overflow:hidden; }
-.ab-header::before { content:''; position:absolute; inset:0; opacity:0.06; background-image:radial-gradient(#C9A96E 1px,transparent 1px); background-size:20px 20px; }
-.ab-header h1 { position:relative; color:#fff; font-size:44px; font-weight:800; margin:0; }
+.ab-header { background:linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.4)),url('/images/campus-building.jpg') center/cover no-repeat; padding:100px 24px; text-align:center; position:relative; overflow:hidden; }
+.ab-header h1 { position:relative; color:#fff; font-size:44px; font-weight:800; margin:0; text-shadow:0 2px 8px rgba(0,0,0,0.3); }
 
 .ab-intro { padding:80px 24px; background:#fff; }
 .ab-intro-grid { max-width:1100px; margin:0 auto; display:flex; gap:64px; align-items:center; flex-wrap:wrap; }
 .ab-intro-img { flex:1; min-width:300px; height:360px; border-radius:24px;
-  background:
-    linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%),
-    linear-gradient(135deg, #1a2740 0%, #2d5078 30%, #8babcc 60%, #d4c5a0 80%, #C9A96E 100%),
-    radial-gradient(circle at 60% 35%, rgba(255,255,255,0.2) 0%, transparent 50%);
+  background: url('/images/campus-building.jpg') center/cover no-repeat;
   box-shadow:0 20px 60px rgba(0,0,0,0.15); }
 .ab-campus-card:nth-child(1) { background: linear-gradient(180deg, #fff 0%, #fef5f5 100%); border-left:4px solid #A31F34; }
 .ab-campus-card:nth-child(2) { background: linear-gradient(180deg, #fff 0%, #f5f7fe 100%); border-left:4px solid #2E7FB9; }

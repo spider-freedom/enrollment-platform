@@ -133,7 +133,8 @@ async function handleLogin() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #821829 0%, #A31F34 50%, #c23d4f 100%);
+  background: linear-gradient(135deg, rgba(130,24,41,0.85) 0%, rgba(163,31,52,0.8) 50%, rgba(194,61,79,0.85) 100%),
+    url('/images/campus-library.jpg') center/cover no-repeat;
   padding: 20px;
 }
 .login-card {

@@ -287,9 +287,7 @@ const pagination = reactive({
 
 // 筛选选项
 const activityOptions = ref<{ id: number; title: string }[]>([])
-const collegeOptions = ref<string[]>([
-  '计算机学院', '数学学院', '物理学院', '化学学院', '生科学院', '人文学院',
-])
+const collegeOptions = ref<string[]>([])
 
 // 弹窗
 const dialogVisible = ref(false)
@@ -402,11 +400,12 @@ async function loadActivities() {
   try {
     const res = await activityApi.listSchool({ page: 1, size: 200 })
     const data = res?.data || res
-    const records = data?.records || (Array.isArray(data) ? data : [])
+    const records = data?.list || data?.records || (Array.isArray(data) ? data : [])
     activityOptions.value = records.map((a: any) => ({
       id: a.id,
       title: a.title,
     }))
+    collegeOptions.value = [...new Set(records.map((a:any) => a.collegeName).filter(Boolean))] as string[]
   } catch {
     // 静默失败
   }

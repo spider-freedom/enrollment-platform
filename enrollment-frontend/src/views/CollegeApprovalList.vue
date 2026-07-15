@@ -253,7 +253,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Clock, CircleCheck, CircleClose, TrendCharts } from '@element-plus/icons-vue'
-import { aiApi, approvalApi } from '@/api'
+import { aiApi, approvalApi, activityApi } from '@/api'
 import type { Enrollment } from '@/types'
 
 // ---- 筛选状态 ----
@@ -412,17 +412,6 @@ async function fetchData() {
     } else if (res?.data?.records) {
       list.value = res.data.records
       total.value = res.data.total || 0
-      // 提取活动选项
-      const activitySet = new Map<string, number>()
-      list.value.forEach((e) => {
-        if (!activitySet.has(e.activityTitle)) {
-          activitySet.set(e.activityTitle, e.activityId)
-        }
-      })
-      activityOptions.value = Array.from(activitySet.entries()).map(([label, value]) => ({
-        label,
-        value,
-      }))
     } else if (res?.records) {
       list.value = res.records
       total.value = res.total || 0
@@ -546,7 +535,17 @@ async function confirmBatchReject() {
   }
 }
 
+async function loadActivities() {
+  try {
+    const res: any = await activityApi.listCollege({ page:1, size:200 })
+    const data = res?.data || res
+    const records = data?.list || data?.records || []
+    activityOptions.value = records.map((a:any) => ({ label:a.title, value:a.id }))
+  } catch {}
+}
+
 onMounted(() => {
+  loadActivities()
   fetchData()
 })
 </script>

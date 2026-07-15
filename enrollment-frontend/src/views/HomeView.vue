@@ -66,10 +66,13 @@
 .hero { position:relative; height:600px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
 .hero-bg { position:absolute; inset:0;
   background:
-    linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%),
-    linear-gradient(135deg, #1a1a2e 0%, #0f2744 25%, #1a3a5c 50%, #2d5a87 75%, #0f3460 100%),
-    radial-gradient(ellipse at 25% 30%, rgba(255,255,255,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 75% 70%, rgba(201,169,110,0.12) 0%, transparent 50%);
+    /* Sky */
+    linear-gradient(180deg, #1a2740 0%, #243b5e 30%, #2d5078 50%, #8babcc 80%, #c5d5e8 100%),
+    /* Sun glow */
+    radial-gradient(ellipse at 75% 15%, rgba(255,220,180,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 12%, rgba(255,255,255,0.15) 0%, transparent 30%),
+    /* Mountains silhouette - Tianshan */
+    linear-gradient(178deg, transparent 45%, #4a6fa5 45.5%, #3d5f8c 48%, #335480 50%, #2a4570 53%, #1e3358 56%, #162845 60%);
 }
 .hero-content { position:relative; z-index:2; text-align:center; max-width:720px; padding:0 24px; }
 .hero-title { font-size:48px; font-weight:800; color:#fff; margin:0 0 16px; line-height:1.2; }

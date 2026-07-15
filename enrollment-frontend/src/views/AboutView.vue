@@ -66,7 +66,15 @@
 
 .ab-intro { padding:80px 24px; background:#fff; }
 .ab-intro-grid { max-width:1100px; margin:0 auto; display:flex; gap:64px; align-items:center; flex-wrap:wrap; }
-.ab-intro-img { flex:1; min-width:300px; height:360px; border-radius:24px; background:linear-gradient(135deg,#1a1a2e,#2d5a87,#A31F34); box-shadow:0 20px 60px rgba(0,0,0,0.15); }
+.ab-intro-img { flex:1; min-width:300px; height:360px; border-radius:24px;
+  background:
+    linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%),
+    linear-gradient(135deg, #1a2740 0%, #2d5078 30%, #8babcc 60%, #d4c5a0 80%, #C9A96E 100%),
+    radial-gradient(circle at 60% 35%, rgba(255,255,255,0.2) 0%, transparent 50%);
+  box-shadow:0 20px 60px rgba(0,0,0,0.15); }
+.ab-campus-card:nth-child(1) { background: linear-gradient(180deg, #fff 0%, #fef5f5 100%); border-left:4px solid #A31F34; }
+.ab-campus-card:nth-child(2) { background: linear-gradient(180deg, #fff 0%, #f5f7fe 100%); border-left:4px solid #2E7FB9; }
+.ab-campus-card:nth-child(3) { background: linear-gradient(180deg, #fff 0%, #fdfaf3 100%); border-left:4px solid #C9A96E; }
 .ab-intro-text { flex:1; min-width:300px; }
 .ab-badge { display:inline-block; padding:6px 16px; background:rgba(163,31,52,0.08); color:#A31F34; border-radius:9999px; font-size:13px; font-weight:700; margin-bottom:16px; }
 .ab-intro-text h2 { font-size:32px; font-weight:700; color:#1e293b; margin:0 0 16px; }

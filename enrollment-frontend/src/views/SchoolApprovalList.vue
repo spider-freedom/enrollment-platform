@@ -71,9 +71,9 @@
             >
               <el-option
                 v-for="c in collegeOptions"
-                :key="c"
-                :label="c"
-                :value="c"
+                :key="c.id"
+                :label="c.name"
+                :value="c.id"
               />
             </el-select>
           </el-form-item>
@@ -287,7 +287,7 @@ const pagination = reactive({
 
 // 筛选选项
 const activityOptions = ref<{ id: number; title: string }[]>([])
-const collegeOptions = ref<string[]>([])
+const collegeOptions = ref<{id:number,name:string}[]>([])
 
 // 弹窗
 const dialogVisible = ref(false)
@@ -405,7 +405,9 @@ async function loadActivities() {
       id: a.id,
       title: a.title,
     }))
-    collegeOptions.value = [...new Set(records.map((a:any) => a.collegeName).filter(Boolean))] as string[]
+    const seen = new Map<number,string>()
+    records.forEach((a:any) => { if (a.collegeId && a.collegeName && !seen.has(a.collegeId)) seen.set(a.collegeId, a.collegeName) })
+    collegeOptions.value = Array.from(seen.entries()).map(([id,name]) => ({id,name}))
   } catch {
     // 静默失败
   }
@@ -420,7 +422,7 @@ async function fetchList() {
       size: pagination.size,
     }
     if (filters.activityId) params.activityId = filters.activityId
-    if (filters.college) params.collegeName = filters.college
+    if (filters.college) params.collegeId = filters.college
     if (filters.status) params.status = filters.status
 
     const res = await approvalApi.listSchool(params)

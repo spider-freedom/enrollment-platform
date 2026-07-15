@@ -43,7 +43,9 @@
       <el-dialog v-model="dialogVisible" title="完善报名信息" width="480px" top="8vh" :close-on-click-modal="false">
         <el-form label-width="80px">
           <el-form-item label="我的学院"><el-input :model-value="myCollege" disabled /></el-form-item>
-          <el-form-item label="院系"><el-input v-model="department" placeholder="请输入您的院系（如数学系）" /></el-form-item>
+          <el-form-item label="个人简介">
+            <el-input v-model="intro" type="textarea" :rows="4" placeholder="简单介绍一下自己..." maxlength="500" show-word-limit />
+          </el-form-item>
         </el-form>
         <template #footer>
           <el-button @click="dialogVisible=false">取消</el-button>
@@ -71,7 +73,7 @@ const error = ref('')
 const enrolling = ref(false)
 const alreadyEnrolled = ref(false)
 const dialogVisible = ref(false)
-const department = ref('')
+const intro = ref('')
 const myCollege = computed(() => store.userInfo?.collegeName || '未知学院')
 
 async function fetchActivity() {
@@ -98,7 +100,7 @@ async function checkEnrollment() {
 }
 
 function handleEnroll() {
-  department.value = ''
+  intro.value = ''
   dialogVisible.value = true
 }
 
@@ -106,7 +108,7 @@ async function submitEnroll() {
   if (!activity.value) return
   enrolling.value = true
   try {
-    await enrollmentApi.submit({ activityId: activity.value.id, contact: department.value })
+    await enrollmentApi.submit({ activityId: activity.value.id, intro: intro.value })
     ElMessage.success('报名成功！')
     alreadyEnrolled.value = true
     dialogVisible.value = false

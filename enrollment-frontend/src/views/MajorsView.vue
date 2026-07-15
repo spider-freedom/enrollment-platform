@@ -69,9 +69,10 @@ const filteredMajors = computed(() => {
 
 <style scoped>
 .majors-page { max-width:1100px; margin:0 auto; padding:48px 24px; }
-.majors-header { text-align:center; margin-bottom:40px; }
-.majors-header h1 { font-size:36px; font-weight:800; color:#1e293b; margin:0 0 8px; }
-.majors-header p { font-size:15px; color:#94a3b8; margin:0; }
+.majors-header { text-align:center; margin-bottom:40px; padding:80px 24px; margin:-48px -24px 40px;
+  background:linear-gradient(180deg,rgba(0,0,0,0.5),rgba(0,0,0,0.35)),url('/images/campus-classroom.jpg') center/cover no-repeat; }
+.majors-header h1 { font-size:36px; font-weight:800; color:#fff; margin:0 0 8px; text-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.majors-header p { font-size:15px; color:rgba(255,255,255,0.85); margin:0; }
 
 .majors-filter { background:#fff; padding:24px 32px; border-radius:16px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.04); margin-bottom:32px; }
 .majors-search { position:relative; margin-bottom:20px; }

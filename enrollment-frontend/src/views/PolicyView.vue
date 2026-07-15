@@ -155,10 +155,9 @@ const faqs = [
 
 <style scoped>
 .policy-page { min-height:calc(100vh - 64px); }
-.policy-hero { background:#A31F34; padding:60px 24px; text-align:center; color:#fff; position:relative; overflow:hidden; }
-.policy-hero::before { content:''; position:absolute; inset:0; opacity:0.05; background-image:radial-gradient(#C9A96E 1px,transparent 1px); background-size:20px 20px; }
-.policy-hero h1 { position:relative; font-size:40px; font-weight:800; margin:0 0 8px; }
-.policy-hero p { position:relative; font-size:15px; opacity:0.8; margin:0; }
+.policy-hero { background:linear-gradient(180deg,rgba(0,0,0,0.5),rgba(0,0,0,0.35)),url('/images/campus-arch.jpg') center/cover no-repeat; padding:80px 24px; text-align:center; color:#fff; position:relative; overflow:hidden; }
+.policy-hero h1 { position:relative; font-size:40px; font-weight:800; margin:0 0 8px; text-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.policy-hero p { position:relative; font-size:15px; opacity:0.9; margin:0; }
 .policy-body { max-width:960px; margin:0 auto; padding:40px 24px; }
 .policy-filter { background:#fff; border-radius:20px; border:1px solid #e2e8f0; padding:20px 24px; margin-bottom:32px; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
 .policy-filter-label { font-size:13px; color:#94a3b8; margin-bottom:12px; }

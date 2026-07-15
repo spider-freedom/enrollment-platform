@@ -108,7 +108,7 @@
 .feature-card p { font-size:13px; color:#64748b; line-height:1.7; margin:0; }
 
 /* CTA */
-.cta { position:relative; background:#A31F34; padding:80px 24px; text-align:center; overflow:hidden; }
+.cta { position:relative; background:linear-gradient(180deg,rgba(130,24,41,0.85),rgba(163,31,52,0.8)),url('/images/campus-students.jpg') center/cover no-repeat; padding:80px 24px; text-align:center; overflow:hidden; }
 .cta-pattern { position:absolute; inset:0; opacity:0.06; background-image:radial-gradient(#C9A96E 1px,transparent 1px); background-size:20px 20px; }
 .cta-content { position:relative; z-index:2; }
 .cta-title { font-size:36px; font-weight:700; color:#fff; margin:0 0 32px; }

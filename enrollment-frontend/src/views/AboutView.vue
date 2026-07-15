@@ -66,7 +66,7 @@
 .ab-intro { padding:80px 24px; background:#fff; }
 .ab-intro-grid { max-width:1100px; margin:0 auto; display:flex; gap:64px; align-items:center; flex-wrap:wrap; }
 .ab-intro-img { flex:1; min-width:300px; height:360px; border-radius:24px;
-  background: url('/images/campus-building.jpg') center/cover no-repeat;
+  background: url('/images/campus-green.jpg') center/cover no-repeat;
   box-shadow:0 20px 60px rgba(0,0,0,0.15); }
 .ab-campus-card:nth-child(1) { background: linear-gradient(180deg, #fff 0%, #fef5f5 100%); border-left:4px solid #A31F34; }
 .ab-campus-card:nth-child(2) { background: linear-gradient(180deg, #fff 0%, #f5f7fe 100%); border-left:4px solid #2E7FB9; }

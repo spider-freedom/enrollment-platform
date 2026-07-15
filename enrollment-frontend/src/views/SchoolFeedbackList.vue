@@ -330,9 +330,7 @@ const pagination = reactive({
 
 // 筛选选项
 const activityOptions = ref<{ id: number; title: string }[]>([])
-const collegeOptions = ref<string[]>([
-  '计算机学院', '数学学院', '物理学院', '化学学院', '生科学院', '人文学院',
-])
+const collegeOptions = ref<string[]>([])
 
 // 查看详情
 const viewVisible = ref(false)
@@ -372,6 +370,9 @@ async function loadActivities() {
       id: a.id,
       title: a.title,
     }))
+    // Extract unique college names
+    const colleges = [...new Set(records.map((a:any) => a.collegeName).filter(Boolean))]
+    collegeOptions.value = colleges as string[]
   } catch {
     // 静默失败
   }

@@ -190,16 +190,16 @@ async function fetchNotifications() {
     if (role==='student'||role==='teacher') {
       const api = role==='teacher' ? activityApi.listTeacher : activityApi.listStudent
       const res: any = await api({ page:1, size:3 })
-      const recs = res?.data?.records || res?.records || []
+      const recs = res?.data?.list || res?.data?.records || res?.records || []
       for (const a of recs) items.push({ icon:'📢', title:'新活动发布', desc:`「${a.title}」已开放报名`, time:a.createTime?.substring(0,10)||'', path:`/${role}/activities/${a.id}` })
       const eRes: any = await enrollmentApi.listMy({ page:1, size:5 })
-      const es = eRes?.data?.records || eRes?.records || []
+      const es = eRes?.data?.list || eRes?.data?.records || eRes?.records || []
       for (const e of es) {
         if (e.status==='APPROVED') items.push({ icon:'✅', title:'报名已通过', desc:'活动报名已通过审核', time:e.approvedAt?.substring(0,10)||'', path:`/${role}/enrollments` })
         else if (e.status==='REJECTED') items.push({ icon:'❌', title:'报名被驳回', desc:e.rejectReason?`原因:${e.rejectReason}`:'报名未通过审核', time:e.updateTime?.substring(0,10)||'', path:`/${role}/enrollments` })
       }
       const fRes: any = await feedbackApi.listMy({ page:1, size:5 })
-      const fs = fRes?.data?.records || fRes?.records || []
+      const fs = fRes?.data?.list || fRes?.data?.records || fRes?.records || []
       for (const f of fs) {
         if (f.status==='REPLIED') items.push({ icon:'📨', title:'反馈收到回复', desc:'管理员回复了您的活动反馈', time:f.replyTime?.substring(0,10)||'', path:`/${role}/my-feedback` })
       }

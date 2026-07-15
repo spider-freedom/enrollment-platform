@@ -207,18 +207,18 @@ async function fetchNotifications() {
     if (role==='college_admin') {
       const aRes: any = await approvalApi.listCollege({ page:1, size:1 })
       const pending = aRes?.data?.total || aRes?.total || 0
-      if (pending>0) items.push({ icon:'📋', title:'有待审批报名', desc:`有 ${pending} 条报名申请等待您审批`, path:'/college/approvals' })
+      if (pending>0) items.push({ icon:'📋', title:'有待审批报名', desc:`有 ${pending} 条报名申请等待您审批`, path:'/college/approvals', role:'college_admin' })
       const fRes: any = await feedbackApi.listCollege({ page:1, size:1 })
       const ft = fRes?.data?.total || fRes?.total || 0
-      if (ft>0) items.push({ icon:'📨', title:'反馈管理', desc:`共有 ${ft} 条活动反馈`, path:'/college/feedbacks' })
+      if (ft>0) items.push({ icon:'📨', title:'反馈管理', desc:`共有 ${ft} 条活动反馈`, path:'/college/feedbacks', role:'college_admin' })
     }
     if (role==='school_admin') {
       const aRes: any = await approvalApi.listSchool({ page:1, size:1 })
       const pending = aRes?.data?.total || aRes?.total || 0
-      if (pending>0) items.push({ icon:'📋', title:'有待审批报名', desc:`有 ${pending} 条报名等待学校审批`, path:'/school/approvals' })
+      if (pending>0) items.push({ icon:'📋', title:'有待审批报名', desc:`有 ${pending} 条报名等待学校审批`, path:'/school/approvals', role:'school_admin' })
       const fRes: any = await feedbackApi.listSchool({ page:1, size:1 })
       const ft = fRes?.data?.total || fRes?.total || 0
-      if (ft>0) items.push({ icon:'📨', title:'反馈管理', desc:`共有 ${ft} 条活动反馈`, path:'/school/feedbacks' })
+      if (ft>0) items.push({ icon:'📨', title:'反馈管理', desc:`共有 ${ft} 条活动反馈`, path:'/school/feedbacks', role:'school_admin' })
     }
   } catch {}
   notifications.value = items
@@ -227,8 +227,8 @@ async function fetchNotifications() {
   localStorage.setItem('notifLastCount', String(items.length))
 }
 const filteredNotifications = computed(() => {
-  const r = store.currentRole || ''
-  return notifications.value.filter((n:any) => roleLabelMap[n.role]===roleLabelMap[r] || n.role===r)
+  const r = (store.currentRole || '').toLowerCase()
+  return notifications.value.filter((n:any) => !n.role || (n.role||'').toLowerCase()===r)
 })
 function markAllRead() { unreadCount.value=0; localStorage.setItem('notifLastCount',String(notifications.value.length)) }
 

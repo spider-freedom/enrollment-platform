@@ -25,7 +25,7 @@
                 <el-icon :size="28"><Document /></el-icon>
               </div>
               <div class="stat-content">
-                <h1 class="stat-number">{{ animatedStats.totalActivities }}</h1>
+                <h1 class="stat-number">{{ stats.totalActivities }}</h1>
                 <p>活动总数 <span class="stat-badge up">↑ 12%</span></p>
               </div>
             </div>
@@ -38,7 +38,7 @@
                 <el-icon :size="28"><UserFilled /></el-icon>
               </div>
               <div class="stat-content">
-                <h1 class="stat-number">{{ animatedStats.totalEnrollments }}</h1>
+                <h1 class="stat-number">{{ stats.totalEnrollments }}</h1>
                 <p>报名总数 <span class="stat-badge up">↑ 23%</span></p>
               </div>
             </div>
@@ -51,7 +51,7 @@
                 <el-icon :size="28"><CircleCheckFilled /></el-icon>
               </div>
               <div class="stat-content">
-                <h1 class="stat-number">{{ animatedStats.approvalRate }}%</h1>
+                <h1 class="stat-number">{{ stats.approvalRate }}%</h1>
                 <p>通过率 <span class="stat-badge up">↑ 5%</span></p>
               </div>
             </div>
@@ -64,7 +64,7 @@
                 <el-icon :size="28"><StarFilled /></el-icon>
               </div>
               <div class="stat-content">
-                <h1 class="stat-number">{{ animatedStats.avgRating }}</h1>
+                <h1 class="stat-number">{{ stats.avgRating }}</h1>
                 <p>平均评分 <span class="stat-badge up">↑ 0.3</span></p>
               </div>
             </div>
@@ -159,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import * as echarts from 'echarts'
 import { statisticsApi, feedbackApi, activityApi } from '@/api'
 import { Document, UserFilled, CircleCheckFilled, StarFilled } from '@element-plus/icons-vue'
@@ -176,36 +176,6 @@ const stats = reactive({
   avgRating: 0,
 })
 
-// Animated stats for smooth number transitions
-const animatedStats = reactive({
-  totalActivities: 0,
-  totalEnrollments: 0,
-  approvalRate: 0,
-  avgRating: 0,
-})
-
-function animateValue(key: keyof typeof animatedStats, target: number) {
-  const start = animatedStats[key]
-  const diff = target - start
-  if (diff === 0) return
-  const duration = 600
-  const startTime = performance.now()
-  function step(now: number) {
-    const elapsed = now - startTime
-    const progress = Math.min(elapsed / duration, 1)
-    const eased = 1 - Math.pow(1 - progress, 3)
-    ;(animatedStats as any)[key] = Math.round((start + diff * eased) * 10) / 10
-    if (progress < 1) {
-      requestAnimationFrame(step)
-    }
-  }
-  requestAnimationFrame(step)
-}
-
-watch(() => stats.totalActivities, (v) => animateValue('totalActivities', v))
-watch(() => stats.totalEnrollments, (v) => animateValue('totalEnrollments', v))
-watch(() => stats.approvalRate, (v) => animateValue('approvalRate', v))
-watch(() => stats.avgRating, (v) => animateValue('avgRating', v))
 
 const recentFeedbacks = ref<any[]>([])
 

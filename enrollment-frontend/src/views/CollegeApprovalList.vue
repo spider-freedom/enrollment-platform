@@ -384,9 +384,9 @@ function roleTagType(r: string): string {
 
 // ---- 统计（基于全部数据，忽略分页） ----
 const stats = computed(() => {
-  const pending = list.value.filter((e) => e.status === 'SUBMITTED' || e.status === 'APPROVING').length
-  const approved = list.value.filter((e) => e.status === 'APPROVED').length
-  const rejected = list.value.filter((e) => e.status === 'REJECTED').length
+  const pending = list.value.filter((e) => e.currentStatus === 'SUBMITTED' || e.currentStatus === 'APPROVING').length
+  const approved = list.value.filter((e) => e.currentStatus === 'APPROVED').length
+  const rejected = list.value.filter((e) => e.currentStatus === 'REJECTED').length
   const totalCount = list.value.length || 1
   const approvalRate = Math.round((approved / totalCount) * 100)
   return { pending, approved, rejected, approvalRate }

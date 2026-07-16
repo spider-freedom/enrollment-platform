@@ -27,7 +27,7 @@
             class="login-input"
             placeholder="学号 / 工号"
             autocomplete="off"
-            @input="form.username=form.username.replace(/[^a-zA-Z]/g,'')"
+            @input="form.username=form.username.replace(/[一-鿿]/g,'')"
             @keyup.enter="handleLogin"
           />
         </div>

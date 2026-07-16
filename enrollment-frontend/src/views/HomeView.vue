@@ -4,11 +4,11 @@
     <section class="hero">
       <div class="hero-bg"></div>
       <div class="hero-content">
-        <h1 class="hero-title">筑梦新大，<br/><span class="hero-gold">成就出彩人生</span></h1>
-        <p class="hero-desc">新疆大学是国家"双一流"建设高校，加入我们，开启你的精彩大学之旅</p>
+        <h1 class="hero-title">{{ $t('home.hero1') }}<br/><span class="hero-gold">{{ $t('home.hero2') }}</span></h1>
+        <p class="hero-desc">{{ $t('home.heroDesc') }}</p>
         <div class="hero-btns">
-          <router-link to="/majors" class="hero-btn-red">探索专业 <span style="margin-left:4px">→</span></router-link>
-          <router-link to="/ai-assistant" class="hero-btn-glass">AI 咨询</router-link>
+          <router-link to="/majors" class="hero-btn-red">{{ $t('home.btnMajors') }} <span style="margin-left:4px">→</span></router-link>
+          <router-link to="/ai-assistant" class="hero-btn-glass">{{ $t('home.btnAI') }}</router-link>
         </div>
       </div>
     </section>

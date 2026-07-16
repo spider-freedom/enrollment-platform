@@ -1,0 +1,10 @@
+{
+  "common": { "home":"首页","about":"学校概况","policy":"招生政策","majors":"专业查询","activities":"活动报名","ai":"AI咨询","login":"登录","register":"注册","logout":"退出登录","profile":"个人主页","search":"搜索","reset":"重置","save":"保存","cancel":"取消","confirm":"确认","delete":"删除","edit":"编辑","create":"创建","export":"导出","import":"导入","refresh":"刷新","loading":"加载中...","noData":"暂无数据","back":"返回","submit":"提交","success":"操作成功","error":"操作失败" },
+  "nav": { "home":"首页","about":"学校概况","policy":"招生政策","majors":"专业查询","activities":"活动报名","ai":"AI咨询","aiTitle":"新大招生 AI 数字人","aiOnline":"在线咨询中","aiPlaceholder":"输入你的问题...","aiSend":"发送" },
+  "login": { "title":"欢迎登录","subtitle":"新疆大学招生宣传平台","username":"学号 / 工号","password":"密码","btnLogin":"登 录","noAccount":"还没有账号？立即注册","selectRole":"请选择身份","roleMismatch":"身份不匹配！请选择正确的身份登录","student":"学生","teacher":"教师","collegeAdmin":"学院管理员","schoolAdmin":"学校管理员" },
+  "home": { "hero1":"筑梦新大，","hero2":"成就出彩人生","heroDesc":"新疆大学是国家\"双一流\"建设高校，加入我们，开启你的精彩大学之旅","btnMajors":"探索专业","btnAI":"AI 咨询","year":"建校年份","discipline":"双一流学科","students":"在校学生","area":"校园面积","features":"一流平台，成就未来","feature1":"学术顶尖","feature1desc":"双一流建设高校，拥有多个国家级重点学科和科研平台","feature2":"专业多元","feature2desc":"涵盖理、工、文、法、经、管等多个学科门类，90+本科专业","feature3":"校园生活","feature3desc":"现代化宿舍、图书馆、体育馆等设施一应俱全，多彩社团活动","cta":"在这里，续写你的青春故事","ctaBtn":"立即注册报名" },
+  "admin": { "dashboard":"数据大屏","activityMgmt":"活动管理","approvalMgmt":"报名审批","feedbackMgmt":"反馈管理","userMgmt":"用户管理","createActivity":"创建活动" },
+  "student": { "myActivities":"我的活动","myEnrollments":"已报名活动","myFeedback":"我的反馈","enroll":"立即报名","enrolled":"已报名","closed":"报名已截止","withdraw":"撤回","feedback":"反馈","viewDetail":"查看详情" },
+  "approval": { "pending":"待审核","approved":"已通过","rejected":"已驳回","approve":"通过","reject":"驳回","batchApprove":"批量通过","aiSuggest":"AI建议" },
+  "status": { "draft":"草稿","published":"报名中","ongoing":"进行中","ended":"已结束","submitted":"待审核","approving":"审批中","waitCollege":"等待学院审批","waitSchool":"等待学校审批","replied":"已回复","closed":"已关闭" }
+}

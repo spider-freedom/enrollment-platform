@@ -16,6 +16,9 @@
             {{ item.label }}
           </router-link>
 
+          <span class="pub-nav-divider"></span>
+          <span v-for="l in langOptions" :key="l.value" class="lang-btn" :class="{active:locale===l.value}" @click="switchLang(l.value)">{{ l.label }}</span>
+
           <template v-if="store.isLoggedIn">
             <span class="pub-nav-divider"></span>
             <router-link :to="dashboardPath" class="pub-nav-user">
@@ -93,12 +96,20 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 import { User, SwitchButton, Menu, Close } from '@element-plus/icons-vue'
+import { langOptions } from '@/i18n'
 
 const store = useUserStore()
 const router = useRouter()
+const { locale } = useI18n()
 const mobileOpen = ref(false)
+
+function switchLang(lang: string) {
+  locale.value = lang
+  localStorage.setItem('lang', lang)
+}
 
 const navItems = [
   { label:'首页', path:'/' },
@@ -147,6 +158,11 @@ function handleLogout() {
 .pub-btn-outline:hover { background:#fff; color:#A31F34; }
 .pub-btn-solid { background:#C9A96E; color:#fff; padding:6px 16px; border-radius:8px; text-decoration:none; font-size:13px; font-weight:600; transition:opacity 0.2s; }
 .pub-btn-solid:hover { opacity:0.9; }
+
+.lang-btn { color:rgba(255,255,255,0.7); font-size:12px; cursor:pointer; padding:2px 6px; border-radius:4px; transition:all 0.2s; user-select:none; }
+.lang-btn:hover { color:#C9A96E; }
+.lang-btn.active { color:#C9A96E; font-weight:700; }
+
 .pub-menu-btn { display:block; background:none; border:none; color:#fff; cursor:pointer; margin-left:auto; }
 @media (min-width:900px) { .pub-menu-btn { display:none; } }
 

@@ -201,16 +201,12 @@ const defaultCategory = {
 function initCharts() {
   if (trendChartRef.value) {
     trendInstance = echarts.init(trendChartRef.value)
-    trendInstance.setOption(
-      createBarOption(defaultCategory.names, defaultCategory.values, '活动数'),
-    )
+    trendInstance.setOption(createBarOption(['加载中'], [0], '活动数'))
   }
 
   if (collegeChartRef.value) {
     collegeInstance = echarts.init(collegeChartRef.value)
-    collegeInstance.setOption(
-      createBarOption(defaultCollege.names, defaultCollege.values, '报名数'),
-    )
+    collegeInstance.setOption(createBarOption(['加载中'], [0], '报名数'))
   }
 
   if (ratingChartRef.value) {

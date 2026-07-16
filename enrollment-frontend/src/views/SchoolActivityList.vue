@@ -33,17 +33,15 @@
               @keyup.enter="handleSearch"
             />
           </el-form-item>
-          <el-form-item label="活动类型">
-            <el-select
-              v-model="filters.type"
-              placeholder="全部类型"
-              clearable
-              style="width: 140px"
-            >
-              <el-option label="线下宣讲" value="OFFLINE" />
-              <el-option label="线上直播" value="ONLINE" />
-              <el-option label="开放日" value="OPEN_DAY" />
-              <el-option label="面试" value="INTERVIEW" />
+          <el-form-item label="线上线下">
+            <el-select v-model="filters.type" placeholder="全部" clearable style="width:130px">
+              <el-option label="线上活动" value="ONLINE" />
+              <el-option label="线下活动" value="OFFLINE" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="活动分类">
+            <el-select v-model="filters.category" placeholder="全部分类" clearable style="width:140px">
+              <el-option v-for="c in categoryList" :key="c.value" :label="c.label" :value="c.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="状态">
@@ -137,6 +135,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import { downloadFile } from '@/api/request'
+import { ACTIVITY_CATEGORY_FILTERS } from '@/utils/constants'
+const categoryList = ACTIVITY_CATEGORY_FILTERS
 import type { Activity } from '@/types'
 
 const router = useRouter()
@@ -150,6 +150,7 @@ const total = ref(0)
 const filters = reactive({
   keyword: '',
   type: '',
+  category: '',
   status: '',
 })
 
@@ -232,6 +233,7 @@ async function fetchList() {
     }
     if (filters.keyword) params.keyword = filters.keyword
     if (filters.type) params.type = filters.type
+    if (filters.category) params.category = filters.category
     if (filters.status) params.status = filters.status
 
     const res = await activityApi.listSchool(params)
@@ -265,6 +267,7 @@ function handleSearch() {
 function handleReset() {
   filters.keyword = ''
   filters.type = ''
+  filters.category = ''
   filters.status = ''
   pagination.page = 1
   fetchList()

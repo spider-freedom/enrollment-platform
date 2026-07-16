@@ -89,4 +89,17 @@ public class AiController {
                 Map.of("suggestion", "请人工判断", "reason", "AI服务暂不可用: " + e.getMessage(), "risk", "无"));
         }
     }
+
+    @PostMapping("/chat")
+    public ApiResponse<String> chat(@RequestBody Map<String,String> body) {
+        String question = body.getOrDefault("question", "");
+        if (question.isBlank()) return ApiResponse.fail("请输入问题");
+        try {
+            String prompt = "你是新疆大学招生AI助手，请用中文回答用户问题。用户问题：" + question;
+            String answer = chatLanguageModel.generate(prompt);
+            return ApiResponse.ok(answer);
+        } catch (Exception e) {
+            return ApiResponse.ok("抱歉，AI服务暂时不可用，请稍后重试。如需帮助，请拨打招生办电话 0991-8585671。");
+        }
+    }
 }

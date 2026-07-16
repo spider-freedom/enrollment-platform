@@ -107,10 +107,11 @@ export const policyApi = {
 
 // AI
 export const aiApi = {
-  suggestSchool: (keyword: string) => request.get('/ai/suggest-school', { params: { keyword } }),
-  normalizeSchool: (name: string) => request.get('/ai/normalize-school', { params: { name } }),
-  analyzeFeedback: (content: string) => request.post('/ai/analyze-feedback', { content }),
+  suggestSchool: (keyword: string) => request.get('/ai/school/suggest', { params: { keyword } }),
+  normalizeSchool: (name: string) => request.post('/ai/school/normalize', { name }),
+  analyzeFeedback: (content: string) => request.post('/ai/feedback/analyze', { content }),
   approvalSuggest: (data: any) => request.post('/ai/approval/suggest', data),
+  chat: (question: string) => request.post('/ai/chat', { question }),
 }
 
 // School User

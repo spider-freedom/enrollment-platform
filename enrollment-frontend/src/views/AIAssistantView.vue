@@ -41,39 +41,35 @@
 
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
+import { aiApi } from '@/api'
+import { ElMessage } from 'element-plus'
 
 const input = ref('')
 const typing = ref(false)
 const chatRef = ref<any>(null)
 const messages = ref<{role:string,text:string,time:string}[]>([
-  {role:'bot',text:'你好！我是新大招生AI助手，有什么可以帮你的吗？你可以问我关于分数线、专业设置、宿舍条件等问题。',time:'刚刚'},
+  {role:'bot',text:'你好！我是新大招生AI助手，有什么可以帮你的吗？',time:'刚刚'},
 ])
 
 const suggestions = ['今年录取分数线是多少','双一流学科有哪些','校园开放日什么时候','宿舍条件怎么样']
 
-const responses: Record<string,string> = {
-  '分数线': '2026年新疆大学录取分数线因省份和批次而异。新疆本地一本理科约为480分左右，文科约为510分。外省分数线请参考当地教育考试院公布的数据。',
-  '双一流': '新疆大学双一流建设学科包括：马克思主义理论、化学、计算机科学与技术。这三个学科入选国家"双一流"建设名单。',
-  '开放日': '2026年校园开放日暂定4月15日举行，届时将有专业介绍、校园参观、师生交流等活动。请关注学校官网获取最新通知。',
-  '宿舍': '新疆大学宿舍为4-6人间，配有独立卫生间、空调、热水器、宽带网络。宿舍区有食堂、超市等生活设施。',
-}
-
-function sendMsg(text: string) {
+async function sendMsg(text: string) {
   if (!text.trim()) return
   const t = text.trim()
   messages.value.push({role:'user',text:t,time:'刚刚'})
   input.value = ''
   typing.value = true
   scrollDown()
-  setTimeout(() => {
+  try {
+    const res: any = await aiApi.chat(t)
+    const reply = res?.data || res?.message || res || '抱歉，暂时无法回答您的问题。'
+    messages.value.push({role:'bot',text:typeof reply==='string'?reply:JSON.stringify(reply),time:'刚刚'})
+  } catch {
+    messages.value.push({role:'bot',text:'抱歉，AI服务暂时不可用，请稍后重试。',time:'刚刚'})
+  } finally {
     typing.value = false
-    let reply = '这是一个很好的问题。建议你访问新疆大学招生官网或拨打招生办电话 0991-8585671 获取最新信息。'
-    for (const [k,v] of Object.entries(responses)) {
-      if (t.includes(k)) { reply = v; break }
-    }
-    messages.value.push({role:'bot',text:reply,time:'刚刚'})
     scrollDown()
-  }, 1000)
+  }
 }
 
 function scrollDown() {

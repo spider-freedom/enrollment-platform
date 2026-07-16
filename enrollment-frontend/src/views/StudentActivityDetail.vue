@@ -360,7 +360,9 @@ async function checkEnrollmentStatus() {
   try {
     const res: any = await enrollmentApi.listMy({ page: 1, size: 100 })
     let enrollments: any[] = []
-    if (res?.data?.records) {
+    if (res?.data?.list) {
+      enrollments = res.data.list
+    } else if (res?.data?.records) {
       enrollments = res.data.records
     } else if (res?.records) {
       enrollments = res.records
@@ -395,7 +397,7 @@ async function submitEnroll() {
     await enrollmentApi.submit({
       activityId: activity.value.id,
       targetSchool: targetSchool.value,
-      briefIntro: briefIntro.value,
+      intro: briefIntro.value,
     })
     ElMessage.success('报名成功！')
     alreadyEnrolled.value = true

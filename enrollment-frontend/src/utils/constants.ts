@@ -90,7 +90,8 @@ export function getDisplayStatus(activity: any): string {
 export function canEnroll(activity: any): boolean {
   if (!activity) return false
   const status = activity.status || ''
-  if (status === 'DRAFT' || status === 'ENDED') return false
+  // 与后端保持一致：仅 PUBLISHED/ONGOING 状态的活动可报名
+  if (status && status !== 'PUBLISHED' && status !== 'ONGOING') return false
   const now = new Date()
   const enrollStart = activity.enrollStart ? new Date(activity.enrollStart) : null
   const enrollEnd = activity.enrollEnd ? new Date(activity.enrollEnd) : null

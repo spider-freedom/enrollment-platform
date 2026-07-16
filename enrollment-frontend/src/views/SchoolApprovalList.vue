@@ -257,6 +257,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { aiApi, approvalApi, activityApi } from '@/api'
 import { downloadFile } from '@/api/request'
+import { parseListResponse } from '@/utils/api'
 import type { Enrollment } from '@/types'
 
 // ============= 状态 =============
@@ -426,21 +427,7 @@ async function fetchList() {
     if (filters.status) params.status = filters.status
 
     const res = await approvalApi.listSchool(params)
-    const data = res?.data || res
-
-    if (data && data.list) {
-      list.value = data.list
-      total.value = data.total ?? 0
-    } else if (data && data.records) {
-      list.value = data.records
-      total.value = data.total ?? 0
-    } else if (Array.isArray(data)) {
-      list.value = data
-      total.value = data.length
-    } else {
-      list.value = []
-      total.value = 0
-    }
+    const r = parseListResponse(res); list.value = r.list; total.value = r.total
 
     // 计算统计
     updateStats()

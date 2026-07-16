@@ -254,6 +254,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Clock, CircleCheck, CircleClose, TrendCharts } from '@element-plus/icons-vue'
 import { aiApi, approvalApi, activityApi } from '@/api'
+import { parseListResponse } from '@/utils/api'
 import type { Enrollment } from '@/types'
 
 // ---- 筛选状态 ----
@@ -406,19 +407,7 @@ async function fetchData() {
     if (filterActivityId.value) params.activityId = filterActivityId.value
 
     const res: any = await approvalApi.listCollege(params)
-    if (res?.data?.list) {
-      list.value = res.data.list
-      total.value = res.data.total || 0
-    } else if (res?.data?.records) {
-      list.value = res.data.records
-      total.value = res.data.total || 0
-    } else if (res?.records) {
-      list.value = res.records
-      total.value = res.total || 0
-    } else {
-      list.value = []
-      total.value = 0
-    }
+    const r = parseListResponse(res); list.value = r.list; total.value = r.total
   } catch (err: any) {
     errorMsg.value = err?.response?.data?.message || err?.message || '加载审批数据失败，请稍后重试'
     list.value = []

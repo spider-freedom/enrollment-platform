@@ -229,6 +229,7 @@ import {
   Upload,
 } from '@element-plus/icons-vue'
 import { feedbackApi, activityApi } from '@/api'
+import { parseListResponse } from '@/utils/api'
 import request from '@/api/request'
 import type { Feedback } from '@/types'
 import type { UploadFile, UploadRequestOptions } from 'element-plus'
@@ -309,19 +310,7 @@ async function fetchData() {
     if (filterActivityId.value) params.activityId = filterActivityId.value
 
     const res: any = await feedbackApi.listCollege(params)
-    if (res?.data?.list) {
-      list.value = res.data.list
-      total.value = res.data.total || 0
-    } else if (res?.data?.records) {
-      list.value = res.data.records
-      total.value = res.data.total || 0
-    } else if (res?.records) {
-      list.value = res.records
-      total.value = res.total || 0
-    } else {
-      list.value = []
-      total.value = 0
-    }
+    const r = parseListResponse(res); list.value = r.list; total.value = r.total
 
     // 提取活动选项
     const activitySet = new Map<string, number>()

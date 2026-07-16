@@ -25,10 +25,8 @@
           <input
             v-model="form.username"
             class="login-input"
-            placeholder="学号 / 工号（仅数字）"
+            placeholder="学号 / 工号"
             autocomplete="off"
-            inputmode="numeric"
-            @input="form.username=form.username.replace(/\D/g,'')"
             @keyup.enter="handleLogin"
           />
         </div>

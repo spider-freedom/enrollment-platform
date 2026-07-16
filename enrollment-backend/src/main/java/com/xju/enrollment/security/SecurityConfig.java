@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/activity/list/student", "/api/activity/list/teacher", "/api/activity/banners", "/api/activity/{id}").permitAll()
                         .requestMatchers("/api/policy/list", "/api/policy/{id}", "/api/ai/policy/**").permitAll()
-                        .requestMatchers("/api/ai/school/suggest", "/api/ai/school/normalize", "/api/ai/chat").permitAll()
+                        .requestMatchers("/api/ai/school/suggest", "/api/ai/school/normalize", "/api/ai/chat", "/api/ai/chat/stream").permitAll()
                         .requestMatchers("/api/statistics/**").hasAnyAuthority("COLLEGE_ADMIN", "SCHOOL_ADMIN")
                         .requestMatchers("/api/college/**").hasAuthority("COLLEGE_ADMIN")
                         .requestMatchers("/api/school/**").hasAuthority("SCHOOL_ADMIN")

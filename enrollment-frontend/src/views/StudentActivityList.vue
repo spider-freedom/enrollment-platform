@@ -20,9 +20,9 @@
     <!-- Tabs -->
     <div class="tabs-bar">
       <el-radio-group v-model="activeTab" @change="handleTabChange" size="default">
-        <el-radio-button value="all">{{ $t("全部") }}</el-radio-button>
-        <el-radio-button value="offline">{{ $t("线下") }}</el-radio-button>
-        <el-radio-button value="online">{{ $t("线上") }}</el-radio-button>
+        <el-radio-button value="all">全部</el-radio-button>
+        <el-radio-button value="offline">线下</el-radio-button>
+        <el-radio-button value="online">线上</el-radio-button>
       </el-radio-group>
     </div>
 
@@ -124,7 +124,7 @@
       :sub-title="errorMessage"
     >
       <template #extra>
-        <el-button type="primary" @click="fetchActivities">{{ $t("重新加载") }}</el-button>
+        <el-button type="primary" @click="fetchActivities">重新加载</el-button>
       </template>
     </el-result>
 

@@ -8,37 +8,37 @@
       sub-title="请检查网络连接后重试"
     >
       <template #extra>
-        <el-button type="primary" @click="fetchList">{{ $t("重新加载") }}</el-button>
+        <el-button type="primary" @click="fetchList">重新加载</el-button>
       </template>
     </el-result>
 
     <template v-else>
-      <h3>{{ $t("反馈管理（校级）") }}</h3>
+      <h3>反馈管理（校级）</h3>
 
       <!-- 统计卡片 -->
       <el-row :gutter="16" class="stats-row">
         <el-col :span="6">
           <div class="mini-stat" style="border-left-color: #1a56db">
             <div class="mini-stat-value">{{ stats.total }}</div>
-            <div class="mini-stat-label">{{ $t("反馈总数") }}</div>
+            <div class="mini-stat-label">反馈总数</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="mini-stat" style="border-left-color: #f59e0b">
             <div class="mini-stat-value">{{ stats.pending }}</div>
-            <div class="mini-stat-label">{{ $t("待回复") }}</div>
+            <div class="mini-stat-label">待回复</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="mini-stat" style="border-left-color: #16a34a">
             <div class="mini-stat-value">{{ stats.replied }}</div>
-            <div class="mini-stat-label">{{ $t("已回复") }}</div>
+            <div class="mini-stat-label">已回复</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="mini-stat" style="border-left-color: #7c3aed">
             <div class="mini-stat-value">{{ stats.avgRating }}</div>
-            <div class="mini-stat-label">{{ $t("平均评分") }}</div>
+            <div class="mini-stat-label">平均评分</div>
           </div>
         </el-col>
       </el-row>
@@ -90,12 +90,12 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="handleSearch">{{ $t("查询") }}</el-button>
-            <el-button @click="handleReset">{{ $t("重置") }}</el-button>
+            <el-button type="primary" @click="handleSearch">查询</el-button>
+            <el-button @click="handleReset">重置</el-button>
             <el-button type="warning" :loading="aiAnalyzing" @click="runAiAnalysis">
-              {{ $t("🤖 AI分析") }}
+              🤖 AI分析
             </el-button>
-            <el-button type="success" @click="handleExport" icon="Download">{{ $t("导出Excel") }}</el-button>
+            <el-button type="success" @click="handleExport" icon="Download">导出Excel</el-button>
           </el-form-item>
         </el-form>
 
@@ -110,7 +110,7 @@
         >
           <template #default>
             <div style="margin-top: 4px">
-              <span style="color: #6b7280; font-size: 13px">{{ $t("关键词:") }} </span>
+              <span style="color: #6b7280; font-size: 13px">关键词: </span>
               <el-tag
                 v-for="(kw, idx) in aiResult.keywords"
                 :key="idx"
@@ -178,13 +178,13 @@
         <el-table-column prop="createTime" label="提交时间" width="160" />
         <el-table-column label="操作" width="120" align="center">
           <template #default="{ row }">
-            <el-button size="small" type="primary" link @click="openViewDialog(row)">{{ $t("查看") }}</el-button>
+            <el-button size="small" type="primary" link @click="openViewDialog(row)">查看</el-button>
             <el-button
               v-if="row.status === 'SUBMITTED'"
               size="small"
               type="success"
               link
-              @click="openReplyDialog(row)">{{ $t("回复") }}</el-button>
+              @click="openReplyDialog(row)">回复</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -277,19 +277,19 @@
               list-type="text"
             >
               <el-button type="primary" size="small" plain>
-                <el-icon style="margin-right: 4px"><Upload /></el-icon>{{ $t("上传附件") }}
+                <el-icon style="margin-right: 4px"><Upload /></el-icon>上传附件
               </el-button>
               <template #tip>
-                <div class="upload-tip">{{ $t("支持图片、PDF，单个文件不超过5MB") }}</div>
+                <div class="upload-tip">支持图片、PDF，单个文件不超过5MB</div>
               </template>
             </el-upload>
           </el-form-item>
         </el-form>
       </template>
       <template #footer>
-        <el-button @click="replyVisible = false">{{ $t("取消") }}</el-button>
+        <el-button @click="replyVisible = false">取消</el-button>
         <el-button type="primary" :loading="replySubmitting" @click="submitReply">
-          {{ $t("确认回复") }}
+          确认回复
         </el-button>
       </template>
     </el-dialog>

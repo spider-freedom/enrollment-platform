@@ -5,8 +5,8 @@
       <div style="padding:20px 20px 16px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:10px">
         <img src="/images/xju-logo.png" style="width:40px;height:auto;flex-shrink:0" alt="新疆大学" />
         <div>
-          <div style="font-weight:700;font-size:15px;color:#1e293b">{{ $t("新疆大学") }}</div>
-          <div style="font-size:11px;color:#94a3b8">{{ $t("招生宣传平台") }}</div>
+          <div style="font-weight:700;font-size:15px;color:#1e293b">新疆大学</div>
+          <div style="font-size:11px;color:#94a3b8">招生宣传平台</div>
         </div>
       </div>
 
@@ -34,7 +34,7 @@
         </div>
         <el-button style="width:100%;color:#64748b;border-color:#e2e8f0" size="small" @click="handleLogout">
           <el-icon :size="14"><SwitchButton /></el-icon>
-          <span style="margin-left:4px">{{ $t("退出登录") }}</span>
+          <span style="margin-left:4px">退出登录</span>
         </el-button>
       </div>
     </aside>
@@ -55,7 +55,7 @@
                 </el-badge>
               </template>
               <div style="font-weight:600;padding:4px 0 12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;font-size:14px">
-                {{ $t("消息通知") }} <span style="font-size:12px;color:#999;cursor:pointer" @click="markAllRead()">{{ $t("全部已读") }}</span>
+                消息通知 <span style="font-size:12px;color:#999;cursor:pointer" @click="markAllRead()">全部已读</span>
               </div>
               <div style="max-height:260px;overflow-y:auto">
                 <div v-for="(n,i) in filteredNotifications" :key="i" style="display:flex;gap:8px;padding:10px 0;border-bottom:1px solid #f5f5f5;cursor:pointer" @click="handleNotifyClick(n)">
@@ -67,7 +67,7 @@
                   </div>
                 </div>
               </div>
-              <div v-if="filteredNotifications.length===0" style="text-align:center;color:#bbb;padding:20px 0">{{ $t("暂无消息") }}</div>
+              <div v-if="filteredNotifications.length===0" style="text-align:center;color:#bbb;padding:20px 0">暂无消息</div>
             </el-popover>
           </div>
         </div>

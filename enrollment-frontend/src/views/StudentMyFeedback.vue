@@ -1,7 +1,7 @@
 <template>
   <div class="my-feedback" v-loading="loading">
     <div class="page-header">
-      <h3>{{ $t("我的反馈") }}</h3>
+      <h3>我的反馈</h3>
     </div>
 
     <!-- Feedback List -->
@@ -63,7 +63,7 @@
     >
       <template #default>
         <el-button type="primary" @click="$router.push('/student/enrollments')">
-          {{ $t("查看我的报名") }}
+          查看我的报名
         </el-button>
       </template>
     </el-empty>
@@ -76,7 +76,7 @@
       :sub-title="errorMessage"
     >
       <template #extra>
-        <el-button type="primary" @click="fetchFeedbacks">{{ $t("重新加载") }}</el-button>
+        <el-button type="primary" @click="fetchFeedbacks">重新加载</el-button>
       </template>
     </el-result>
 

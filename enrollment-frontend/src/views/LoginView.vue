@@ -5,8 +5,8 @@
         <div class="login-icon-box">
           <img src="/images/xju-logo.png" style="width:48px;height:auto;filter:brightness(0) invert(1)" alt="新疆大学" />
         </div>
-        <h1 class="login-title">{{ $t('login.title') }}</h1>
-        <p class="login-sub">{{ $t('login.subtitle') }}</p>
+        <h1 class="login-title">欢迎登录</h1>
+        <p class="login-sub">新疆大学招生宣传平台</p>
       </div>
 
       <!-- Role selector -->
@@ -16,7 +16,7 @@
           :key="r.value"
           :class="['role-btn', { active: selectedRole === r.value }]"
           @click="selectedRole = r.value"
-        >{{ $t('login.'+r.value) }}</button>
+        >{{ r.label }}</button>
       </div>
 
       <div class="form-wrap">
@@ -25,7 +25,7 @@
           <input
             v-model="form.username"
             class="login-input"
-            :placeholder="$t('login.username')"
+            placeholder="学号 / 工号"
             autocomplete="off"
             @input="form.username=form.username.replace(/[一-鿿]/g,'')"
             @keyup.enter="handleLogin"
@@ -37,7 +37,7 @@
             v-model="form.password"
             :type="showPwd ? 'text' : 'password'"
             class="login-input"
-            :placeholder="$t('login.password')"
+            placeholder="密码"
             autocomplete="new-password"
             @keyup.enter="handleLogin"
           />
@@ -53,11 +53,11 @@
           @click="handleLogin"
           style="width:100%;height:48px;font-size:16px;font-weight:600;margin-bottom:16px"
         >
-          {{ $t('login.btnLogin') }}
+          登 录
         </el-button>
 
         <div class="login-links">
-          <router-link to="/register">{{ $t('login.noAccount') }}</router-link>
+          <router-link to="/register">还没有账号？立即注册</router-link>
         </div>
       </div>
     </div>
@@ -79,10 +79,10 @@ const showPwd = ref(false)
 const selectedRole = ref('')
 
 const roles = [
-  { value: 'student' },
-  { value: 'teacher' },
-  { value: 'college_admin' },
-  { value: 'school_admin' },
+  { label: '学生', value: 'student' },
+  { label: '教师', value: 'teacher' },
+  { label: '学院管理员', value: 'college_admin' },
+  { label: '学校管理员', value: 'school_admin' },
 ]
 
 const form = reactive({ username: '', password: '' })

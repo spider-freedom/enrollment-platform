@@ -1,8 +1,8 @@
 <template>
   <div class="teacher-enrollments">
     <div class="page-header">
-      <h2>{{ $t("我的报名记录") }}</h2>
-      <p class="subtitle">{{ $t("查看和管理您的活动报名，已通过的活动可以提交反馈") }}</p>
+      <h2>我的报名记录</h2>
+      <p class="subtitle">查看和管理您的活动报名，已通过的活动可以提交反馈</p>
     </div>
 
     <el-card class="table-card">
@@ -27,7 +27,7 @@
               size="small"
               @click="$router.push(`/teacher/activities/${row.activityId}`)"
             >
-              {{ $t("查看") }}
+              查看
             </el-button>
             <el-button
               v-if="row.status === 'APPROVED'"
@@ -35,7 +35,7 @@
               type="success"
               @click="$router.push(`/teacher/feedback/${row.id}`)"
             >
-              {{ $t("反馈") }}
+              反馈
             </el-button>
             <el-button
               v-if="row.status === 'SUBMITTED' || row.status === 'APPROVING'"
@@ -43,7 +43,7 @@
               type="danger"
               @click="handleWithdraw(row)"
             >
-              {{ $t("撤回") }}
+              撤回
             </el-button>
           </template>
         </el-table-column>

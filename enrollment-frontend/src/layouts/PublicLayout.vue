@@ -13,7 +13,7 @@
 
         <nav class="pub-nav">
           <router-link v-for="item in navItems" :key="item.path" :to="item.path" class="pub-nav-link">
-            {{ item.label }}
+            {{ $t('nav.'+item.key) }}
           </router-link>
 
           <span class="pub-nav-divider"></span>
@@ -51,7 +51,7 @@
       <!-- Mobile menu -->
       <div v-if="mobileOpen" class="pub-mobile-menu">
         <router-link v-for="item in navItems" :key="item.path" :to="item.path" class="pub-mobile-link" @click="mobileOpen=false">
-          {{ item.label }}
+          {{ $t('nav.'+item.key) }}
         </router-link>
         <div class="pub-mobile-divider"></div>
         <template v-if="store.isLoggedIn">

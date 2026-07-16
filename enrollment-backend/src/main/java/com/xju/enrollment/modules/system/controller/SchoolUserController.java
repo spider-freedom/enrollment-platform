@@ -55,7 +55,7 @@ public class SchoolUserController {
 
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteUser(@PathVariable Long id) {
-        userService.softDeleteUser(id);
-        return ApiResponse.ok("用户已禁用", null);
+        userService.hardDeleteUser(id);
+        return ApiResponse.ok("用户已删除", null);
     }
 }

@@ -1,6 +1,7 @@
 package com.xju.enrollment.modules.system.controller;
 
 import com.xju.enrollment.common.ApiResponse;
+import com.xju.enrollment.common.BusinessException;
 import com.xju.enrollment.entity.User;
 import com.xju.enrollment.modules.system.dto.UserVO;
 import com.xju.enrollment.modules.system.service.UserService;
@@ -59,8 +60,11 @@ public class CollegeUserController {
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteUser(@PathVariable Long id) {
         Long collegeId = getCurrentUserCollegeId();
-        userService.deleteUser(id, collegeId);
-        return ApiResponse.ok("用户已禁用", null);
+        User user = userService.getById(id);
+        if (user == null) throw new BusinessException("用户不存在");
+        if (!collegeId.equals(user.getCollegeId())) throw new BusinessException("无权操作该用户");
+        userService.hardDeleteUser(id);
+        return ApiResponse.ok("用户已删除", null);
     }
 
     @PostMapping("/{id}/reset-password")

@@ -323,4 +323,11 @@ public class UserService {
         user.setStatus("DISABLED");
         userMapper.updateById(user);
     }
+
+    @Transactional
+    public void hardDeleteUser(Long userId) {
+        User user = userMapper.selectById(userId);
+        if (user == null) throw new BusinessException("用户不存在");
+        userMapper.deleteById(userId);
+    }
 }

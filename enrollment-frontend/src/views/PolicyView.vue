@@ -1,19 +1,19 @@
 <template>
   <div class="policy-page">
-    <div class="policy-hero"><h1>{{ $t("招生政策") }}</h1><p>{{ $t("新疆大学2026年本科招生政策与历年录取参考") }}</p></div>
+    <div class="policy-hero"><h1>招生政策</h1><p>新疆大学2026年本科招生政策与历年录取参考</p></div>
     <div class="policy-body">
 
       <div class="policy-list">
         <div v-for="p in policies" :key="p.id" class="policy-item">
           <div class="policy-item-left"><div class="policy-icon">📋</div><div class="policy-info"><h3>{{ p.title }}</h3><span class="policy-meta">{{ (p.createTime||'').substring(0,10) }} ·<span :class="'policy-badge-'+(p.type==='章程'?'red':'gold')">{{ p.type }}</span></span></div></div>
-          <button class="policy-dl-btn" @click="openDetail(p)">{{ $t("查看详情") }}</button>
+          <button class="policy-dl-btn" @click="openDetail(p)">查看详情</button>
         </div>
       </div>
 
       <!-- Score Reference -->
       <div class="policy-scores">
-        <h2>{{ $t("历年录取参考") }}</h2>
-        <p style="color:#94a3b8;font-size:13px;margin:0 0 20px">{{ $t("数据来源：各省教育考试院官方公布，为本科一批/本科批最低录取分数") }}</p>
+        <h2>历年录取参考</h2>
+        <p style="color:#94a3b8;font-size:13px;margin:0 0 20px">数据来源：各省教育考试院官方公布，为本科一批/本科批最低录取分数</p>
 
         <div class="score-tabs">
           <button v-for="y in [2025,2024,2023]" :key="y" :class="['score-tab',{active:scoreYear===y}]" @click="scoreYear=y">{{ y }}年</button>
@@ -29,30 +29,30 @@
         <div v-if="selectedProvince" class="score-detail">
           <h3 style="font-size:18px;font-weight:700;color:#1e293b;margin:0 0 12px">{{ selectedProvince }} - {{ scoreYear }}年</h3>
           <div class="score-major-chips">
-            <span style="font-size:12px;color:#94a3b8;margin-right:4px">{{ $t("专业:") }}</span>
-            <button :class="['score-chip',{active:selectedMajor===''}]" @click="selectedMajor=''">{{ $t("全部") }}</button>
+            <span style="font-size:12px;color:#94a3b8;margin-right:4px">专业:</span>
+            <button :class="['score-chip',{active:selectedMajor===''}]" @click="selectedMajor=''">全部</button>
             <button v-for="m in majorList" :key="m" :class="['score-chip',{active:selectedMajor===m}]" @click="selectedMajor=selectedMajor===m?'':m">{{ m }}</button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px">
             <div class="score-col">
-              <h4 class="score-col-title score-col-title-blue">{{ $t("理科/物理类") }}</h4>
+              <h4 class="score-col-title score-col-title-blue">理科/物理类</h4>
               <div class="score-mini-table">
-                <div class="score-row head"><span>{{ $t("专业") }}</span><span>{{ $t("最低分") }}</span><span>{{ $t("位次") }}</span></div>
+                <div class="score-row head"><span>专业</span><span>最低分</span><span>位次</span></div>
                 <div v-for="s in provinceScores.li" :key="s.major" class="score-row"><span>{{ s.major }}</span><span class="score-num">{{ s.score }}</span><span class="score-rank">{{ s.rank }}</span></div>
-                <div v-if="!provinceScores.li.length" class="score-row"><span style="color:#94a3b8">{{ $t("暂无数据") }}</span></div>
+                <div v-if="!provinceScores.li.length" class="score-row"><span style="color:#94a3b8">暂无数据</span></div>
               </div>
             </div>
             <div class="score-col">
-              <h4 class="score-col-title score-col-title-red">{{ $t("文科/历史类") }}</h4>
+              <h4 class="score-col-title score-col-title-red">文科/历史类</h4>
               <div class="score-mini-table">
-                <div class="score-row head"><span>{{ $t("专业") }}</span><span>{{ $t("最低分") }}</span><span>{{ $t("位次") }}</span></div>
+                <div class="score-row head"><span>专业</span><span>最低分</span><span>位次</span></div>
                 <div v-for="s in provinceScores.wen" :key="s.major" class="score-row"><span>{{ s.major }}</span><span class="score-num">{{ s.score }}</span><span class="score-rank">{{ s.rank }}</span></div>
-                <div v-if="!provinceScores.wen.length" class="score-row"><span style="color:#94a3b8">{{ $t("暂无数据") }}</span></div>
+                <div v-if="!provinceScores.wen.length" class="score-row"><span style="color:#94a3b8">暂无数据</span></div>
               </div>
             </div>
           </div>
         </div>
-        <div v-else style="text-align:center;color:#94a3b8;padding:40px 0">{{ $t("请选择省份查看录取数据") }}</div>
+        <div v-else style="text-align:center;color:#94a3b8;padding:40px 0">请选择省份查看录取数据</div>
       </div>
 
       <!-- Detail Modal -->
@@ -67,7 +67,7 @@
       </div>
 
       <!-- FAQ -->
-      <div class="policy-faq"><h2>{{ $t("常见问题") }}</h2>
+      <div class="policy-faq"><h2>常见问题</h2>
         <div class="policy-faq-grid">
           <div v-for="(faq,i) in faqs" :key="i" class="policy-faq-card"><p class="faq-q"><span>Q.</span> {{ faq.q }}</p><p class="faq-a">{{ faq.a }}</p></div>
         </div>

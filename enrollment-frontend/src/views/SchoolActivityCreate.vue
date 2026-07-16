@@ -2,7 +2,7 @@
   <div class="activity-create" v-loading="pageLoading">
     <div class="page-header">
       <h3>{{ isEdit ? '编辑活动' : '创建活动' }}</h3>
-      <el-button @click="router.back()">{{ $t("返回列表") }}</el-button>
+      <el-button @click="router.back()">返回列表</el-button>
     </div>
 
     <el-form
@@ -16,7 +16,7 @@
       <el-card shadow="never" class="section-card">
         <template #header>
           <div class="section-header">
-            <span class="section-title">{{ $t("基本信息") }}</span>
+            <span class="section-title">基本信息</span>
           </div>
         </template>
         <el-form-item label="活动标题" prop="title">
@@ -92,7 +92,7 @@
       <el-card shadow="never" class="section-card">
         <template #header>
           <div class="section-header">
-            <span class="section-title">{{ $t("时间与容量") }}</span>
+            <span class="section-title">时间与容量</span>
           </div>
         </template>
         <el-row :gutter="16">
@@ -185,7 +185,7 @@
       <el-card shadow="never" class="section-card">
         <template #header>
           <div class="section-header">
-            <span class="section-title">{{ $t("审批流程与规则") }}</span>
+            <span class="section-title">审批流程与规则</span>
           </div>
         </template>
         <el-form-item label="审批流程" prop="workflowKey">
@@ -201,9 +201,10 @@
       <el-card shadow="never" class="section-card">
         <template #header>
           <div class="section-header">
-            <span class="section-title">{{ $t("自定义字段") }}</span>
+            <span class="section-title">自定义字段</span>
             <el-button type="primary" size="small" text @click="addCustomField">
-              <el-icon style="margin-right: 2px"><Plus /></el-icon>{{ $t("添加字段") }}</el-button>
+              <el-icon style="margin-right: 2px"><Plus /></el-icon>添加字段
+            </el-button>
           </div>
         </template>
         <el-empty v-if="form.customFields.length === 0" description="暂未添加自定义字段" :image-size="60" />
@@ -243,7 +244,7 @@
       <el-card shadow="never" class="section-card">
         <template #header>
           <div class="section-header">
-            <span class="section-title">{{ $t("活动横幅") }}</span>
+            <span class="section-title">活动横幅</span>
           </div>
         </template>
         <el-row :gutter="16">
@@ -255,12 +256,12 @@
           <el-col :span="12">
             <el-form-item label="设为轮播展示">
               <el-switch v-model="form.isBanner" active-text="是" inactive-text="否" inline-prompt />
-              <div style="font-size:12px;color:#999;margin-top:4px">{{ $t("开启后该活动将在首页轮播图中展示") }}</div>
+              <div style="font-size:12px;color:#999;margin-top:4px">开启后该活动将在首页轮播图中展示</div>
             </el-form-item>
           </el-col>
         </el-row>
         <div v-if="form.bannerUrl" class="banner-preview">
-          <span class="preview-label">{{ $t("预览：") }}</span>
+          <span class="preview-label">预览：</span>
           <el-image
             :src="form.bannerUrl"
             fit="cover"
@@ -270,7 +271,7 @@
             <template #error>
               <div class="image-error">
                 <el-icon><PictureFilled /></el-icon>
-                <span>{{ $t("图片加载失败") }}</span>
+                <span>图片加载失败</span>
               </div>
             </template>
           </el-image>
@@ -279,8 +280,10 @@
 
       <!-- 操作按钮 -->
       <div class="form-actions">
-        <el-button @click="router.back()">{{ $t("取消") }}</el-button>
-        <el-button type="default" :loading="submitting" @click="handleSaveDraft">{{ $t("保存草稿") }}</el-button>
+        <el-button @click="router.back()">取消</el-button>
+        <el-button type="default" :loading="submitting" @click="handleSaveDraft">
+          保存草稿
+        </el-button>
         <el-button type="primary" :loading="submitting" @click="handlePublish">
           {{ isEdit ? '保存修改' : '发布活动' }}
         </el-button>

@@ -1,6 +1,6 @@
 <template>
   <div class="college-feedbacks">
-    <h2 class="page-title">{{ $t("反馈管理") }}</h2>
+    <h2 class="page-title">反馈管理</h2>
 
     <!-- 统计卡片 -->
     <div class="stats-row">
@@ -8,28 +8,28 @@
         <div class="stat-icon"><el-icon size="28"><ChatLineSquare /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.total }}</div>
-          <div class="stat-label">{{ $t("反馈总数") }}</div>
+          <div class="stat-label">反馈总数</div>
         </div>
       </div>
       <div class="stat-card stat-pending">
         <div class="stat-icon"><el-icon size="28"><Warning /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.pendingReply }}</div>
-          <div class="stat-label">{{ $t("待回复") }}</div>
+          <div class="stat-label">待回复</div>
         </div>
       </div>
       <div class="stat-card stat-replied">
         <div class="stat-icon"><el-icon size="28"><CircleCheck /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.replied }}</div>
-          <div class="stat-label">{{ $t("已回复") }}</div>
+          <div class="stat-label">已回复</div>
         </div>
       </div>
       <div class="stat-card stat-rating">
         <div class="stat-icon"><el-icon size="28"><Star /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.avgRating }}</div>
-          <div class="stat-label">{{ $t("平均评分") }}</div>
+          <div class="stat-label">平均评分</div>
         </div>
       </div>
     </div>
@@ -61,8 +61,8 @@
         <el-option label="已回复" value="REPLIED" />
         <el-option label="已关闭" value="CLOSED" />
       </el-select>
-      <el-button type="primary" style="margin-left: 12px" @click="handleSearch">{{ $t("搜索") }}</el-button>
-      <el-button style="margin-left: 8px" @click="handleReset">{{ $t("重置") }}</el-button>
+      <el-button type="primary" style="margin-left: 12px" @click="handleSearch">搜索</el-button>
+      <el-button style="margin-left: 8px" @click="handleReset">重置</el-button>
     </div>
 
     <!-- 错误提示 -->
@@ -118,7 +118,9 @@
             size="small"
             type="success"
             @click="openReply(row)"
-          >{{ $t("回复") }}</el-button>
+          >
+            回复
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -173,7 +175,7 @@
 
         <!-- 回复内容 -->
         <div class="reply-section">
-          <label class="reply-label">{{ $t("回复内容") }}</label>
+          <label class="reply-label">回复内容</label>
           <el-input
             v-model="replyContent"
             type="textarea"
@@ -186,7 +188,7 @@
 
         <!-- 附件上传 -->
         <div class="reply-section">
-          <label class="reply-label">{{ $t("上传附件（选填）") }}</label>
+          <label class="reply-label">上传附件（选填）</label>
           <el-upload
             v-model:file-list="uploadFiles"
             :http-request="handleFileUpload"
@@ -196,17 +198,20 @@
             :on-exceed="handleExceed"
           >
             <el-button type="primary" plain size="small">
-              <el-icon style="margin-right: 4px"><Upload /></el-icon>{{ $t("选择文件") }}</el-button>
+              <el-icon style="margin-right: 4px"><Upload /></el-icon>选择文件
+            </el-button>
             <template #tip>
-              <div class="upload-tip">{{ $t("单个文件不超过 10MB，最多上传 5 个文件") }}</div>
+              <div class="upload-tip">单个文件不超过 10MB，最多上传 5 个文件</div>
             </template>
           </el-upload>
         </div>
       </div>
 
       <template #footer>
-        <el-button @click="replyVisible = false">{{ $t("取消") }}</el-button>
-        <el-button type="primary" :loading="submitting" @click="submitReply">{{ $t("确认回复") }}</el-button>
+        <el-button @click="replyVisible = false">取消</el-button>
+        <el-button type="primary" :loading="submitting" @click="submitReply">
+          确认回复
+        </el-button>
       </template>
     </el-dialog>
   </div>

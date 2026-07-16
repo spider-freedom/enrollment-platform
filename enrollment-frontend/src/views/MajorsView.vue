@@ -1,8 +1,8 @@
 <template>
   <div class="majors-page">
     <div class="majors-header">
-      <h1>{{ $t("专业查询") }}</h1>
-      <p>{{ $t("新疆大学开设90+本科专业，涵盖理、工、文、法、经、管等多个学科门类") }}</p>
+      <h1>专业查询</h1>
+      <p>新疆大学开设90+本科专业，涵盖理、工、文、法、经、管等多个学科门类</p>
     </div>
 
     <!-- Filter Bar -->
@@ -28,11 +28,11 @@
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
           <span v-for="t in (m.tags||[])" :key="t" class="majors-tag">{{ t }}</span>
         </div>
-        <button class="majors-card-btn" @click="selectedMajor=m">{{ $t("查看详情") }}</button>
+        <button class="majors-card-btn" @click="selectedMajor=m">查看详情</button>
       </div>
       <div v-if="filteredMajors.length===0" style="grid-column:1/-1;text-align:center;padding:64px 0;color:#94a3b8">
         <div style="font-size:48px;margin-bottom:16px">📖</div>
-        <p style="font-size:15px">{{ $t("没有找到匹配的专业") }}</p>
+        <p style="font-size:15px">没有找到匹配的专业</p>
       </div>
     </div>
 
@@ -46,11 +46,11 @@
           <span v-for="t in (selectedMajor.tags||[])" :key="t" class="majors-tag">{{ t }}</span>
         </div>
         <div class="modal-info">
-          <div><b>{{ $t("学制") }}</b>{{ $t("：4年") }}</div>
-          <div><b>{{ $t("学位") }}</b>{{ $t("：学士") }}</div>
-          <div><b>{{ $t("招生类别") }}</b>{{ $t("：理工类") }}</div>
+          <div><b>学制</b>：4年</div>
+          <div><b>学位</b>：学士</div>
+          <div><b>招生类别</b>：理工类</div>
         </div>
-        <button class="modal-close-btn" @click="selectedMajor=null">{{ $t("关闭") }}</button>
+        <button class="modal-close-btn" @click="selectedMajor=null">关闭</button>
       </div>
     </div>
   </div>

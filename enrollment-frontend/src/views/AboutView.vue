@@ -2,7 +2,7 @@
   <div>
     <!-- Page Header -->
     <section class="ab-header">
-      <h1>{{ $t("关于新大") }}</h1>
+      <h1>关于新大</h1>
     </section>
 
     <!-- Intro -->
@@ -10,16 +10,16 @@
       <div class="ab-intro-grid">
         <div class="ab-intro-img"></div>
         <div class="ab-intro-text">
-          <span class="ab-badge">{{ $t("百年新大") }}</span>
-          <h2>{{ $t("扎根边疆，面向世界") }}</h2>
+          <span class="ab-badge">百年新大</span>
+          <h2>扎根边疆，面向世界</h2>
           <p>
             新疆大学始建于1924年，前身是新疆俄文法政专门学校。近百年来，学校始终与国家同呼吸、共命运。
             学校是国家"双一流"建设高校、部省合建高校、国家"211工程"重点建设高校，被誉为"新疆高等教育的一面旗帜"。
             学校现有三个校区，占地面积4700余亩，现有各类在校学生3.7万余人。
           </p>
           <div class="ab-facts">
-            <div><span class="ab-fact-num">1924</span><span class="ab-fact-label">{{ $t("建校") }}</span></div>
-            <div><span class="ab-fact-num">3</span><span class="ab-fact-label">{{ $t("双一流学科") }}</span></div>
+            <div><span class="ab-fact-num">1924</span><span class="ab-fact-label">建校</span></div>
+            <div><span class="ab-fact-num">3</span><span class="ab-fact-label">双一流学科</span></div>
           </div>
         </div>
       </div>
@@ -27,22 +27,22 @@
 
     <!-- Campuses -->
     <section class="ab-campuses">
-      <h2 class="ab-section-title">{{ $t("三大校区") }}</h2>
+      <h2 class="ab-section-title">三大校区</h2>
       <div class="ab-campus-grid">
         <div class="ab-campus-card">
           <div class="ab-campus-icon ab-icon-red"></div>
-          <h3>{{ $t("红湖校区") }}</h3>
-          <p>{{ $t("主校区，位于乌鲁木齐市天山区胜利路666号，历史悠久，文化底蕴深厚") }}</p>
+          <h3>红湖校区</h3>
+          <p>主校区，位于乌鲁木齐市天山区胜利路666号，历史悠久，文化底蕴深厚</p>
         </div>
         <div class="ab-campus-card">
           <div class="ab-campus-icon ab-icon-blue"></div>
-          <h3>{{ $t("博达校区") }}</h3>
-          <p>{{ $t("新校区，现代化教学设施，美丽的校园环境，位于水磨沟区") }}</p>
+          <h3>博达校区</h3>
+          <p>新校区，现代化教学设施，美丽的校园环境，位于水磨沟区</p>
         </div>
         <div class="ab-campus-card">
           <div class="ab-campus-icon ab-icon-gold"></div>
-          <h3>{{ $t("友好校区") }}</h3>
-          <p>{{ $t("位于乌鲁木齐市沙依巴克区，交通便利，紧邻市中心") }}</p>
+          <h3>友好校区</h3>
+          <p>位于乌鲁木齐市沙依巴克区，交通便利，紧邻市中心</p>
         </div>
       </div>
     </section>
@@ -52,8 +52,8 @@
       <div class="ab-motto-bg"></div>
       <div class="ab-motto-content">
         <div class="ab-motto-icon"></div>
-        <h2>{{ $t("团结 紧张 质朴 活泼") }}</h2>
-        <p>{{ $t("—— 新疆大学校训") }}</p>
+        <h2>团结 紧张 质朴 活泼</h2>
+        <p>—— 新疆大学校训</p>
       </div>
     </section>
   </div>

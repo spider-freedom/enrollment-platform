@@ -6,8 +6,8 @@
         <div class="ai-header-left">
           <img src="/images/xju-logo.png" style="width:34px;height:auto;filter:brightness(0) invert(1)" alt="新大" />
           <div>
-            <h2>{{ $t("新大招生 AI 数字人") }}</h2>
-            <span class="ai-online">{{ $t("● 在线咨询中") }}</span>
+            <h2>新大招生 AI 数字人</h2>
+            <span class="ai-online">● 在线咨询中</span>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
       <!-- Input -->
       <div class="ai-input-area">
         <input v-model="input" class="ai-input" placeholder="输入你的问题..." @keyup.enter="sendMsg(input)" />
-        <button class="ai-send-btn" @click="sendMsg(input)">{{ $t("发送") }}</button>
+        <button class="ai-send-btn" @click="sendMsg(input)">发送</button>
       </div>
     </div>
   </div>

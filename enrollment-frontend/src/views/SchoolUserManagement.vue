@@ -3,11 +3,11 @@
     <div class="page-header"><h2>全校用户管理</h2><p>管理全校所有学院的学生、教师和管理员账号</p></div>
 
     <div class="stats-row">
-      <div class="stat-card c1"><div class="stat-icon">👥</div><div class="stat-value">{{ stats.total }}</div><div class="stat-label">用户总数</div></div>
-      <div class="stat-card c2"><div class="stat-icon">🛡️</div><div class="stat-value">{{ stats.schoolAdmins }}</div><div class="stat-label">学校管理员</div></div>
-      <div class="stat-card c3"><div class="stat-icon">🔰</div><div class="stat-value">{{ stats.collegeAdmins }}</div><div class="stat-label">学院管理员</div></div>
-      <div class="stat-card c4"><div class="stat-icon">👨‍🏫</div><div class="stat-value">{{ stats.teachers }}</div><div class="stat-label">教师</div></div>
-      <div class="stat-card c5"><div class="stat-icon">🎓</div><div class="stat-value">{{ stats.students }}</div><div class="stat-label">学生</div></div>
+      <div class="stat-card c1"><div class="stat-icon"><el-icon :size="22"><User /></el-icon></div><div class="stat-value">{{ stats.total }}</div><div class="stat-label">用户总数</div></div>
+      <div class="stat-card c2"><div class="stat-icon"><el-icon :size="22"><Star /></el-icon></div><div class="stat-value">{{ stats.schoolAdmins }}</div><div class="stat-label">学校管理员</div></div>
+      <div class="stat-card c3"><div class="stat-icon"><el-icon :size="22"><Avatar /></el-icon></div><div class="stat-value">{{ stats.collegeAdmins }}</div><div class="stat-label">学院管理员</div></div>
+      <div class="stat-card c4"><div class="stat-icon"><el-icon :size="22"><UserFilled /></el-icon></div><div class="stat-value">{{ stats.teachers }}</div><div class="stat-label">教师</div></div>
+      <div class="stat-card c5"><div class="stat-icon"><el-icon :size="22"><School /></el-icon></div><div class="stat-value">{{ stats.students }}</div><div class="stat-label">学生</div></div>
     </div>
 
     <div class="card">
@@ -26,7 +26,7 @@
           <el-button type="primary" @click="fetchUsers">刷新</el-button>
         </div>
         <div class="header-actions">
-          <el-button type="success" @click="triggerImport">📤 导入CSV</el-button>
+          <el-button type="success" @click="triggerImport">导入CSV</el-button>
         </div>
       </div>
       <input ref="fileInput" type="file" accept=".csv" style="display:none" @change="handleImportUsers" />

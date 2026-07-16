@@ -17,7 +17,14 @@
           </router-link>
 
           <span class="pub-nav-divider"></span>
-          <span v-for="l in langOptions" :key="l.value" class="lang-btn" :class="{active:locale===l.value}" @click="switchLang(l.value)">{{ l.label }}</span>
+          <el-dropdown trigger="click" @command="switchLang">
+            <span class="lang-dropdown">{{ langOptions.find(l=>l.value===locale)?.label || '中文' }} ▾</span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item v-for="l in langOptions" :key="l.value" :command="l.value" :class="{active:locale===l.value}">{{ l.label }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
 
           <template v-if="store.isLoggedIn">
             <span class="pub-nav-divider"></span>
@@ -112,12 +119,12 @@ function switchLang(lang: string) {
 }
 
 const navItems = [
-  { label:'首页', path:'/' },
-  { label:'学校概况', path:'/about' },
-  { label:'招生政策', path:'/policy' },
-  { label:'专业查询', path:'/majors' },
-  { label:'活动报名', path:'/activities' },
-  { label:'AI咨询', path:'/ai-assistant' },
+  { key:'home', path:'/' },
+  { key:'about', path:'/about' },
+  { key:'policy', path:'/policy' },
+  { key:'majors', path:'/majors' },
+  { key:'activities', path:'/activities' },
+  { key:'ai', path:'/ai-assistant' },
 ]
 
 const dashboardPath = computed(() => {
@@ -159,9 +166,8 @@ function handleLogout() {
 .pub-btn-solid { background:#C9A96E; color:#fff; padding:6px 16px; border-radius:8px; text-decoration:none; font-size:13px; font-weight:600; transition:opacity 0.2s; }
 .pub-btn-solid:hover { opacity:0.9; }
 
-.lang-btn { color:rgba(255,255,255,0.7); font-size:12px; cursor:pointer; padding:2px 6px; border-radius:4px; transition:all 0.2s; user-select:none; }
-.lang-btn:hover { color:#C9A96E; }
-.lang-btn.active { color:#C9A96E; font-weight:700; }
+.lang-dropdown { color:rgba(255,255,255,0.85); font-size:13px; cursor:pointer; padding:4px 10px; border-radius:6px; transition:all 0.2s; border:1px solid rgba(255,255,255,0.3); }
+.lang-dropdown:hover { color:#C9A96E; border-color:#C9A96E; }
 
 .pub-menu-btn { display:block; background:none; border:none; color:#fff; cursor:pointer; margin-left:auto; }
 @media (min-width:900px) { .pub-menu-btn { display:none; } }

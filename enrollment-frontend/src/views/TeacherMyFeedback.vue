@@ -20,7 +20,7 @@
       >
         <div class="fb-header">
           <div class="fb-header-left">
-            <span class="fb-college">{{ fb.college || '未知院系' }}</span>
+            <span class="fb-college">{{ fb.activityTitle || fb.college || '活动反馈' }}</span>
             <span class="fb-rating">
               <el-rate
                 :model-value="fb.rating"

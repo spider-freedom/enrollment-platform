@@ -173,6 +173,7 @@ public class FeedbackService {
 
         Map<Long, String> userNameCache = new HashMap<>();
         Map<Long, String> userCollegeCache = new HashMap<>();
+        Map<Long, String> activityTitleCache = new HashMap<>();
 
         List<FeedbackVO> voList = resultPage.getRecords().stream()
                 .map(f -> {
@@ -183,6 +184,11 @@ public class FeedbackService {
                     String college = userCollegeCache.computeIfAbsent(f.getUserId(), uid -> {
                         User u = userMapper.selectById(uid);
                         return u != null ? u.getCollegeName() : null;
+                    });
+                    String activityTitle = f.getActivityId() == null ? null
+                            : activityTitleCache.computeIfAbsent(f.getActivityId(), aid -> {
+                        Activity a = activityMapper.selectById(aid);
+                        return a != null ? a.getTitle() : null;
                     });
                     String replyUserName = null;
                     if (f.getReplyUserId() != null) {
@@ -199,6 +205,8 @@ public class FeedbackService {
 
                     return new FeedbackVO(
                             f.getId(),
+                            f.getActivityId(),
+                            activityTitle,
                             f.getUserId(),
                             userName,
                             f.getUserRole(),
@@ -232,8 +240,16 @@ public class FeedbackService {
         FeedbackVO vo = FeedbackVO.from(feedback);
         FeedbackVO enriched = enrichWithUserNames(vo, feedback);
 
+        String activityTitle = null;
+        if (feedback.getActivityId() != null) {
+            Activity activity = activityMapper.selectById(feedback.getActivityId());
+            activityTitle = activity != null ? activity.getTitle() : null;
+        }
+
         return new FeedbackVO(
                 enriched.feedbackId(),
+                enriched.activityId(),
+                activityTitle,
                 enriched.userId(),
                 enriched.userName(),
                 enriched.userRole(),
@@ -324,6 +340,7 @@ public class FeedbackService {
 
         Map<Long, String> userNameCache = new HashMap<>();
         Map<Long, String> userCollegeCache = new HashMap<>();
+        Map<Long, String> activityTitleCache = new HashMap<>();
 
         List<FeedbackVO> voList = resultPage.getRecords().stream()
                 .map(f -> {
@@ -334,6 +351,11 @@ public class FeedbackService {
                     String college = userCollegeCache.computeIfAbsent(f.getUserId(), uid -> {
                         User u = userMapper.selectById(uid);
                         return u != null ? u.getCollegeName() : null;
+                    });
+                    String activityTitle = f.getActivityId() == null ? null
+                            : activityTitleCache.computeIfAbsent(f.getActivityId(), aid -> {
+                        Activity a = activityMapper.selectById(aid);
+                        return a != null ? a.getTitle() : null;
                     });
                     String replyUserName = null;
                     if (f.getReplyUserId() != null) {
@@ -350,6 +372,8 @@ public class FeedbackService {
 
                     return new FeedbackVO(
                             f.getId(),
+                            f.getActivityId(),
+                            activityTitle,
                             f.getUserId(),
                             userName,
                             f.getUserRole(),
@@ -382,6 +406,8 @@ public class FeedbackService {
 
         return new FeedbackVO(
                 vo.feedbackId(),
+                vo.activityId(),
+                vo.activityTitle(),
                 vo.userId(),
                 userName,
                 vo.userRole(),

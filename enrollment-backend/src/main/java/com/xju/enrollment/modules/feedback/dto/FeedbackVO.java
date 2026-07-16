@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 public record FeedbackVO(
         Long feedbackId,
+        Long activityId,
+        String activityTitle,
         Long userId,
         String userName,
         String userRole,
@@ -23,6 +25,8 @@ public record FeedbackVO(
     public static FeedbackVO from(Feedback f) {
         return new FeedbackVO(
                 f.getId(),
+                f.getActivityId(),
+                null,
                 f.getUserId(),
                 null,
                 f.getUserRole(),

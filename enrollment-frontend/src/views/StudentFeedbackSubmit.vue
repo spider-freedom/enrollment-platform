@@ -35,7 +35,13 @@ const activityId = ref<number | null>(null)
 
 const form = reactive({ rating: 0, content: '', contact: '' })
 const rules = {
-  rating: [{ required: true, message: '请评分', trigger: 'change' }],
+  rating: [{
+    validator: (_rule: any, value: number, callback: (e?: Error) => void) => {
+      if (!value || value < 1) callback(new Error('请评分'))
+      else callback()
+    },
+    trigger: 'change',
+  }],
   content: [{ required: true, message: '请输入反馈内容', trigger: 'blur' }, { min: 10, message: '至少10个字符', trigger: 'blur' }],
 }
 
@@ -43,7 +49,7 @@ onMounted(async () => {
   try {
     const enrollmentId = Number(route.params.enrollmentId)
     const enr: any = await enrollmentApi.getById(enrollmentId)
-    activityId.value = enr?.activityId || enr?.data?.activityId || enr?.id && enr?.activityId
+    activityId.value = enr?.data?.activityId || enr?.activityId || null
     if (!activityId.value) {
       // fallback: try to get enrollment list and find it
       const list: any = await enrollmentApi.listMy({ page:1, size:50 })

@@ -34,7 +34,22 @@ request.interceptors.request.use(
 )
 
 request.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    const res = response.data
+    // 后端业务异常（如"您已提交过反馈"、"报名已截止"）以 HTTP 200 返回 {code, message}
+    // 必须在此检查 code，否则失败会被页面当作成功处理
+    if (res && typeof res === 'object' && typeof res.code === 'number' && res.code !== 200) {
+      if (res.code === 401 && localStorage.getItem('token')) {
+        localStorage.removeItem('token')
+        window.location.href = '/login'
+      }
+      const err: any = new Error(res.message || '请求失败')
+      err.code = res.code
+      err.response = { status: res.code, data: res }
+      return Promise.reject(err)
+    }
+    return res
+  },
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token')

@@ -1,10 +1,8 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
-import { i18nAutoPlugin } from './vite-plugin-i18n'
-
 export default defineConfig({
-  plugins: [vue(), i18nAutoPlugin()],
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

@@ -8,13 +8,13 @@
       sub-title="请检查网络连接后重试"
     >
       <template #extra>
-        <el-button type="primary" @click="fetchAll">重新加载</el-button>
+        <el-button type="primary" @click="fetchAll">{{ $t("重新加载") }}</el-button>
       </template>
     </el-result>
 
     <!-- 正常内容 -->
     <template v-else>
-      <h3>数据大屏</h3>
+      <h3>{{ $t("数据大屏") }}</h3>
 
       <!-- 统计卡片 -->
       <el-row :gutter="16" class="stat-row">
@@ -26,7 +26,7 @@
               </div>
               <div class="stat-content">
                 <h1 class="stat-number">{{ stats.totalActivities }}</h1>
-                <p>活动总数 <span class="stat-badge up">↑ 12%</span></p>
+                <p>{{ $t("活动总数") }}<span class="stat-badge up">↑ 12%</span></p>
               </div>
             </div>
           </el-card>
@@ -39,7 +39,7 @@
               </div>
               <div class="stat-content">
                 <h1 class="stat-number">{{ stats.totalEnrollments }}</h1>
-                <p>报名总数 <span class="stat-badge up">↑ 23%</span></p>
+                <p>{{ $t("报名总数") }}<span class="stat-badge up">↑ 23%</span></p>
               </div>
             </div>
           </el-card>
@@ -52,7 +52,7 @@
               </div>
               <div class="stat-content">
                 <h1 class="stat-number">{{ stats.approvalRate }}%</h1>
-                <p>通过率 <span class="stat-badge up">↑ 5%</span></p>
+                <p>{{ $t("通过率") }}<span class="stat-badge up">↑ 5%</span></p>
               </div>
             </div>
           </el-card>
@@ -65,7 +65,7 @@
               </div>
               <div class="stat-content">
                 <h1 class="stat-number">{{ stats.avgRating }}</h1>
-                <p>平均评分 <span class="stat-badge up">↑ 0.3</span></p>
+                <p>{{ $t("平均评分") }}<span class="stat-badge up">↑ 0.3</span></p>
               </div>
             </div>
           </el-card>
@@ -78,7 +78,7 @@
           <el-card shadow="hover" class="chart-card">
             <template #header>
               <div class="chart-header">
-                <h4>活动分类统计</h4>
+                <h4>{{ $t("活动分类统计") }}</h4>
               </div>
             </template>
             <div ref="trendChartRef" class="chart-container" />
@@ -88,7 +88,7 @@
           <el-card shadow="hover" class="chart-card">
             <template #header>
               <div class="chart-header">
-                <h4>各学院报名分布</h4>
+                <h4>{{ $t("各学院报名分布") }}</h4>
               </div>
             </template>
             <div ref="collegeChartRef" class="chart-container" />
@@ -102,7 +102,7 @@
           <el-card shadow="hover" class="chart-card">
             <template #header>
               <div class="chart-header">
-                <h4>评分分布</h4>
+                <h4>{{ $t("评分分布") }}</h4>
               </div>
             </template>
             <div ref="ratingChartRef" class="chart-container" />
@@ -112,7 +112,7 @@
           <el-card shadow="hover" class="chart-card">
             <template #header>
               <div class="chart-header">
-                <h4>活动类型分布</h4>
+                <h4>{{ $t("活动类型分布") }}</h4>
               </div>
             </template>
             <div ref="typeChartRef" class="chart-container" />
@@ -126,12 +126,10 @@
           <el-card shadow="hover" class="chart-card">
             <template #header>
               <div class="chart-header">
-                <h4>最近反馈</h4>
+                <h4>{{ $t("最近反馈") }}</h4>
               </div>
             </template>
-            <div v-if="recentFeedbacks.length === 0" class="empty-feedbacks">
-              暂无反馈记录
-            </div>
+            <div v-if="recentFeedbacks.length === 0" class="empty-feedbacks">{{ $t("暂无反馈记录") }}</div>
             <div v-else class="feedback-list">
               <div
                 v-for="(fb, idx) in recentFeedbacks"
@@ -177,10 +175,10 @@ const stats = reactive({
 })
 
 
-const recentFeedbacks = ref<any[]>([])
+const recentFeedbacks = ref<any[]>{{ $t("([])
 
 // 图表DOM引用
-const trendChartRef = ref<HTMLElement>()
+const trendChartRef = ref") }}<HTMLElement>()
 const collegeChartRef = ref<HTMLElement>()
 const ratingChartRef = ref<HTMLElement>()
 const typeChartRef = ref<HTMLElement>()

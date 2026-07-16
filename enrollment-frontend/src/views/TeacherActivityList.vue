@@ -1,8 +1,8 @@
 <template>
   <div class="teacher-activity-list">
     <div class="page-header">
-      <h2>招生宣传活动</h2>
-      <p class="subtitle">浏览并报名参与招生宣传活动，为学校招生工作贡献力量</p>
+      <h2>{{ $t("招生宣传活动") }}</h2>
+      <p class="subtitle">{{ $t("浏览并报名参与招生宣传活动，为学校招生工作贡献力量") }}</p>
     </div>
 
     <el-carousel height="220px" class="banner-carousel">
@@ -38,7 +38,7 @@
         <el-option label="线上活动" value="ONLINE" />
         <el-option label="线下活动" value="OFFLINE" />
       </el-select>
-      <el-button type="primary" @click="handleSearch">搜索</el-button>
+      <el-button type="primary" @click="handleSearch">{{ $t("搜索") }}</el-button>
     </div>
 
     <div v-loading="loading" class="content-area">

@@ -1,6 +1,6 @@
 <template>
   <div class="feedback-submit">
-    <div class="page-header"><h3>提交活动反馈</h3><p>请对您参加的活动进行评价</p></div>
+    <div class="page-header"><h3>{{ $t("提交活动反馈") }}</h3><p>{{ $t("请对您参加的活动进行评价") }}</p></div>
     <el-card class="form-card">
       <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
         <el-form-item label="活动评分" prop="rating">
@@ -13,8 +13,8 @@
           <el-input v-model="form.contact" placeholder="手机号或邮箱（选填）" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :loading="submitting" @click="handleSubmit" size="large">提交反馈</el-button>
-          <el-button @click="$router.back()">取消</el-button>
+          <el-button type="primary" :loading="submitting" @click="handleSubmit" size="large">{{ $t("提交反馈") }}</el-button>
+          <el-button @click="$router.back()">{{ $t("取消") }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>

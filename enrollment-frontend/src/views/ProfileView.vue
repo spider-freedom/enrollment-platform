@@ -8,12 +8,12 @@
           <p>{{ roleLabel(store.userInfo?.role || '') }}</p>
         </div>
         <input ref="fileInput" type="file" accept="image/*" hidden @change="handleAvatarChange" />
-        <el-button type="primary" size="small" :loading="uploading" @click="() => fileInput?.click()">更换头像</el-button>
+        <el-button type="primary" size="small" :loading="uploading" @click="() => fileInput?.click()">{{ $t("更换头像") }}</el-button>
       </div>
     </el-card>
 
     <el-card style="margin-top:20px">
-      <template #header><h3>个人信息</h3></template>
+      <template #header><h3>{{ $t("个人信息") }}</h3></template>
       <el-descriptions :column="2" border v-if="store.userInfo">
         <el-descriptions-item label="用户名">{{ store.userInfo.username }}</el-descriptions-item>
         <el-descriptions-item label="姓名">{{ store.userInfo.name }}</el-descriptions-item>
@@ -30,7 +30,7 @@
     </el-card>
 
     <el-card style="margin-top:20px">
-      <template #header><h3>编辑个人信息</h3></template>
+      <template #header><h3>{{ $t("编辑个人信息") }}</h3></template>
       <el-form :model="profileForm" label-width="100px" style="max-width:550px">
         <el-form-item label="姓名">
           <el-input v-model="profileForm.name" placeholder="请输入姓名" />
@@ -47,7 +47,7 @@
           </el-form-item>
           <el-form-item label="GPA">
             <el-input v-model="profileForm.gpa" placeholder="GPA由系统管理" disabled />
-            <span style="font-size:12px;color:#999;margin-left:8px">GPA与学号绑定，不可自行修改</span>
+            <span style="font-size:12px;color:#999;margin-left:8px">{{ $t("GPA与学号绑定，不可自行修改") }}</span>
           </el-form-item>
         </template>
         <el-form-item label="邮箱">
@@ -57,18 +57,18 @@
           <el-input v-model="profileForm.phone" placeholder="请输入手机号" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :loading="saving" @click="handleSaveProfile">保存修改</el-button>
+          <el-button type="primary" :loading="saving" @click="handleSaveProfile">{{ $t("保存修改") }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
 
     <el-card style="margin-top:20px">
-      <template #header><h3>修改密码</h3></template>
+      <template #header><h3>{{ $t("修改密码") }}</h3></template>
       <el-form :model="pwdForm" label-width="120px" style="max-width:400px">
         <el-form-item label="原密码"><el-input v-model="pwdForm.oldPassword" type="password" show-password /></el-form-item>
         <el-form-item label="新密码"><el-input v-model="pwdForm.newPassword" type="password" show-password /></el-form-item>
         <el-form-item label="确认新密码"><el-input v-model="pwdForm.confirmPassword" type="password" show-password /></el-form-item>
-        <el-form-item><el-button type="primary" @click="handleChangePwd">修改密码</el-button></el-form-item>
+        <el-form-item><el-button type="primary" @click="handleChangePwd">{{ $t("修改密码") }}</el-button></el-form-item>
       </el-form>
     </el-card>
   </div>

@@ -8,37 +8,37 @@
       sub-title="请检查网络连接后重试"
     >
       <template #extra>
-        <el-button type="primary" @click="fetchList">重新加载</el-button>
+        <el-button type="primary" @click="fetchList">{{ $t("重新加载") }}</el-button>
       </template>
     </el-result>
 
     <template v-else>
-      <h3>报名审批（校级）</h3>
+      <h3>{{ $t("报名审批（校级）") }}</h3>
 
       <!-- 统计卡片 -->
       <el-row :gutter="16" class="stats-row">
         <el-col :span="6">
           <div class="mini-stat" style="border-left-color: #1a56db">
             <div class="mini-stat-value">{{ stats.total }}</div>
-            <div class="mini-stat-label">审批总数</div>
+            <div class="mini-stat-label">{{ $t("审批总数") }}</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="mini-stat" style="border-left-color: #f59e0b">
             <div class="mini-stat-value">{{ stats.pending }}</div>
-            <div class="mini-stat-label">待审批</div>
+            <div class="mini-stat-label">{{ $t("待审批") }}</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="mini-stat" style="border-left-color: #16a34a">
             <div class="mini-stat-value">{{ stats.approved }}</div>
-            <div class="mini-stat-label">已通过</div>
+            <div class="mini-stat-label">{{ $t("已通过") }}</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="mini-stat" style="border-left-color: #ef4444">
             <div class="mini-stat-value">{{ stats.approvalRate }}%</div>
-            <div class="mini-stat-label">通过率</div>
+            <div class="mini-stat-label">{{ $t("通过率") }}</div>
           </div>
         </el-col>
       </el-row>
@@ -92,9 +92,9 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="handleSearch">查询</el-button>
-            <el-button @click="handleReset">重置</el-button>
-            <el-button type="success" @click="handleExport" icon="Download">导出Excel</el-button>
+            <el-button type="primary" @click="handleSearch">{{ $t("查询") }}</el-button>
+            <el-button @click="handleReset">{{ $t("重置") }}</el-button>
+            <el-button type="success" @click="handleExport" icon="Download">{{ $t("导出Excel") }}</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -102,12 +102,8 @@
       <!-- 批量操作栏 -->
       <div class="batch-bar" v-if="selectedRows.length > 0">
         <span class="batch-info">已选择 {{ selectedRows.length }} 条记录</span>
-        <el-button type="success" size="small" @click="handleBatchApprove">
-          批量通过
-        </el-button>
-        <el-button type="danger" size="small" @click="handleBatchReject">
-          批量拒绝
-        </el-button>
+        <el-button type="success" size="small" @click="handleBatchApprove">{{ $t("批量通过") }}</el-button>
+        <el-button type="danger" size="small" @click="handleBatchReject">{{ $t("批量拒绝") }}</el-button>
       </div>
 
       <!-- 空状态 -->
@@ -160,12 +156,8 @@
         <el-table-column label="操作" width="150" align="center">
           <template #default="{ row }">
             <template v-if="row.currentStatus === 'APPROVING'">
-              <el-button size="small" type="success" link @click="openApproveDialog(row)">
-                通过
-              </el-button>
-              <el-button size="small" type="danger" link @click="openRejectDialog(row)">
-                拒绝
-              </el-button>
+              <el-button size="small" type="success" link @click="openApproveDialog(row)">{{ $t("通过") }}</el-button>
+              <el-button size="small" type="danger" link @click="openRejectDialog(row)">{{ $t("拒绝") }}</el-button>
               <el-button size="small" type="warning" plain @click="handleAiSuggest(row)">
                 🤖 AI
               </el-button>
@@ -214,7 +206,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="dialogVisible = false">{{ $t("取消") }}</el-button>
         <el-button
           :type="dialogAction === 'approve' ? 'success' : 'danger'"
           :loading="dialogSubmitting"
@@ -229,24 +221,24 @@
     <el-dialog v-model="aiVisible" title="AI 审批建议" width="520px" destroy-on-close>
       <div class="ai-dialog-content" v-if="aiResult">
         <div class="ai-student-info">
-          <p>申请人：<strong>{{ aiCurrentRow?.userName }}</strong> | 活动：{{ aiCurrentRow?.activityTitle }}</p>
+          <p>{{ $t("申请人：") }}<strong>{{ aiCurrentRow?.userName }}</strong> | 活动：{{ aiCurrentRow?.activityTitle }}</p>
         </div>
         <div class="ai-suggestion" :class="aiSuggestionClass">
-          <span class="ai-label">建议：</span>
+          <span class="ai-label">{{ $t("建议：") }}</span>
           <span class="ai-value">{{ aiResult.suggestion }}</span>
         </div>
         <div class="ai-reason">
-          <span class="ai-label">理由：</span>
+          <span class="ai-label">{{ $t("理由：") }}</span>
           <span>{{ aiResult.reason }}</span>
         </div>
         <div class="ai-risk">
-          <span class="ai-label">风险点：</span>
+          <span class="ai-label">{{ $t("风险点：") }}</span>
           <span>{{ aiResult.risk }}</span>
         </div>
       </div>
       <div v-else-if="aiLoading" class="ai-loading" v-loading="true" element-loading-text="AI 分析中..."></div>
       <template #footer>
-        <el-button @click="aiVisible = false">关闭</el-button>
+        <el-button @click="aiVisible = false">{{ $t("关闭") }}</el-button>
       </template>
     </el-dialog>
   </div>

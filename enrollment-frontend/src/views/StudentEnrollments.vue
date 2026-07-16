@@ -1,7 +1,7 @@
 <template>
   <div class="enrollments" v-loading="loading">
     <div class="page-header">
-      <h3>我的报名</h3>
+      <h3>{{ $t("我的报名") }}</h3>
     </div>
 
     <el-table
@@ -24,25 +24,19 @@
           <el-button
             size="small"
             @click="$router.push(`/student/activities/${row.activityId}`)"
-          >
-            查看
-          </el-button>
+          >{{ $t("查看") }}</el-button>
           <el-button
             v-if="row.status === 'APPROVED'"
             size="small"
             type="success"
             @click="$router.push(`/student/feedback/${row.id}`)"
-          >
-            反馈
-          </el-button>
+          >{{ $t("反馈") }}</el-button>
           <el-button
             v-if="row.status === 'SUBMITTED' || row.status === 'APPROVING'"
             size="small"
             type="danger"
             @click="handleWithdraw(row)"
-          >
-            撤回
-          </el-button>
+          >{{ $t("撤回") }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -54,9 +48,7 @@
       :image-size="160"
     >
       <template #default>
-        <el-button type="primary" @click="$router.push('/student/activities')">
-          去看看活动
-        </el-button>
+        <el-button type="primary" @click="$router.push('/student/activities')">{{ $t("去看看活动") }}</el-button>
       </template>
     </el-empty>
 
@@ -68,7 +60,7 @@
       :sub-title="errorMessage"
     >
       <template #extra>
-        <el-button type="primary" @click="fetchEnrollments">重新加载</el-button>
+        <el-button type="primary" @click="fetchEnrollments">{{ $t("重新加载") }}</el-button>
       </template>
     </el-result>
 

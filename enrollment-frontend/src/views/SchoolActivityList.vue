@@ -8,17 +8,16 @@
       sub-title="请检查网络连接后重试"
     >
       <template #extra>
-        <el-button type="primary" @click="fetchList">重新加载</el-button>
+        <el-button type="primary" @click="fetchList">{{ $t("重新加载") }}</el-button>
       </template>
     </el-result>
 
     <template v-else>
       <!-- 工具栏 -->
       <div class="toolbar">
-        <h3>活动管理</h3>
+        <h3>{{ $t("活动管理") }}</h3>
         <el-button type="primary" @click="handleCreate">
-          <el-icon style="margin-right: 4px"><Plus /></el-icon>创建活动
-        </el-button>
+          <el-icon style="margin-right: 4px"><Plus /></el-icon>{{ $t("创建活动") }}</el-button>
       </div>
 
       <!-- 筛选栏 -->
@@ -58,9 +57,9 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="handleSearch">查询</el-button>
-            <el-button @click="handleReset">重置</el-button>
-            <el-button type="success" @click="handleExport" icon="Download">导出Excel</el-button>
+            <el-button type="primary" @click="handleSearch">{{ $t("查询") }}</el-button>
+            <el-button @click="handleReset">{{ $t("重置") }}</el-button>
+            <el-button type="success" @click="handleExport" icon="Download">{{ $t("导出Excel") }}</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -103,10 +102,10 @@
         </el-table-column>
         <el-table-column label="操作" width="200" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button size="small" type="primary" link @click="handleEdit(row)">编辑</el-button>
-            <el-button size="small" link @click="handleView(row)">查看</el-button>
+            <el-button size="small" type="primary" link @click="handleEdit(row)">{{ $t("编辑") }}</el-button>
+            <el-button size="small" link @click="handleView(row)">{{ $t("查看") }}</el-button>
             <el-button size="small" :type="row.isBanner === 1 ? 'warning' : 'info'" link @click="toggleBanner(row, row.isBanner !== 1)">{{ row.isBanner === 1 ? '取消轮播' : '设为轮播' }}</el-button>
-            <el-button size="small" type="danger" link @click="handleDelete(row)">删除</el-button>
+            <el-button size="small" type="danger" link @click="handleDelete(row)">{{ $t("删除") }}</el-button>
           </template>
         </el-table-column>
       </el-table>

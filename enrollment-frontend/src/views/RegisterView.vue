@@ -3,8 +3,8 @@
     <div class="register-card">
       <div class="register-accent-bar" />
       <div class="register-logo">🏫</div>
-      <h1 class="register-title">注册账号</h1>
-      <p class="register-sub">新疆大学 · 招生宣传报名平台</p>
+      <h1 class="register-title">{{ $t("注册账号") }}</h1>
+      <p class="register-sub">{{ $t("新疆大学 · 招生宣传报名平台") }}</p>
       <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
         <el-row :gutter="16">
           <el-col :span="12">
@@ -32,8 +32,8 @@
         </el-row>
         <el-form-item label="角色" prop="role">
           <el-radio-group v-model="form.role">
-            <el-radio value="STUDENT">学生</el-radio>
-            <el-radio value="TEACHER">教师</el-radio>
+            <el-radio value="STUDENT">{{ $t("学生") }}</el-radio>
+            <el-radio value="TEACHER">{{ $t("教师") }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="学院" prop="collegeId">
@@ -54,10 +54,9 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :loading="loading" @click="handleRegister" style="width:100%" size="large">注 册</el-button>
+          <el-button type="primary" :loading="loading" @click="handleRegister" style="width:100%" size="large">{{ $t("注 册") }}</el-button>
         </el-form-item>
-        <div style="text-align: center; font-size: 13px; color: #999;">
-          已有账号？<router-link to="/login">返回登录</router-link>
+        <div style="text-align: center; font-size: 13px; color: #999;">{{ $t("已有账号？") }}<router-link to="/login">{{ $t("返回登录") }}</router-link>
         </div>
       </el-form>
     </div>

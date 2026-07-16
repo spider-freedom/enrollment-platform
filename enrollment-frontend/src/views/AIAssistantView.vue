@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="ai-header">
         <div class="ai-header-left">
-          <div class="ai-header-icon">X</div>
+          <img src="/images/xju-logo.png" style="width:34px;height:auto;filter:brightness(0) invert(1)" alt="新大" />
           <div>
             <h2>新大招生 AI 数字人</h2>
             <span class="ai-online">● 在线咨询中</span>
@@ -109,7 +109,7 @@ function scrollDown() {
 
 .ai-header { padding:18px 24px; background:linear-gradient(135deg,#1a1a2e,#2d2d44); color:#fff; display:flex; align-items:center; }
 .ai-header-left { display:flex; align-items:center; gap:12px; }
-.ai-header-icon { width:38px;height:38px;background:linear-gradient(135deg,#A31F34,#c23d4f);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px; }
+.ai-header-icon { width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden; }
 .ai-header h2 { font-size:16px;font-weight:700;margin:0; }
 .ai-online { font-size:11px;color:#10b981; }
 

@@ -119,7 +119,7 @@ function scrollDown() {
 .ai-msg-bot { align-self:flex-start; }
 .ai-bubble { padding:14px 18px;border-radius:18px;font-size:14px;line-height:1.7; }
 .ai-bubble-user { background:linear-gradient(135deg,#1a56db,#2563eb);color:#fff;border-bottom-right-radius:6px;box-shadow:0 2px 8px rgba(37,99,235,0.2); }
-.ai-bubble-bot { background:#fff;color:#334155;border:1px solid #e8e0d0;box-shadow:0 2px 8px rgba(0,0,0,0.04);border-bottom-left-radius:6px; }
+.ai-bubble-bot { background:#fff;color:#334155;border:1px solid #e8e0d0;box-shadow:0 2px 8px rgba(0,0,0,0.04);border-bottom-left-radius:6px;white-space:pre-wrap;word-break:break-word; }
 .ai-time { font-size:10px;color:#94a3b8;margin-top:4px; }
 .ai-msg-user .ai-time { text-align:right; }
 

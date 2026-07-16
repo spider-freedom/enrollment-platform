@@ -495,12 +495,9 @@ function handleResize() {
 
 // ============= 生命周期 =============
 onMounted(async () => {
+  // Init charts first (show loading), then fetch data
+  initCharts()
   await fetchAll()
-
-  // 延迟初始化图表以确保DOM渲染完成
-  setTimeout(() => {
-    initCharts()
-  }, 100)
 
   window.addEventListener('resize', handleResize)
 })

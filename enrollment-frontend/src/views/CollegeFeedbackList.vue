@@ -338,28 +338,26 @@ async function fetchData() {
     }))
     // Also load activities from the activity API
     loadActivityOptions()
-  } catch { list.value = []; total.value = 0 }
+  } catch (err: any) {
+    errorMsg.value = err?.response?.data?.message || err?.message || '加载失败'
+    list.value = []; total.value = 0
+  } finally {
+    loading.value = false
+  }
 }
 
 async function loadActivityOptions() {
   try {
     const res: any = await activityApi.listCollege({ page:1, size:100 })
-    const list = res?.data?.list || res?.data?.records || []
+    const records = res?.data?.list || res?.data?.records || []
     const seen = new Set(activityOptions.value.map((a:any)=>a.value))
-    for (const a of list) {
+    for (const a of records) {
       if (!seen.has(a.id)) {
         activityOptions.value.push({ label:a.title, value:a.id })
         seen.add(a.id)
       }
     }
   } catch {}
-  } catch (err: any) {
-    errorMsg.value = err?.response?.data?.message || err?.message || '加载反馈数据失败，请稍后重试'
-    list.value = []
-    total.value = 0
-  } finally {
-    loading.value = false
-  }
 }
 
 function handleSearch() {

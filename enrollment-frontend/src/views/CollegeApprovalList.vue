@@ -1,6 +1,6 @@
 <template>
   <div class="college-approvals">
-    <h2 class="page-title">报名审批管理</h2>
+    <h2 class="page-title">{{ $t("报名审批管理") }}</h2>
 
     <!-- 统计卡片 -->
     <div class="stats-row">
@@ -8,28 +8,28 @@
         <div class="stat-icon"><el-icon size="28"><Clock /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.pending }}</div>
-          <div class="stat-label">待审核</div>
+          <div class="stat-label">{{ $t("待审核") }}</div>
         </div>
       </div>
       <div class="stat-card stat-approved">
         <div class="stat-icon"><el-icon size="28"><CircleCheck /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.approved }}</div>
-          <div class="stat-label">已通过</div>
+          <div class="stat-label">{{ $t("已通过") }}</div>
         </div>
       </div>
       <div class="stat-card stat-rejected">
         <div class="stat-icon"><el-icon size="28"><CircleClose /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.rejected }}</div>
-          <div class="stat-label">已拒绝</div>
+          <div class="stat-label">{{ $t("已拒绝") }}</div>
         </div>
       </div>
       <div class="stat-card stat-rate">
         <div class="stat-icon"><el-icon size="28"><TrendCharts /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.approvalRate }}%</div>
-          <div class="stat-label">通过率</div>
+          <div class="stat-label">{{ $t("通过率") }}</div>
         </div>
       </div>
     </div>
@@ -72,8 +72,8 @@
           :value="s.value"
         />
       </el-select>
-      <el-button type="primary" style="margin-left: 12px" @click="handleSearch">搜索</el-button>
-      <el-button style="margin-left: 8px" @click="handleReset">重置</el-button>
+      <el-button type="primary" style="margin-left: 12px" @click="handleSearch">{{ $t("搜索") }}</el-button>
+      <el-button style="margin-left: 8px" @click="handleReset">{{ $t("重置") }}</el-button>
     </div>
 
     <!-- 错误提示 -->
@@ -91,10 +91,10 @@
     <div class="batch-bar" v-if="selectedRows.length > 0">
       <span class="batch-tip">已选择 {{ selectedRows.length }} 项</span>
       <el-button type="success" size="small" style="margin-left: 12px" @click="handleBatchAction('APPROVE')">
-        批量通过
+        {{ $t("批量通过") }}
       </el-button>
       <el-button type="danger" size="small" style="margin-left: 8px" @click="handleBatchAction('REJECT')">
-        批量拒绝
+        {{ $t("批量拒绝") }}
       </el-button>
     </div>
 
@@ -138,7 +138,7 @@
             type="success"
             @click="handleApprove(row)"
           >
-            通过
+            {{ $t("通过") }}
           </el-button>
           <el-button
             v-if="row.currentStatus === 'SUBMITTED'"
@@ -146,7 +146,7 @@
             type="danger"
             @click="handleReject(row)"
           >
-            拒绝
+            {{ $t("拒绝") }}
           </el-button>
           <el-button
             v-if="row.status === 'SUBMITTED' || row.status === 'APPROVING'"
@@ -157,8 +157,8 @@
           >
             🤖 AI
           </el-button>
-          <el-tag v-else-if="row.status === 'APPROVED'" type="success" size="small">已通过</el-tag>
-          <el-tag v-else-if="row.status === 'REJECTED'" type="danger" size="small">已拒绝</el-tag>
+          <el-tag v-else-if="row.status === 'APPROVED'" type="success" size="small">{{ $t("已通过") }}</el-tag>
+          <el-tag v-else-if="row.status === 'REJECTED'" type="danger" size="small">{{ $t("已拒绝") }}</el-tag>
           <el-tag v-else type="info" size="small">{{ statusLabel(row.status) }}</el-tag>
         </template>
       </el-table-column>
@@ -185,7 +185,7 @@
     <el-dialog v-model="rejectVisible" title="拒绝报名" width="480px" destroy-on-close>
       <div class="reject-dialog-content">
         <p class="reject-info">
-          申请人：<strong>{{ currentReject?.userName }}</strong>
+          {{ $t("申请人：") }}<strong>{{ currentReject?.userName }}</strong>
           &nbsp;|&nbsp; 活动：{{ currentReject?.activityTitle }}
         </p>
         <el-input
@@ -198,15 +198,15 @@
         />
       </div>
       <template #footer>
-        <el-button @click="rejectVisible = false">取消</el-button>
-        <el-button type="danger" :loading="rejecting" @click="confirmReject">确认拒绝</el-button>
+        <el-button @click="rejectVisible = false">{{ $t("取消") }}</el-button>
+        <el-button type="danger" :loading="rejecting" @click="confirmReject">{{ $t("确认拒绝") }}</el-button>
       </template>
     </el-dialog>
 
     <!-- 批量拒绝原因弹窗 -->
     <el-dialog v-model="batchRejectVisible" title="批量拒绝" width="480px" destroy-on-close>
       <div class="reject-dialog-content">
-        <p class="reject-info">已选择 <strong>{{ selectedRows.length }}</strong> 条报名记录</p>
+        <p class="reject-info">{{ $t("已选择") }} <strong>{{ selectedRows.length }}</strong> {{ $t("条报名记录") }}</p>
         <el-input
           v-model="batchRejectReason"
           type="textarea"
@@ -217,8 +217,8 @@
         />
       </div>
       <template #footer>
-        <el-button @click="batchRejectVisible = false">取消</el-button>
-        <el-button type="danger" :loading="rejecting" @click="confirmBatchReject">确认拒绝</el-button>
+        <el-button @click="batchRejectVisible = false">{{ $t("取消") }}</el-button>
+        <el-button type="danger" :loading="rejecting" @click="confirmBatchReject">{{ $t("确认拒绝") }}</el-button>
       </template>
     </el-dialog>
 
@@ -226,24 +226,24 @@
     <el-dialog v-model="aiVisible" title="AI 审批建议" width="520px" destroy-on-close>
       <div class="ai-dialog-content" v-if="aiResult">
         <div class="ai-student-info">
-          <p>申请人：<strong>{{ aiCurrentRow?.userName }}</strong> | 活动：{{ aiCurrentRow?.activityTitle }}</p>
+          <p>{{ $t("申请人：") }}<strong>{{ aiCurrentRow?.userName }}</strong> | 活动：{{ aiCurrentRow?.activityTitle }}</p>
         </div>
         <div class="ai-suggestion" :class="aiSuggestionClass">
-          <span class="ai-label">建议：</span>
+          <span class="ai-label">{{ $t("建议：") }}</span>
           <span class="ai-value">{{ aiResult.suggestion }}</span>
         </div>
         <div class="ai-reason">
-          <span class="ai-label">理由：</span>
+          <span class="ai-label">{{ $t("理由：") }}</span>
           <span>{{ aiResult.reason }}</span>
         </div>
         <div class="ai-risk">
-          <span class="ai-label">风险点：</span>
+          <span class="ai-label">{{ $t("风险点：") }}</span>
           <span>{{ aiResult.risk }}</span>
         </div>
       </div>
       <div v-else-if="aiLoading" class="ai-loading" v-loading="true" element-loading-text="AI 分析中..."></div>
       <template #footer>
-        <el-button @click="aiVisible = false">关闭</el-button>
+        <el-button @click="aiVisible = false">{{ $t("关闭") }}</el-button>
       </template>
     </el-dialog>
   </div>

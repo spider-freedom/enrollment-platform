@@ -1,13 +1,13 @@
 <template>
   <div class="user-management">
-    <div class="page-header"><h2>全校用户管理</h2><p>管理全校所有学院的学生、教师和管理员账号</p></div>
+    <div class="page-header"><h2>{{ $t("全校用户管理") }}</h2><p>{{ $t("管理全校所有学院的学生、教师和管理员账号") }}</p></div>
 
     <div class="stats-row">
-      <div class="stat-card c1"><div class="stat-icon"><el-icon :size="22"><User /></el-icon></div><div class="stat-value">{{ stats.total }}</div><div class="stat-label">用户总数</div></div>
-      <div class="stat-card c2"><div class="stat-icon"><el-icon :size="22"><Star /></el-icon></div><div class="stat-value">{{ stats.schoolAdmins }}</div><div class="stat-label">学校管理员</div></div>
-      <div class="stat-card c3"><div class="stat-icon"><el-icon :size="22"><Avatar /></el-icon></div><div class="stat-value">{{ stats.collegeAdmins }}</div><div class="stat-label">学院管理员</div></div>
-      <div class="stat-card c4"><div class="stat-icon"><el-icon :size="22"><UserFilled /></el-icon></div><div class="stat-value">{{ stats.teachers }}</div><div class="stat-label">教师</div></div>
-      <div class="stat-card c5"><div class="stat-icon"><el-icon :size="22"><School /></el-icon></div><div class="stat-value">{{ stats.students }}</div><div class="stat-label">学生</div></div>
+      <div class="stat-card c1"><div class="stat-icon"><el-icon :size="22"><User /></el-icon></div><div class="stat-value">{{ stats.total }}</div><div class="stat-label">{{ $t("用户总数") }}</div></div>
+      <div class="stat-card c2"><div class="stat-icon"><el-icon :size="22"><Star /></el-icon></div><div class="stat-value">{{ stats.schoolAdmins }}</div><div class="stat-label">{{ $t("学校管理员") }}</div></div>
+      <div class="stat-card c3"><div class="stat-icon"><el-icon :size="22"><Avatar /></el-icon></div><div class="stat-value">{{ stats.collegeAdmins }}</div><div class="stat-label">{{ $t("学院管理员") }}</div></div>
+      <div class="stat-card c4"><div class="stat-icon"><el-icon :size="22"><UserFilled /></el-icon></div><div class="stat-value">{{ stats.teachers }}</div><div class="stat-label">{{ $t("教师") }}</div></div>
+      <div class="stat-card c5"><div class="stat-icon"><el-icon :size="22"><School /></el-icon></div><div class="stat-value">{{ stats.students }}</div><div class="stat-label">{{ $t("学生") }}</div></div>
     </div>
 
     <div class="card">
@@ -23,10 +23,10 @@
           <el-select v-model="filterCollege" placeholder="学院筛选" clearable filterable style="width:180px">
             <el-option v-for="c in collegeOptions" :key="c" :label="c" :value="c" />
           </el-select>
-          <el-button type="primary" @click="fetchUsers">刷新</el-button>
+          <el-button type="primary" @click="fetchUsers">{{ $t("刷新") }}</el-button>
         </div>
         <div class="header-actions">
-          <el-button type="success" @click="triggerImport">导入CSV</el-button>
+          <el-button type="success" @click="triggerImport">{{ $t("导入CSV") }}</el-button>
         </div>
       </div>
       <input ref="fileInput" type="file" accept=".csv" style="display:none" @change="handleImportUsers" />
@@ -38,10 +38,10 @@
         <el-table-column prop="name" label="姓名" width="80" />
         <el-table-column label="角色" width="100">
           <template #default="{ row }">
-            <el-tag v-if="isSchoolAdmin(row.role)" type="danger" size="small">学校管理员</el-tag>
-            <el-tag v-else-if="isCollegeAdmin(row.role)" type="warning" size="small">学院管理员</el-tag>
-            <el-tag v-else-if="isTeacher(row.role)" type="success" size="small">教师</el-tag>
-            <el-tag v-else-if="isStudent(row.role)" type="info" size="small">学生</el-tag>
+            <el-tag v-if="isSchoolAdmin(row.role)" type="danger" size="small">{{ $t("学校管理员") }}</el-tag>
+            <el-tag v-else-if="isCollegeAdmin(row.role)" type="warning" size="small">{{ $t("学院管理员") }}</el-tag>
+            <el-tag v-else-if="isTeacher(row.role)" type="success" size="small">{{ $t("教师") }}</el-tag>
+            <el-tag v-else-if="isStudent(row.role)" type="info" size="small">{{ $t("学生") }}</el-tag>
             <el-tag v-else size="small">{{ row.role }}</el-tag>
           </template>
         </el-table-column>
@@ -69,15 +69,15 @@
         <el-table-column label="权限设置" width="100" fixed="right">
           <template #default="{ row }">
             <el-dropdown trigger="click" @command="(cmd: string) => handleCommand(cmd, row)">
-              <el-button size="small" type="primary" link>设置 ▾</el-button>
+              <el-button size="small" type="primary" link>{{ $t("设置 ▾") }}</el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item v-if="isTeacher(row.role)" command="promoteCollege">设为学院管理员</el-dropdown-item>
-                  <el-dropdown-item v-if="isTeacher(row.role)" command="promoteSchool">设为学校管理员</el-dropdown-item>
-                  <el-dropdown-item v-if="isCollegeAdmin(row.role)" command="promoteSchool">设为学校管理员</el-dropdown-item>
-                  <el-dropdown-item v-if="isCollegeAdmin(row.role) || isSchoolAdmin(row.role)" command="demote" divided>降为教师</el-dropdown-item>
-                  <el-dropdown-item command="resetPassword">重置密码</el-dropdown-item>
-                  <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
+                  <el-dropdown-item v-if="isTeacher(row.role)" command="promoteCollege">{{ $t("设为学院管理员") }}</el-dropdown-item>
+                  <el-dropdown-item v-if="isTeacher(row.role)" command="promoteSchool">{{ $t("设为学校管理员") }}</el-dropdown-item>
+                  <el-dropdown-item v-if="isCollegeAdmin(row.role)" command="promoteSchool">{{ $t("设为学校管理员") }}</el-dropdown-item>
+                  <el-dropdown-item v-if="isCollegeAdmin(row.role) || isSchoolAdmin(row.role)" command="demote" divided>{{ $t("降为教师") }}</el-dropdown-item>
+                  <el-dropdown-item command="resetPassword">{{ $t("重置密码") }}</el-dropdown-item>
+                  <el-dropdown-item command="delete" divided>{{ $t("删除") }}</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>

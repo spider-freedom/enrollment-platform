@@ -10,12 +10,12 @@
         <div style="flex:1;min-width:200px">
           <h1 style="font-size:30px;font-weight:700;color:#1e293b;margin:0 0 8px">{{ store.userInfo?.name || '用户' }}</h1>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-            <span style="padding:4px 12px;background:rgba(201,169,110,0.1);color:#C9A96E;border-radius:9999px;font-size:12px;font-weight:600;border:1px solid rgba(201,169,110,0.2)">考生身份</span>
-            <span style="padding:4px 12px;background:#f1f5f9;color:#64748b;border-radius:9999px;font-size:12px;font-weight:600;border:1px solid #e2e8f0">手机已验证</span>
+            <span style="padding:4px 12px;background:rgba(201,169,110,0.1);color:#C9A96E;border-radius:9999px;font-size:12px;font-weight:600;border:1px solid rgba(201,169,110,0.2)">{{ $t("考生身份") }}</span>
+            <span style="padding:4px 12px;background:#f1f5f9;color:#64748b;border-radius:9999px;font-size:12px;font-weight:600;border:1px solid #e2e8f0">{{ $t("手机已验证") }}</span>
           </div>
-          <p style="color:#64748b;font-size:13px;max-width:480px;margin:0">欢迎来到新疆大学招生系统。您可以在这里管理您的报名活动、查看咨询回复以及更新个人信息。</p>
+          <p style="color:#64748b;font-size:13px;max-width:480px;margin:0">{{ $t("欢迎来到新疆大学招生系统。您可以在这里管理您的报名活动、查看咨询回复以及更新个人信息。") }}</p>
         </div>
-        <router-link to="/student/profile" style="padding:10px 24px;background:#1e293b;color:#fff;border-radius:12px;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.12);flex-shrink:0;align-self:center">编辑资料</router-link>
+        <router-link to="/student/profile" style="padding:10px 24px;background:#1e293b;color:#fff;border-radius:12px;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.12);flex-shrink:0;align-self:center">{{ $t("编辑资料") }}</router-link>
       </div>
     </div>
 
@@ -25,9 +25,9 @@
       <div style="background:#fff;border-radius:24px;border:1px solid #e2e8f0;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,0.04)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
           <h3 style="font-size:20px;font-weight:700;color:#1e293b;display:flex;align-items:center;gap:8px;margin:0">
-            <span style="color:#C9A96E;font-size:22px">📅</span> 我的活动
+            <span style="color:#C9A96E;font-size:22px">📅</span> {{ $t("我的活动") }}
           </h3>
-          <router-link to="/student/activities" style="font-size:12px;font-weight:700;color:#C9A96E;text-decoration:none">查看全部</router-link>
+          <router-link to="/student/activities" style="font-size:12px;font-weight:700;color:#C9A96E;text-decoration:none">{{ $t("查看全部") }}</router-link>
         </div>
         <div style="display:flex;flex-direction:column;gap:16px">
           <div v-if="myActivities.length" v-for="a in myActivities" :key="a.id" style="padding:16px;border-radius:16px;background:#f8fafc;border:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between">
@@ -38,11 +38,11 @@
                 <p style="font-size:12px;color:#94a3b8;margin:0">{{ a.createTime?.substring(0,10) || a.date }}</p>
               </div>
             </div>
-            <span style="font-size:10px;padding:4px 10px;background:rgba(16,185,129,0.1);color:#10b981;border-radius:9999px;font-weight:700">已报名</span>
+            <span style="font-size:10px;padding:4px 10px;background:rgba(16,185,129,0.1);color:#10b981;border-radius:9999px;font-weight:700">{{ $t("已报名") }}</span>
           </div>
           <div style="padding:40px;border:2px dashed #e2e8f0;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
-            <p style="color:#94a3b8;font-size:13px;margin:0 0 16px">参加更多活动，深入了解新大</p>
-            <router-link to="/activities" style="color:#A31F34;font-size:13px;font-weight:700;display:flex;align-items:center;gap:4px;text-decoration:none">去探索更多活动 <span>→</span></router-link>
+            <p style="color:#94a3b8;font-size:13px;margin:0 0 16px">{{ $t("参加更多活动，深入了解新大") }}</p>
+            <router-link to="/activities" style="color:#A31F34;font-size:13px;font-weight:700;display:flex;align-items:center;gap:4px;text-decoration:none">{{ $t("去探索更多活动") }} <span>→</span></router-link>
           </div>
         </div>
       </div>
@@ -51,9 +51,9 @@
       <div style="background:#fff;border-radius:24px;border:1px solid #e2e8f0;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,0.04)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
           <h3 style="font-size:20px;font-weight:700;color:#1e293b;display:flex;align-items:center;gap:8px;margin:0">
-            <span style="color:#C9A96E;font-size:22px">💬</span> 我的反馈
+            <span style="color:#C9A96E;font-size:22px">💬</span> {{ $t("我的反馈") }}
           </h3>
-          <router-link to="/student/my-feedback" style="font-size:12px;font-weight:700;color:#C9A96E;text-decoration:none">查看全部</router-link>
+          <router-link to="/student/my-feedback" style="font-size:12px;font-weight:700;color:#C9A96E;text-decoration:none">{{ $t("查看全部") }}</router-link>
         </div>
         <div style="display:flex;flex-direction:column;gap:16px">
           <div v-if="myFeedback.length" v-for="f in myFeedback" :key="f.feedbackId||f.id" style="padding:16px;border-radius:16px;background:#f8fafc;border:1px solid #f1f5f9">
@@ -66,7 +66,7 @@
             <p v-if="f.reply" style="font-size:12px;color:#94a3b8;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"{{ f.reply }}"</p>
           </div>
           <div v-else style="padding:40px;border:2px dashed #e2e8f0;border-radius:16px;text-align:center">
-            <p style="color:#94a3b8;font-size:13px;margin:0">暂无反馈记录</p>
+            <p style="color:#94a3b8;font-size:13px;margin:0">{{ $t("暂无反馈记录") }}</p>
           </div>
         </div>
       </div>

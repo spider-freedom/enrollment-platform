@@ -6,8 +6,8 @@
         <router-link to="/" class="pub-logo">
           <img src="/images/xju-logo.png" style="width:36px;height:auto" alt="新疆大学" />
           <div class="pub-logo-text">
-            <span class="pub-logo-main">新疆大学</span>
-            <span class="pub-logo-sub">2026招生宣传系统</span>
+            <span class="pub-logo-main">{{ $t("新疆大学") }}</span>
+            <span class="pub-logo-sub">{{ $t("2026招生宣传系统") }}</span>
           </div>
         </router-link>
 
@@ -38,8 +38,8 @@
           </template>
           <template v-else>
             <span class="pub-nav-divider"></span>
-            <router-link to="/login" class="pub-btn-outline">登录</router-link>
-            <router-link to="/register" class="pub-btn-solid">注册</router-link>
+            <router-link to="/login" class="pub-btn-outline">{{ $t("登录") }}</router-link>
+            <router-link to="/register" class="pub-btn-solid">{{ $t("注册") }}</router-link>
           </template>
         </nav>
 
@@ -58,11 +58,11 @@
           <router-link :to="dashboardPath" class="pub-mobile-link" @click="mobileOpen=false">
             {{ store.userInfo?.name }}
           </router-link>
-          <button class="pub-mobile-link" @click="handleLogout">退出登录</button>
+          <button class="pub-mobile-link" @click="handleLogout">{{ $t("退出登录") }}</button>
         </template>
         <template v-else>
-          <router-link to="/login" class="pub-mobile-btn" @click="mobileOpen=false">登录</router-link>
-          <router-link to="/register" class="pub-mobile-btn gold" @click="mobileOpen=false">注册</router-link>
+          <router-link to="/login" class="pub-mobile-btn" @click="mobileOpen=false">{{ $t("登录") }}</router-link>
+          <router-link to="/register" class="pub-mobile-btn gold" @click="mobileOpen=false">{{ $t("注册") }}</router-link>
         </template>
       </div>
     </header>
@@ -76,24 +76,24 @@
     <footer class="pub-footer">
       <div class="pub-footer-grid">
         <div style="grid-column:span 2">
-          <h3 class="pub-footer-title">新疆大学</h3>
+          <h3 class="pub-footer-title">{{ $t("新疆大学") }}</h3>
           <p class="pub-footer-desc">
             新疆大学位于新疆维吾尔自治区首府乌鲁木齐市，是国家"双一流"建设高校、部省合建高校、国家"211工程"重点建设高校。
           </p>
-          <p class="pub-footer-copy">© 2026 新疆大学招生办公室 版权所有</p>
+          <p class="pub-footer-copy">{{ $t("© 2026 新疆大学招生办公室 版权所有") }}</p>
         </div>
         <div>
-          <h4 class="pub-footer-head">快速链接</h4>
-          <router-link to="/about" class="pub-footer-link">关于新大</router-link>
-          <router-link to="/majors" class="pub-footer-link">专业目录</router-link>
-          <router-link to="/policy" class="pub-footer-link">历年分数</router-link>
-          <router-link to="/ai-assistant" class="pub-footer-link">咨询助手</router-link>
+          <h4 class="pub-footer-head">{{ $t("快速链接") }}</h4>
+          <router-link to="/about" class="pub-footer-link">{{ $t("关于新大") }}</router-link>
+          <router-link to="/majors" class="pub-footer-link">{{ $t("专业目录") }}</router-link>
+          <router-link to="/policy" class="pub-footer-link">{{ $t("历年分数") }}</router-link>
+          <router-link to="/ai-assistant" class="pub-footer-link">{{ $t("咨询助手") }}</router-link>
         </div>
         <div>
-          <h4 class="pub-footer-head">联系我们</h4>
-          <p class="pub-footer-link">地址：新疆乌鲁木齐市天山区胜利路666号</p>
-          <p class="pub-footer-link">电话：0991-8585671 / 8585672</p>
-          <p class="pub-footer-link">邮编：830046</p>
+          <h4 class="pub-footer-head">{{ $t("联系我们") }}</h4>
+          <p class="pub-footer-link">{{ $t("地址：新疆乌鲁木齐市天山区胜利路666号") }}</p>
+          <p class="pub-footer-link">{{ $t("电话：0991-8585671 / 8585672") }}</p>
+          <p class="pub-footer-link">{{ $t("邮编：830046") }}</p>
         </div>
       </div>
     </footer>

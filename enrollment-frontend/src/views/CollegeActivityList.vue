@@ -1,6 +1,6 @@
 <template>
   <div class="college-activities">
-    <h2 class="page-title">活动管理</h2>
+    <h2 class="page-title">{{ $t("活动管理") }}</h2>
 
     <!-- 统计卡片 -->
     <div class="stats-row">
@@ -8,28 +8,28 @@
         <div class="stat-icon"><el-icon size="28"><List /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.total }}</div>
-          <div class="stat-label">活动总数</div>
+          <div class="stat-label">{{ $t("活动总数") }}</div>
         </div>
       </div>
       <div class="stat-card stat-active">
         <div class="stat-icon"><el-icon size="28"><VideoPlay /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.active }}</div>
-          <div class="stat-label">进行中</div>
+          <div class="stat-label">{{ $t("进行中") }}</div>
         </div>
       </div>
       <div class="stat-card stat-enrolling">
         <div class="stat-icon"><el-icon size="28"><EditPen /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.enrolling }}</div>
-          <div class="stat-label">报名中</div>
+          <div class="stat-label">{{ $t("报名中") }}</div>
         </div>
       </div>
       <div class="stat-card stat-ended">
         <div class="stat-icon"><el-icon size="28"><CircleClose /></el-icon></div>
         <div class="stat-info">
           <div class="stat-value">{{ stats.ended }}</div>
-          <div class="stat-label">已结束</div>
+          <div class="stat-label">{{ $t("已结束") }}</div>
         </div>
       </div>
     </div>
@@ -70,9 +70,9 @@
         <el-option label="已结束" value="ENDED" />
         <el-option label="草稿" value="DRAFT" />
       </el-select>
-      <el-button type="primary" style="margin-left: 12px" @click="handleSearch">搜索</el-button>
-      <el-button style="margin-left: 8px" @click="handleReset">重置</el-button>
-      <el-button type="success" style="margin-left: auto" @click="$router.push('/college/activities/create')">创建活动</el-button>
+      <el-button type="primary" style="margin-left: 12px" @click="handleSearch">{{ $t("搜索") }}</el-button>
+      <el-button style="margin-left: 8px" @click="handleReset">{{ $t("重置") }}</el-button>
+      <el-button type="success" style="margin-left: auto" @click="$router.push('/college/activities/create')">{{ $t("创建活动") }}</el-button>
     </div>
 
     <!-- 错误提示 -->
@@ -130,10 +130,10 @@
       <el-table-column label="操作" width="200" fixed="right">
         <template #default="{ row }">
           <el-button size="small" type="primary" @click="editActivity(row.id)">
-            编辑
+            {{ $t("编辑") }}
           </el-button>
           <el-button size="small" type="danger" @click="deleteActivity(row)">
-            删除
+            {{ $t("删除") }}
           </el-button>
         </template>
       </el-table-column>

@@ -1,8 +1,8 @@
 <template>
   <div class="teacher-my-feedback">
     <div class="page-header">
-      <h2>我的反馈记录</h2>
-      <p class="subtitle">查看您提交的活动反馈及管理员回复</p>
+      <h2>{{ $t("我的反馈记录") }}</h2>
+      <p class="subtitle">{{ $t("查看您提交的活动反馈及管理员回复") }}</p>
     </div>
 
     <div v-loading="loading" class="content-area">

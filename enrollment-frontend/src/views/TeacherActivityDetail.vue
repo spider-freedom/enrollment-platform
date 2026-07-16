@@ -2,7 +2,7 @@
   <div class="activity-detail" v-loading="loading">
     <div v-if="error" class="error-state">
       <el-result icon="error" title="加载失败" :sub-title="error">
-        <template #extra><el-button type="primary" @click="fetchActivity">重新加载</el-button></template>
+        <template #extra><el-button type="primary" @click="fetchActivity">{{ $t("重新加载") }}</el-button></template>
       </el-result>
     </div>
     <div v-else-if="!activity && !loading" class="empty-state">
@@ -26,14 +26,14 @@
         </el-descriptions>
       </el-card>
       <el-card class="detail-card">
-        <h3>活动详情</h3>
+        <h3>{{ $t("活动详情") }}</h3>
         <p>{{ activity.description }}</p>
       </el-card>
 
       <!-- Enroll Button -->
       <div style="text-align:center;margin-top:24px">
-        <el-button v-if="alreadyEnrolled" type="info" size="large" disabled style="width:200px">已报名</el-button>
-        <el-button v-else-if="canEnroll(activity)" type="primary" size="large" style="width:200px" :loading="enrolling" @click="handleEnroll">立即报名</el-button>
+        <el-button v-if="alreadyEnrolled" type="info" size="large" disabled style="width:200px">{{ $t("已报名") }}</el-button>
+        <el-button v-else-if="canEnroll(activity)" type="primary" size="large" style="width:200px" :loading="enrolling" @click="handleEnroll">{{ $t("立即报名") }}</el-button>
         <el-button v-else type="info" size="large" disabled style="width:200px">
           {{ getDisplayStatus(activity) === '报名已截止' ? '报名已截止' : getDisplayStatus(activity) === '已结束' ? '已结束' : '暂不可报名' }}
         </el-button>
@@ -48,8 +48,8 @@
           </el-form-item>
         </el-form>
         <template #footer>
-          <el-button @click="dialogVisible=false">取消</el-button>
-          <el-button type="primary" :loading="enrolling" @click="submitEnroll">确认报名</el-button>
+          <el-button @click="dialogVisible=false">{{ $t("取消") }}</el-button>
+          <el-button type="primary" :loading="enrolling" @click="submitEnroll">{{ $t("确认报名") }}</el-button>
         </template>
       </el-dialog>
     </template>

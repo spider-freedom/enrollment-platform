@@ -9,7 +9,7 @@
     >
       <template #extra>
         <el-button type="primary" @click="$router.push('/student/activities')">
-          返回活动列表
+          {{ $t("返回活动列表") }}
         </el-button>
       </template>
     </el-result>
@@ -22,8 +22,8 @@
       :sub-title="errorMessage"
     >
       <template #extra>
-        <el-button type="primary" @click="fetchActivity">重新加载</el-button>
-        <el-button @click="$router.push('/student/activities')">返回活动列表</el-button>
+        <el-button type="primary" @click="fetchActivity">{{ $t("重新加载") }}</el-button>
+        <el-button @click="$router.push('/student/activities')">{{ $t("返回活动列表") }}</el-button>
       </template>
     </el-result>
 
@@ -72,7 +72,7 @@
         <div class="detail-left">
           <el-card class="detail-card" shadow="never">
             <template #header>
-              <h3 class="card-section-title">活动详情</h3>
+              <h3 class="card-section-title">{{ $t("活动详情") }}</h3>
             </template>
             <div class="description-content">
               {{ activity.description || '暂无详细描述' }}
@@ -81,7 +81,7 @@
 
           <el-card class="detail-card" shadow="never">
             <template #header>
-              <h3 class="card-section-title">基本要求</h3>
+              <h3 class="card-section-title">{{ $t("基本要求") }}</h3>
             </template>
             <el-descriptions :column="1" border size="default">
               <el-descriptions-item label="招生对象">
@@ -105,11 +105,11 @@
           <!-- Quota Card -->
           <el-card class="info-card" shadow="never">
             <template #header>
-              <h3 class="card-section-title">名额信息</h3>
+              <h3 class="card-section-title">{{ $t("名额信息") }}</h3>
             </template>
             <div class="quota-list">
               <div class="quota-item">
-                <span class="quota-label">学生名额</span>
+                <span class="quota-label">{{ $t("学生名额") }}</span>
                 <div class="quota-bar-wrapper">
                   <el-progress
                     :percentage="studentPercent"
@@ -121,7 +121,7 @@
                 </div>
               </div>
               <div class="quota-item">
-                <span class="quota-label">教师名额</span>
+                <span class="quota-label">{{ $t("教师名额") }}</span>
                 <div class="quota-bar-wrapper">
                   <el-progress
                     :percentage="teacherPercent"
@@ -133,7 +133,7 @@
                 </div>
               </div>
               <div class="quota-item">
-                <span class="quota-label">每所学校最多报名</span>
+                <span class="quota-label">{{ $t("每所学校最多报名") }}</span>
                 <span class="quota-value">{{ activity.maxPerSchool ? activity.maxPerSchool + ' 人' : '不限人数' }}</span>
               </div>
             </div>
@@ -148,7 +148,7 @@
               disabled
               style="width: 100%"
             >
-              已报名
+              {{ $t("已报名") }}
             </el-button>
             <el-button
               v-else-if="canEnroll(activity)"
@@ -158,7 +158,7 @@
               :loading="enrolling"
               @click="handleEnroll"
             >
-              立即报名
+              {{ $t("立即报名") }}
             </el-button>
             <el-button
               v-else
@@ -195,9 +195,9 @@
               </el-form-item>
             </el-form>
             <template #footer>
-              <el-button @click="enrollDialogVisible = false">取消</el-button>
+              <el-button @click="enrollDialogVisible = false">{{ $t("取消") }}</el-button>
               <el-button type="primary" :loading="enrolling" @click="submitEnroll">
-                确认报名
+                {{ $t("确认报名") }}
               </el-button>
             </template>
           </el-dialog>
@@ -205,7 +205,7 @@
           <!-- Attachments Placeholder -->
           <el-card v-if="activity.attachments && activity.attachments.length > 0" class="info-card" shadow="never">
             <template #header>
-              <h3 class="card-section-title">相关附件</h3>
+              <h3 class="card-section-title">{{ $t("相关附件") }}</h3>
             </template>
             <div
               v-for="(file, idx) in activity.attachments"
@@ -214,7 +214,7 @@
             >
               <el-icon><Document /></el-icon>
               <span>{{ file.name || file }}</span>
-              <el-button size="small" type="primary" link>下载</el-button>
+              <el-button size="small" type="primary" link>{{ $t("下载") }}</el-button>
             </div>
           </el-card>
         </div>

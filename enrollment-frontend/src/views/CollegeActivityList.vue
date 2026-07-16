@@ -164,6 +164,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { List, VideoPlay, EditPen, CircleClose } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
+import { parseListResponse } from '@/utils/api'
 import type { Activity } from '@/types'
 
 const router = useRouter()
@@ -234,25 +235,7 @@ async function fetchData() {
     if (filterStatus.value) params.status = filterStatus.value
 
     const res: any = await activityApi.listCollege(params)
-    if (res?.data?.list) {
-      list.value = res.data.list
-      total.value = res.data.total || 0
-    } else if (res?.data?.records) {
-      list.value = res.data.records
-      total.value = res.data.total || 0
-    } else if (res?.records) {
-      list.value = res.records
-      total.value = res.total || 0
-    } else if (Array.isArray(res?.data)) {
-      list.value = res.data
-      total.value = res.data.length
-    } else if (Array.isArray(res)) {
-      list.value = res
-      total.value = res.length
-    } else {
-      list.value = []
-      total.value = 0
-    }
+    const r = parseListResponse(res); list.value = r.list; total.value = r.total
 
     // 提取活动类型
     const typeSet = new Set<string>()

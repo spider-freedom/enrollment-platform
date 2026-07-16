@@ -98,6 +98,7 @@ import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { ChatDotRound } from '@element-plus/icons-vue'
 import { feedbackApi } from '@/api'
+import { parseListResponse } from '@/utils/api'
 import type { Feedback } from '@/types'
 
 const FEEDBACK_STATUS_MAP: Record<string, string> = {
@@ -121,28 +122,8 @@ async function fetchFeedbacks() {
   loading.value = true
   errorMessage.value = ''
   try {
-    const res: any = await feedbackApi.listMy({
-      page: page.value,
-      size: pageSize.value,
-    })
-
-    // Handle different response shapes
-    if (res?.data?.list) {
-      feedbacks.value = res.data.list
-      total.value = res.data.total || 0
-    } else if (res?.data?.records) {
-      feedbacks.value = res.data.records
-      total.value = res.data.total || 0
-    } else if (res?.records) {
-      feedbacks.value = res.records
-      total.value = res.total || 0
-    } else if (Array.isArray(res)) {
-      feedbacks.value = res
-      total.value = res.length
-    } else {
-      feedbacks.value = []
-      total.value = 0
-    }
+    const res: any = await feedbackApi.listMy({ page: page.value, size: pageSize.value })
+    const r = parseListResponse(res); feedbacks.value = r.list; total.value = r.total
   } catch (err: any) {
     feedbacks.value = []
     total.value = 0

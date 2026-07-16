@@ -147,6 +147,7 @@ import { ElMessage } from 'element-plus'
 import { Search, Calendar, Location } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import type { Activity } from '@/types'
+import { parseListResponse } from '@/utils/api'
 import { ACTIVITY_TYPE_MAP, ACTIVITY_CATEGORY_FILTERS, activityTypeTagType, getDisplayStatus, getDisplayStatusTagType } from '@/utils/constants'
 
 const bannerGradients = ['linear-gradient(135deg, #1a56db, #6366f1)', 'linear-gradient(135deg, #10b981, #059669)', 'linear-gradient(135deg, #f59e0b, #d97706)', 'linear-gradient(135deg, #6366f1, #8b5cf6)', 'linear-gradient(135deg, #ef4444, #dc2626)']
@@ -201,24 +202,7 @@ async function fetchActivities() {
   }
   try {
     const res: any = await activityApi.listStudent(params)
-
-    // Handle different response shapes
-    if (res?.data?.list) {
-      activities.value = res.data.list
-      total.value = res.data.total || 0
-    } else if (res?.data?.records) {
-      activities.value = res.data.records
-      total.value = res.data.total || 0
-    } else if (res?.records) {
-      activities.value = res.records
-      total.value = res.total || 0
-    } else if (Array.isArray(res)) {
-      activities.value = res
-      total.value = res.length
-    } else {
-      activities.value = []
-      total.value = 0
-    }
+    const r = parseListResponse(res); activities.value = r.list; total.value = r.total
   } catch (err: any) {
     activities.value = []
     total.value = 0

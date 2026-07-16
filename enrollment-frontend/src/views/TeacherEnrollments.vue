@@ -73,6 +73,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { enrollmentApi } from '@/api'
+import { parseListResponse } from '@/utils/api'
 import type { Enrollment } from '@/types'
 
 const list = ref<Enrollment[]>([])
@@ -109,22 +110,7 @@ async function fetchEnrollments() {
   loading.value = true
   try {
     const res: any = await enrollmentApi.listMy({ page: page.value, size: pageSize })
-    if (res?.data?.list) {
-      list.value = res.data.list
-      total.value = res.data.total || 0
-    } else if (res?.data?.records) {
-      list.value = res.data.records
-      total.value = res.data.total || 0
-    } else if (res?.records) {
-      list.value = res.records
-      total.value = res.total || 0
-    } else if (Array.isArray(res)) {
-      list.value = res
-      total.value = res.length
-    } else {
-      list.value = []
-      total.value = 0
-    }
+    const r = parseListResponse(res); list.value = r.list; total.value = r.total
   } catch {
     list.value = []
     total.value = 0

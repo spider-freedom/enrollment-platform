@@ -103,6 +103,7 @@ import { ElMessage } from 'element-plus'
 import { Search, Location } from '@element-plus/icons-vue'
 import { activityApi } from '@/api'
 import type { Activity } from '@/types'
+import { parseListResponse } from '@/utils/api'
 import { ACTIVITY_TYPE_MAP, activityTypeTagType, getDisplayStatus, getDisplayStatusTagType } from '@/utils/constants'
 
 const router = useRouter()
@@ -142,22 +143,7 @@ async function fetchActivities() {
     if (filterType.value) params.type = filterType.value
 
     const res: any = await activityApi.listTeacher(params)
-    if (res?.data?.list) {
-      activities.value = res.data.list
-      total.value = res.data.total || 0
-    } else if (res?.data?.records) {
-      activities.value = res.data.records
-      total.value = res.data.total || 0
-    } else if (res?.records) {
-      activities.value = res.records
-      total.value = res.total || 0
-    } else if (Array.isArray(res)) {
-      activities.value = res
-      total.value = res.length
-    } else {
-      activities.value = []
-      total.value = 0
-    }
+    const r = parseListResponse(res); activities.value = r.list; total.value = r.total
   } catch {
     activities.value = []
     total.value = 0

@@ -14,6 +14,11 @@ import java.util.List;
 
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
+
+import dev.langchain4j.model.chat.StreamingChatLanguageModel;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/api/ai")
@@ -23,6 +28,7 @@ public class AiController {
     private final SchoolNameNormalizer schoolNameNormalizer;
     private final FeedbackAnalyzer feedbackAnalyzer;
     private final ChatLanguageModel chatLanguageModel;
+    private final StreamingChatLanguageModel streamingModel;
     private final PolicyMapper policyMapper;
 
     @GetMapping("/policy/list")
@@ -101,5 +107,31 @@ public class AiController {
         } catch (Exception e) {
             return ApiResponse.ok("抱歉，AI服务暂时不可用，请稍后重试。如需帮助，请拨打招生办电话 0991-8585671。");
         }
+    }
+
+    @PostMapping(value = "/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter chatStream(@RequestBody Map<String,String> body) {
+        String question = body.getOrDefault("question", "");
+        SseEmitter emitter = new SseEmitter(120000L);
+        if (question.isBlank()) {
+            try { emitter.send(SseEmitter.event().data("请输入问题")); emitter.complete(); } catch (IOException ignored) {}
+            return emitter;
+        }
+        String prompt = "你是新疆大学招生AI助手，请用中文简洁回答。用户问题：" + question;
+        new Thread(() -> {
+            try {
+                String answer = chatLanguageModel.generate(prompt);
+                // Stream characters with small delay for typing effect
+                for (int i = 0; i < answer.length(); i += 3) {
+                    int end = Math.min(i + 3, answer.length());
+                    emitter.send(SseEmitter.event().data(answer.substring(i, end)));
+                    Thread.sleep(20);
+                }
+                emitter.complete();
+            } catch (Exception e) {
+                try { emitter.send(SseEmitter.event().data("抱歉，AI服务暂时不可用。")); emitter.complete(); } catch (IOException ignored) {}
+            }
+        }).start();
+        return emitter;
     }
 }

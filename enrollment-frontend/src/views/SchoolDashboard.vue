@@ -431,11 +431,12 @@ async function fetchStats() {
 
   const colRes = await statisticsApi.getCollegeDist()
   const col = colRes?.data || colRes
-  if (Array.isArray(col) && col.length > 0 && collegeInstance) {
+  const colList = col?.list || col?.records || (Array.isArray(col) ? col : [])
+  if (colList.length > 0 && collegeInstance) {
     collegeInstance.setOption(
       createBarOption(
-        col.map((c: any) => c.collegeName || c.name || '未知'),
-        col.map((c: any) => c.enrollmentCount || c.count || c.value || 0),
+        colList.map((c: any) => c.collegeName || c.name || '未知'),
+        colList.map((c: any) => c.enrollmentCount || c.count || c.value || 0),
         '报名数',
       ),
     )
@@ -451,17 +452,25 @@ async function fetchStats() {
         name: k.includes('分') ? k : `${k}分`,
       }))
     }
-    if (entries.length > 0) {
-      ratingInstance.setOption(createPieOption(entries))
-    }
+    ratingInstance.setOption(entries.length > 0 ? createPieOption(entries) : createPieOption([{value:1,name:'暂无数据'}]))
+  }
+
+  // Type distribution from activity category data
+  if (typeInstance && catList.length > 0) {
+    const typeMap: Record<string, number> = {}
+    catList.forEach((a: any) => { const t = a.type === 'ONLINE' ? '线上活动' : '线下活动'; typeMap[t] = (typeMap[t] || 0) + 1 })
+    const tNames = Object.keys(typeMap), tValues = Object.values(typeMap)
+    typeInstance.setOption(createPieOption(tNames.map((n,i)=>({value:tValues[i],name:n})), {radius:'65%',center:['50%','50%']}))
   }
 }
 
 async function fetchRecentFeedbacks() {
-  const res = await feedbackApi.listSchool({ page: 1, size: 3 })
-  const data = res?.data || res
-  const records = data?.records || (Array.isArray(data) ? data : [])
-  recentFeedbacks.value = records.slice(0, 3)
+  try {
+    const res = await feedbackApi.listSchool({ page: 1, size: 3 })
+    const data = res?.data || res
+    const records = data?.list || data?.records || (Array.isArray(data) ? data : [])
+    recentFeedbacks.value = records.slice(0, 3)
+  } catch { recentFeedbacks.value = [] }
 }
 
 async function fetchAll() {

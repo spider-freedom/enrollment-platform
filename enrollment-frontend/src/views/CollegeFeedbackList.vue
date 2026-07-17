@@ -63,37 +63,7 @@
       </el-select>
       <el-button type="primary" style="margin-left: 12px" @click="handleSearch">搜索</el-button>
       <el-button style="margin-left: 8px" @click="handleReset">重置</el-button>
-      <el-button type="warning" style="margin-left: 8px" :loading="aiAnalyzing" @click="runAiAnalysis">
-        🤖 AI分析
-      </el-button>
     </div>
-
-    <!-- AI分析结果 -->
-    <el-alert
-      v-if="aiResult"
-      :title="'AI 分析报告（共 ' + aiResult.count + ' 条反馈）· 整体情感倾向: ' + aiResult.sentiment"
-      :type="aiResult.sentiment === '正面' ? 'success' : aiResult.sentiment === '负面' ? 'error' : 'info'"
-      :closable="true"
-      show-icon
-      style="margin-bottom: 16px"
-      @close="aiResult = null"
-    >
-      <template #default>
-        <div style="margin-top: 4px" v-if="aiResult.keywords.length">
-          <span style="color: #6b7280; font-size: 13px">关键词: </span>
-          <el-tag
-            v-for="(kw, idx) in aiResult.keywords"
-            :key="idx"
-            size="small"
-            style="margin-right: 6px"
-            effect="plain"
-          >
-            {{ kw }}
-          </el-tag>
-        </div>
-        <div v-if="aiResult.summary" style="margin-top: 8px; white-space: pre-wrap; line-height: 1.7; color: #374151; font-size: 13px">{{ aiResult.summary }}</div>
-      </template>
-    </el-alert>
 
     <!-- 错误提示 -->
     <el-alert
@@ -141,7 +111,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="提交时间" width="170" />
-      <el-table-column label="操作" width="120" fixed="right">
+      <el-table-column label="操作" width="160" fixed="right">
         <template #default="{ row }">
           <el-button
             v-if="row.status === 'SUBMITTED'"
@@ -151,6 +121,7 @@
           >
             回复
           </el-button>
+          <el-button size="small" type="warning" plain @click="handleAiAnalyze(row)">🤖 AI</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -244,6 +215,49 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!-- AI 分析弹窗 -->
+    <el-dialog v-model="aiVisible" title="AI 反馈分析" width="540px" destroy-on-close>
+      <template v-if="aiRow">
+        <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px">
+          提交人：<strong>{{ aiRow.userName }}</strong>
+          <span v-if="aiRow.activityTitle"> | 活动：{{ aiRow.activityTitle }}</span>
+        </p>
+        <div style="background: #f5f7fa; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #374151; line-height: 1.6; margin-bottom: 14px; white-space: pre-wrap">{{ aiRow.content }}</div>
+        <div v-loading="aiLoading" element-loading-text="AI 分析中..." style="min-height: 120px">
+          <template v-if="aiData">
+            <div style="margin-bottom: 10px">
+              <span style="color: #6b7280; font-size: 13px">情感倾向: </span>
+              <el-tag :type="aiData.sentiment === '正面' ? 'success' : aiData.sentiment === '负面' ? 'danger' : 'info'" size="small">
+                {{ aiData.sentiment }}
+              </el-tag>
+            </div>
+            <div v-if="aiData.keywords.length" style="margin-bottom: 10px">
+              <span style="color: #6b7280; font-size: 13px">关键词: </span>
+              <el-tag v-for="(kw, idx) in aiData.keywords" :key="idx" size="small" effect="plain" style="margin-right: 6px">{{ kw }}</el-tag>
+            </div>
+            <div v-if="aiData.comment" style="margin-bottom: 10px; font-size: 13px; line-height: 1.7; color: #374151">
+              <span style="color: #6b7280">点评: </span>{{ aiData.comment }}
+            </div>
+            <div v-if="aiData.replySuggestion" style="background: #f0fdf4; border-left: 3px solid #22c55e; border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13px; line-height: 1.7; color: #166534">
+              <div style="margin-bottom: 6px"><strong>回复建议</strong></div>
+              <div style="white-space: pre-wrap">{{ aiData.replySuggestion }}</div>
+              <el-button
+                v-if="aiRow.status === 'SUBMITTED'"
+                size="small"
+                type="success"
+                plain
+                style="margin-top: 8px"
+                @click="useAiReply"
+              >引用到回复</el-button>
+            </div>
+          </template>
+        </div>
+      </template>
+      <template #footer>
+        <el-button @click="aiVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -287,39 +301,42 @@ const replyContent = ref('')
 const uploadFiles = ref<UploadFile[]>([])
 let currentFeedback: Feedback | null = null
 
-// ---- AI 分析 ----
-const aiAnalyzing = ref(false)
-const aiResult = ref<{ sentiment: string; keywords: string[]; summary: string; count: number } | null>(null)
+// ---- AI 分析（逐条） ----
+const aiVisible = ref(false)
+const aiLoading = ref(false)
+const aiRow = ref<any>(null)
+const aiData = ref<{ sentiment: string; keywords: string[]; comment: string; replySuggestion: string } | null>(null)
 
-async function runAiAnalysis() {
-  aiAnalyzing.value = true
-  aiResult.value = null
+async function handleAiAnalyze(row: any) {
+  aiRow.value = row
+  aiVisible.value = true
+  aiLoading.value = true
+  aiData.value = null
   try {
-    // 按当前筛选条件拉取全部反馈（不只当前页）
-    const params: any = { page: 1, size: 500 }
-    if (filterStatus.value) params.status = filterStatus.value
-    if (filterActivityId.value) params.activityId = filterActivityId.value
-    const listRes = await feedbackApi.listCollege(params)
-    const all = parseListResponse(listRes).list
-    const contents = all.filter((f: any) => f.content).map((f: any) => f.content)
-    if (contents.length === 0) {
-      ElMessage.warning('没有可分析的反馈内容')
-      return
-    }
-
-    const res: any = await aiApi.analyzeFeedbackAll(contents)
+    const res: any = await aiApi.analyzeFeedback(row.content || '')
     const data = res?.data || res
-    aiResult.value = {
+    aiData.value = {
       sentiment: data?.sentiment || '未知',
       keywords: data?.keywords || [],
-      summary: data?.summary || '',
-      count: data?.count || contents.length,
+      comment: data?.comment || '',
+      replySuggestion: data?.replySuggestion || '',
     }
   } catch {
     ElMessage.error('AI分析失败，请稍后重试')
+    aiVisible.value = false
   } finally {
-    aiAnalyzing.value = false
+    aiLoading.value = false
   }
+}
+
+// 引用AI回复建议到回复弹窗
+function useAiReply() {
+  if (!aiRow.value || !aiData.value?.replySuggestion) return
+  const row = aiRow.value
+  const suggestion = aiData.value.replySuggestion
+  aiVisible.value = false
+  openReply(row)
+  replyContent.value = suggestion
 }
 
 // ---- 统计 ----

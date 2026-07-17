@@ -51,10 +51,9 @@ public class AiController {
     }
 
     @PostMapping("/feedback/analyze")
-    public ApiResponse<String> analyze(@RequestBody Map<String, String> body) {
+    public ApiResponse<Map<String, Object>> analyze(@RequestBody Map<String, String> body) {
         String content = body.get("content");
-        String result = feedbackAnalyzer.analyze(content);
-        return ApiResponse.ok(result);
+        return ApiResponse.ok(feedbackAnalyzer.analyzeOne(content));
     }
 
     @PostMapping("/feedback/summarize")

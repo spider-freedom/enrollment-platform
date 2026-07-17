@@ -19,6 +19,56 @@ public class FeedbackAnalyzer {
     }
 
     /**
+     * 单条反馈分析：返回结构化 Map {sentiment, keywords[], comment, replySuggestion}
+     */
+    public Map<String, Object> analyzeOne(String content) {
+        Map<String, Object> fallback = new HashMap<>();
+        fallback.put("sentiment", "中性");
+        fallback.put("keywords", List.of());
+        fallback.put("comment", "AI分析暂时不可用，请稍后重试。");
+        fallback.put("replySuggestion", "");
+
+        if (content == null || content.isBlank()) {
+            fallback.put("comment", "反馈内容为空，无法分析。");
+            return fallback;
+        }
+
+        String prompt = """
+                你是高校招生宣传平台的反馈分析助手。请分析下面这条活动反馈，返回JSON：
+                {
+                  "sentiment": "情感倾向，取值：正面/中性/负面",
+                  "keywords": ["提取3个以内最具代表性的关键词"],
+                  "comment": "一句话点评这条反馈反映的核心信息",
+                  "replySuggestion": "以管理员口吻拟一段60字以内、礼貌得体的回复建议"
+                }
+                只返回JSON，不要包含任何其他内容或代码块标记。
+
+                反馈内容: %s
+                """.formatted(content);
+
+        try {
+            String raw = chatLanguageModel.generate(prompt);
+            Map<String, Object> parsed = parseJson(raw);
+            if (parsed != null) {
+                parsed.putIfAbsent("sentiment", "中性");
+                parsed.putIfAbsent("keywords", List.of());
+                parsed.putIfAbsent("comment", "");
+                parsed.putIfAbsent("replySuggestion", "");
+                if (parsed.get("comment") instanceof String c) {
+                    parsed.put("comment", c.replace("\\n", "\n"));
+                }
+                if (parsed.get("replySuggestion") instanceof String r) {
+                    parsed.put("replySuggestion", r.replace("\\n", "\n"));
+                }
+                return parsed;
+            }
+        } catch (Exception e) {
+            // LLM call failed, return fallback
+        }
+        return fallback;
+    }
+
+    /**
      * Analyze a single feedback content for sentiment and keywords.
      * Returns a JSON string: {"sentiment": "...", "keywords": [...]}
      */

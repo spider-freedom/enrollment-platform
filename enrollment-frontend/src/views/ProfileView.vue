@@ -36,7 +36,8 @@
           <el-input v-model="profileForm.name" placeholder="请输入姓名" />
         </el-form-item>
         <el-form-item label="学院">
-          <el-input v-model="profileForm.collegeName" placeholder="请输入学院名称" />
+          <el-input :model-value="store.userInfo?.collegeName || '未设置'" disabled />
+          <span style="font-size:12px;color:#999;margin-left:8px">学院与账号绑定，不可自行修改</span>
         </el-form-item>
         <template v-if="isStudent">
           <el-form-item label="专业">
@@ -107,14 +108,13 @@ async function handleAvatarChange(e: Event) {
 }
 const pwdForm = reactive({ oldPassword: '', newPassword: '', confirmPassword: '' })
 const profileForm = reactive({
-  name: '', collegeName: '', major: '', grade: '', gpa: '', email: '', phone: '',
+  name: '', major: '', grade: '', gpa: '', email: '', phone: '',
 })
 
 // Sync profile form from store when userInfo loads
 watch(() => store.userInfo, (info: any) => {
   if (info) {
     profileForm.name = info.name || ''
-    profileForm.collegeName = info.collegeName || ''
     profileForm.major = info.major || ''
     profileForm.grade = info.grade || ''
     profileForm.gpa = info.gpa || ''
@@ -133,10 +133,8 @@ async function handleSaveProfile() {
   try {
     await userApi.updateProfile({
       name: profileForm.name,
-      collegeName: profileForm.collegeName,
       major: profileForm.major,
       grade: profileForm.grade,
-      gpa: profileForm.gpa ? Number(profileForm.gpa) : undefined,
       email: profileForm.email,
       phone: profileForm.phone,
     })

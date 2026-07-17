@@ -84,17 +84,12 @@ public class UserService {
         if (vo.grade() != null) {
             user.setGrade(vo.grade());
         }
-        if (vo.gpa() != null) {
-            user.setGpa(vo.gpa());
-        }
+        // GPA 与学号绑定、学院与账号绑定，均不可通过个人资料接口修改
         if (vo.email() != null) {
             user.setEmail(vo.email());
         }
         if (vo.phone() != null) {
             user.setPhone(vo.phone());
-        }
-        if (vo.collegeName() != null) {
-            user.setCollegeName(vo.collegeName());
         }
         if (vo.avatar() != null) {
             user.setAvatar(vo.avatar());

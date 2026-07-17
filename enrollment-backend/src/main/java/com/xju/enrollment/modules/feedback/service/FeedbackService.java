@@ -143,7 +143,8 @@ public class FeedbackService {
         feedback.setContent(req.content());
         feedback.setRating(req.rating());
         feedback.setContact(req.contact());
-        feedback.setDepartment(req.department());
+        // 院系与账号绑定，不接受前端传入
+        feedback.setDepartment(user.getCollegeName());
         feedback.setStatus("SUBMITTED");
         feedbackMapper.insert(feedback);
 

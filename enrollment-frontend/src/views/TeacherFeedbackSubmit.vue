@@ -6,10 +6,9 @@
         <el-form-item label="活动评分" prop="rating">
           <el-rate v-model="form.rating" :max="5" :texts="['很差','较差','一般','满意','非常满意']" show-text :colors="['#f56c6c','#e6a23c','#67c23a']" size="large" />
         </el-form-item>
-        <el-form-item label="所属院系" prop="department">
-          <el-select v-model="form.department" placeholder="请选择院系" style="width:100%" filterable>
-            <el-option v-for="d in departments" :key="d" :label="d" :value="d" />
-          </el-select>
+        <el-form-item label="所属院系">
+          <el-input :model-value="myCollege" disabled />
+          <span style="font-size:12px;color:#999">院系与账号绑定，不可修改</span>
         </el-form-item>
         <el-form-item label="反馈内容" prop="content">
           <el-input v-model="form.content" type="textarea" :rows="6" placeholder="请分享带队体验、活动效果和建议..." maxlength="2000" show-word-limit />
@@ -27,20 +26,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { feedbackApi, enrollmentApi } from '@/api'
+import { useUserStore } from '@/stores/user'
 
 const route = useRoute()
 const router = useRouter()
+const store = useUserStore()
 const formRef = ref()
 const submitting = ref(false)
 const activityId = ref<number | null>(null)
+// 院系与账号绑定，直接取当前用户的学院
+const myCollege = computed(() => store.userInfo?.collegeName || '未设置学院')
 
-const departments = ['计算机科学与技术学院','软件学院','数学与系统科学学院','信息科学与工程学院','物理科学与技术学院','化学学院','生命科学与技术学院','经济与管理学院','法学院','中国语言文学学院','电气工程学院','机械工程学院','土木工程学院','新闻与传播学院','外国语学院','马克思主义学院']
-
-const form = reactive({ rating: 0, content: '', contact: '', department: '' })
+const form = reactive({ rating: 0, content: '', contact: '' })
 const rules = {
   rating: [{
     validator: (_rule: any, value: number, callback: (e?: Error) => void) => {
@@ -49,7 +50,6 @@ const rules = {
     },
     trigger: 'change',
   }],
-  department: [{ required: true, message: '请选择院系', trigger: 'change' }],
   content: [{ required: true, message: '请输入反馈内容', trigger: 'blur' }, { min: 10, message: '至少10个字符', trigger: 'blur' }],
 }
 
@@ -72,7 +72,7 @@ async function handleSubmit() {
   if (!activityId.value) { ElMessage.error('无法获取活动信息，请返回重试'); return }
   submitting.value = true
   try {
-    await feedbackApi.submitTeacher({ activityId: activityId.value, content: form.content, rating: form.rating, contact: form.contact || undefined, department: form.department })
+    await feedbackApi.submitTeacher({ activityId: activityId.value, content: form.content, rating: form.rating, contact: form.contact || undefined })
     ElMessage.success('反馈提交成功！')
     router.push('/teacher/my-feedback')
   } catch (e: any) {

@@ -9,6 +9,7 @@ import com.xju.enrollment.common.PageResult;
 import com.xju.enrollment.entity.Activity;
 import com.xju.enrollment.entity.User;
 import com.xju.enrollment.mapper.ActivityMapper;
+import com.xju.enrollment.mapper.EnrollmentMapper;
 import com.xju.enrollment.modules.activity.dto.ActivityListQuery;
 import com.xju.enrollment.modules.activity.dto.ActivityRequest;
 import com.xju.enrollment.modules.activity.dto.ActivityVO;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class ActivityService {
 
     private final ActivityMapper activityMapper;
+    private final EnrollmentMapper enrollmentMapper;
     private final UserService userService;
 
     public ActivityVO createActivity(ActivityRequest request, Long creatorId) {
@@ -63,7 +65,8 @@ public class ActivityService {
             } catch (BusinessException ignored) {
             }
         }
-        return ActivityVO.from(activity, creatorName);
+        int[] counts = countEnrollments(List.of(id)).getOrDefault(id, new int[2]);
+        return ActivityVO.from(activity, creatorName, counts[0], counts[1]);
     }
 
     public PageResult<ActivityVO> listForStudent(ActivityListQuery query, Long userId) {
@@ -161,11 +164,41 @@ public class ActivityService {
             }
         }
 
+        // Batch count enrollments per activity (students / teachers)
+        List<Long> activityIds = result.getRecords().stream().map(Activity::getId).toList();
+        Map<Long, int[]> enrollCountMap = countEnrollments(activityIds);
+
         List<ActivityVO> voList = result.getRecords().stream()
-                .map(a -> ActivityVO.from(a, creatorNameMap.get(a.getCreatorId())))
+                .map(a -> {
+                    int[] counts = enrollCountMap.getOrDefault(a.getId(), new int[2]);
+                    return ActivityVO.from(a, creatorNameMap.get(a.getCreatorId()), counts[0], counts[1]);
+                })
                 .toList();
 
         return PageResult.of(voList, result.getTotal(), query.page(), query.size());
+    }
+
+    /**
+     * 批量统计各活动的有效报名人数（不含已撤回/已拒绝），按角色区分
+     * 返回: activityId -> [学生人数, 教师人数]
+     */
+    private Map<Long, int[]> countEnrollments(List<Long> activityIds) {
+        Map<Long, int[]> map = new HashMap<>();
+        if (activityIds == null || activityIds.isEmpty()) {
+            return map;
+        }
+        for (Map<String, Object> row : enrollmentMapper.countByActivityAndRole(activityIds)) {
+            Long activityId = ((Number) row.get("activityId")).longValue();
+            String role = (String) row.get("role");
+            int cnt = ((Number) row.get("cnt")).intValue();
+            int[] counts = map.computeIfAbsent(activityId, k -> new int[2]);
+            if ("STUDENT".equals(role)) {
+                counts[0] += cnt;
+            } else if ("TEACHER".equals(role)) {
+                counts[1] += cnt;
+            }
+        }
+        return map;
     }
 
     private void applyRequestToActivity(ActivityRequest request, Activity activity) {

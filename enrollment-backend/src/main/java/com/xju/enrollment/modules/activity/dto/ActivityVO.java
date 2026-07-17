@@ -21,6 +21,8 @@ public record ActivityVO(
         Integer maxStudents,
         Integer maxTeachers,
         Integer maxPerSchool,
+        Integer currentStudents,
+        Integer currentTeachers,
         String bannerUrl,
         String bannerLink,
         String groupRule,
@@ -39,13 +41,21 @@ public record ActivityVO(
     }
 
     public static ActivityVO from(Activity activity, String creatorName) {
+        return from(activity, creatorName, 0, 0);
+    }
+
+    public static ActivityVO from(Activity activity, String creatorName,
+                                  Integer currentStudents, Integer currentTeachers) {
         return new ActivityVO(
                 activity.getId(), activity.getTitle(), activity.getDescription(),
                 activity.getType(), activity.getCategory(), activity.getLevel(), activity.getStatus(), activity.getTargetAudience(),
                 activity.getStartTime(), activity.getEndTime(),
                 activity.getEnrollStart(), activity.getEnrollEnd(),
                 activity.getLocation(), activity.getMaxStudents(), activity.getMaxTeachers(),
-                activity.getMaxPerSchool(), activity.getBannerUrl(), activity.getBannerLink(),
+                activity.getMaxPerSchool(),
+                currentStudents != null ? currentStudents : 0,
+                currentTeachers != null ? currentTeachers : 0,
+                activity.getBannerUrl(), activity.getBannerLink(),
                 activity.getGroupRule(), activity.getRankRule(), activity.getWorkflowKey(),
                 activity.getCreatorId(), creatorName,
                 activity.getCollegeId(), activity.getCollegeName(), activity.getIsBanner(),

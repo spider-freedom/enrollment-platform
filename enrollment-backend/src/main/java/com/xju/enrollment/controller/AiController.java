@@ -64,6 +64,12 @@ public class AiController {
         return ApiResponse.ok(result);
     }
 
+    @PostMapping("/feedback/analyze-all")
+    public ApiResponse<Map<String, Object>> analyzeAll(@RequestBody Map<String, List<String>> body) {
+        List<String> contents = body.get("contents");
+        return ApiResponse.ok(feedbackAnalyzer.analyzeAll(contents));
+    }
+
     @PostMapping("/approval/suggest")
     public ApiResponse<Map<String, Object>> approvalSuggest(@RequestBody Map<String, Object> body) {
         String studentName = (String) body.get("studentName");

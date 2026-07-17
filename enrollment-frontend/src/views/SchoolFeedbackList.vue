@@ -102,14 +102,15 @@
         <!-- AI分析结果 -->
         <el-alert
           v-if="aiResult"
-          :title="'情感倾向: ' + aiResult.sentiment"
-          type="info"
-          :closable="false"
+          :title="'AI 分析报告（共 ' + aiResult.count + ' 条反馈）· 整体情感倾向: ' + aiResult.sentiment"
+          :type="aiResult.sentiment === '正面' ? 'success' : aiResult.sentiment === '负面' ? 'error' : 'info'"
+          :closable="true"
           show-icon
           style="margin-top: 12px"
+          @close="aiResult = null"
         >
           <template #default>
-            <div style="margin-top: 4px">
+            <div style="margin-top: 4px" v-if="aiResult.keywords.length">
               <span style="color: #6b7280; font-size: 13px">关键词: </span>
               <el-tag
                 v-for="(kw, idx) in aiResult.keywords"
@@ -121,6 +122,7 @@
                 {{ kw }}
               </el-tag>
             </div>
+            <div v-if="aiResult.summary" style="margin-top: 8px; white-space: pre-wrap; line-height: 1.7; color: #374151; font-size: 13px">{{ aiResult.summary }}</div>
           </template>
         </el-alert>
       </el-card>
@@ -348,7 +350,7 @@ const replyForm = reactive({
 
 // AI analysis
 const aiAnalyzing = ref(false)
-const aiResult = ref<{ sentiment: string; keywords: string[] } | null>(null)
+const aiResult = ref<{ sentiment: string; keywords: string[]; summary: string; count: number } | null>(null)
 
 // ============= 辅助函数 =============
 function statusLabel(status: string) {
@@ -483,22 +485,29 @@ async function submitReply() {
 
 // ============= AI分析 =============
 async function runAiAnalysis() {
-  const contents = list.value
-    .filter((f) => f.content)
-    .map((f) => f.content)
-  if (contents.length === 0) {
-    ElMessage.warning('没有可分析的反馈内容')
-    return
-  }
-
   aiAnalyzing.value = true
   aiResult.value = null
   try {
-    const res: any = await aiApi.analyzeFeedback(contents[0])
+    // 按当前筛选条件拉取全部反馈（不只当前页）
+    const params: any = { page: 1, size: 500 }
+    if (filters.activityId) params.activityId = filters.activityId
+    if (filters.college) params.collegeId = filters.college
+    if (filters.status) params.status = filters.status
+    const listRes = await feedbackApi.listSchool(params)
+    const all = parseListResponse(listRes).list
+    const contents = all.filter((f: any) => f.content).map((f: any) => f.content)
+    if (contents.length === 0) {
+      ElMessage.warning('没有可分析的反馈内容')
+      return
+    }
+
+    const res: any = await aiApi.analyzeFeedbackAll(contents)
     const data = res?.data || res
     aiResult.value = {
-      sentiment: data?.sentiment || data?.label || '未知',
-      keywords: data?.keywords || data?.keyWords || data?.tags || [],
+      sentiment: data?.sentiment || '未知',
+      keywords: data?.keywords || [],
+      summary: data?.summary || '',
+      count: data?.count || contents.length,
     }
   } catch {
     ElMessage.error('AI分析失败，请稍后重试')

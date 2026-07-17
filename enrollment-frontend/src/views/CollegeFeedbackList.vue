@@ -63,7 +63,37 @@
       </el-select>
       <el-button type="primary" style="margin-left: 12px" @click="handleSearch">搜索</el-button>
       <el-button style="margin-left: 8px" @click="handleReset">重置</el-button>
+      <el-button type="warning" style="margin-left: 8px" :loading="aiAnalyzing" @click="runAiAnalysis">
+        🤖 AI分析
+      </el-button>
     </div>
+
+    <!-- AI分析结果 -->
+    <el-alert
+      v-if="aiResult"
+      :title="'AI 分析报告（共 ' + aiResult.count + ' 条反馈）· 整体情感倾向: ' + aiResult.sentiment"
+      :type="aiResult.sentiment === '正面' ? 'success' : aiResult.sentiment === '负面' ? 'error' : 'info'"
+      :closable="true"
+      show-icon
+      style="margin-bottom: 16px"
+      @close="aiResult = null"
+    >
+      <template #default>
+        <div style="margin-top: 4px" v-if="aiResult.keywords.length">
+          <span style="color: #6b7280; font-size: 13px">关键词: </span>
+          <el-tag
+            v-for="(kw, idx) in aiResult.keywords"
+            :key="idx"
+            size="small"
+            style="margin-right: 6px"
+            effect="plain"
+          >
+            {{ kw }}
+          </el-tag>
+        </div>
+        <div v-if="aiResult.summary" style="margin-top: 8px; white-space: pre-wrap; line-height: 1.7; color: #374151; font-size: 13px">{{ aiResult.summary }}</div>
+      </template>
+    </el-alert>
 
     <!-- 错误提示 -->
     <el-alert
@@ -228,7 +258,7 @@ import {
   Paperclip,
   Upload,
 } from '@element-plus/icons-vue'
-import { feedbackApi, activityApi } from '@/api'
+import { feedbackApi, activityApi, aiApi } from '@/api'
 import { parseListResponse } from '@/utils/api'
 import request from '@/api/request'
 import type { Feedback } from '@/types'
@@ -256,6 +286,41 @@ const submitting = ref(false)
 const replyContent = ref('')
 const uploadFiles = ref<UploadFile[]>([])
 let currentFeedback: Feedback | null = null
+
+// ---- AI 分析 ----
+const aiAnalyzing = ref(false)
+const aiResult = ref<{ sentiment: string; keywords: string[]; summary: string; count: number } | null>(null)
+
+async function runAiAnalysis() {
+  aiAnalyzing.value = true
+  aiResult.value = null
+  try {
+    // 按当前筛选条件拉取全部反馈（不只当前页）
+    const params: any = { page: 1, size: 500 }
+    if (filterStatus.value) params.status = filterStatus.value
+    if (filterActivityId.value) params.activityId = filterActivityId.value
+    const listRes = await feedbackApi.listCollege(params)
+    const all = parseListResponse(listRes).list
+    const contents = all.filter((f: any) => f.content).map((f: any) => f.content)
+    if (contents.length === 0) {
+      ElMessage.warning('没有可分析的反馈内容')
+      return
+    }
+
+    const res: any = await aiApi.analyzeFeedbackAll(contents)
+    const data = res?.data || res
+    aiResult.value = {
+      sentiment: data?.sentiment || '未知',
+      keywords: data?.keywords || [],
+      summary: data?.summary || '',
+      count: data?.count || contents.length,
+    }
+  } catch {
+    ElMessage.error('AI分析失败，请稍后重试')
+  } finally {
+    aiAnalyzing.value = false
+  }
+}
 
 // ---- 统计 ----
 const stats = computed(() => {

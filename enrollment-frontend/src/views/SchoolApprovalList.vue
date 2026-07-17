@@ -229,7 +229,7 @@
     <el-dialog v-model="aiVisible" title="AI 审批建议" width="520px" destroy-on-close>
       <div class="ai-dialog-content" v-if="aiResult">
         <div class="ai-student-info">
-          <p>申请人：<strong>{{ aiCurrentRow?.userName }}</strong> | 活动：{{ aiCurrentRow?.activityTitle }}</p>
+          <p>申请人：<strong>{{ aiCurrentRow?.applicantName }}</strong> | 活动：{{ aiCurrentRow?.activityTitle }}</p>
         </div>
         <div class="ai-suggestion" :class="aiSuggestionClass">
           <span class="ai-label">建议：</span>
@@ -438,17 +438,23 @@ async function fetchList() {
   }
 }
 
-function updateStats() {
-  stats.total = total.value
-  stats.pending = list.value.filter(
-    (e) => e.currentStatus === 'APPROVING' || e.currentStatus === '待审批' || e.currentStatus === '待审核',
-  ).length
-  stats.approved = list.value.filter(
-    (e) => e.status === 'APPROVED' || e.status === '已通过',
-  ).length
-  stats.approvalRate = stats.total > 0
-    ? Math.round((stats.approved / stats.total) * 100)
-    : 0
+// ---- 统计（来自后端真实数据，不受分页/筛选状态影响） ----
+async function updateStats() {
+  try {
+    const params: any = {}
+    if (filters.activityId) params.activityId = filters.activityId
+    if (filters.college) params.collegeId = filters.college
+    const res: any = await approvalApi.statsSchool(params)
+    const d = res?.data || res
+    // 校级视角：待审批 = 已到校级待审(APPROVING)；总数为到达校级及之后的记录
+    const total = (d?.approving || 0) + (d?.approved || 0) + (d?.rejected || 0)
+    stats.total = total
+    stats.pending = d?.approving || 0
+    stats.approved = d?.approved || 0
+    stats.approvalRate = total > 0 ? Math.round(((d?.approved || 0) / total) * 100) : 0
+  } catch {
+    // 统计加载失败不阻塞列表
+  }
 }
 
 // ============= 筛选 =============

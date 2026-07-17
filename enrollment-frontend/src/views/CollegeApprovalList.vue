@@ -149,7 +149,7 @@
             拒绝
           </el-button>
           <el-button
-            v-if="row.status === 'SUBMITTED' || row.status === 'APPROVING'"
+            v-if="row.currentStatus === 'SUBMITTED' || row.currentStatus === 'APPROVING'"
             size="small"
             type="warning"
             plain
@@ -157,9 +157,9 @@
           >
             🤖 AI
           </el-button>
-          <el-tag v-else-if="row.status === 'APPROVED'" type="success" size="small">已通过</el-tag>
-          <el-tag v-else-if="row.status === 'REJECTED'" type="danger" size="small">已拒绝</el-tag>
-          <el-tag v-else type="info" size="small">{{ statusLabel(row.status) }}</el-tag>
+          <el-tag v-else-if="row.currentStatus === 'APPROVED'" type="success" size="small">已通过</el-tag>
+          <el-tag v-else-if="row.currentStatus === 'REJECTED'" type="danger" size="small">已拒绝</el-tag>
+          <el-tag v-else type="info" size="small">{{ statusLabel(row.currentStatus) }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -185,7 +185,7 @@
     <el-dialog v-model="rejectVisible" title="拒绝报名" width="480px" destroy-on-close>
       <div class="reject-dialog-content">
         <p class="reject-info">
-          申请人：<strong>{{ currentReject?.userName }}</strong>
+          申请人：<strong>{{ currentReject?.applicantName }}</strong>
           &nbsp;|&nbsp; 活动：{{ currentReject?.activityTitle }}
         </p>
         <el-input
@@ -306,8 +306,8 @@ async function handleAiSuggest(row: Enrollment) {
   aiResult.value = null
   try {
     const res: any = await aiApi.approvalSuggest({
-      studentName: row.userName,
-      studentRole: roleLabel(row.userRole),
+      studentName: (row as any).applicantName || row.userName,
+      studentRole: roleLabel((row as any).applicantRole || row.userRole),
       collegeName: (row as any).collegeName || '',
       gpa: (row as any).gpa ?? null,
       targetSchool: row.targetSchool,
@@ -383,15 +383,25 @@ function roleTagType(r: string): string {
   return roleTagTypeMap[r] || 'info'
 }
 
-// ---- 统计（基于全部数据，忽略分页） ----
-const stats = computed(() => {
-  const pending = list.value.filter((e) => e.currentStatus === 'SUBMITTED' || e.currentStatus === 'APPROVING').length
-  const approved = list.value.filter((e) => e.currentStatus === 'APPROVED').length
-  const rejected = list.value.filter((e) => e.currentStatus === 'REJECTED').length
-  const totalCount = list.value.length || 1
-  const approvalRate = Math.round((approved / totalCount) * 100)
-  return { pending, approved, rejected, approvalRate }
-})
+// ---- 统计（来自后端真实数据，不受分页/筛选状态影响） ----
+const stats = ref({ pending: 0, approved: 0, rejected: 0, approvalRate: 0 })
+
+async function fetchStats() {
+  try {
+    const params: any = {}
+    if (filterActivityId.value) params.activityId = filterActivityId.value
+    const res: any = await approvalApi.statsCollege(params)
+    const d = res?.data || res
+    stats.value = {
+      pending: (d?.submitted || 0) + (d?.approving || 0),
+      approved: d?.approved || 0,
+      rejected: d?.rejected || 0,
+      approvalRate: d?.approvalRate || 0,
+    }
+  } catch {
+    // 统计加载失败不阻塞列表
+  }
+}
 
 // ---- 数据获取 ----
 async function fetchData() {
@@ -408,6 +418,7 @@ async function fetchData() {
 
     const res: any = await approvalApi.listCollege(params)
     const r = parseListResponse(res); list.value = r.list; total.value = r.total
+    fetchStats()
   } catch (err: any) {
     errorMsg.value = err?.response?.data?.message || err?.message || '加载审批数据失败，请稍后重试'
     list.value = []

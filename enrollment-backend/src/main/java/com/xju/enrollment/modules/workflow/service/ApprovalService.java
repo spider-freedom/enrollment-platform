@@ -12,6 +12,7 @@ import com.xju.enrollment.mapper.EnrollmentMapper;
 import com.xju.enrollment.mapper.UserMapper;
 import com.xju.enrollment.modules.system.service.UserService;
 import com.xju.enrollment.modules.workflow.dto.ApprovalRequest;
+import com.xju.enrollment.modules.workflow.dto.ApprovalStatsVO;
 import com.xju.enrollment.modules.workflow.dto.ApprovalVO;
 import com.xju.enrollment.modules.workflow.dto.BatchApprovalRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,8 @@ public class ApprovalService {
         LambdaQueryWrapper<Enrollment> w = new LambdaQueryWrapper<>();
         w.eq(Enrollment::getCollegeId, collegeId);
         if (status != null && !status.isBlank()) w.eq(Enrollment::getStatus, status);
-        else w.eq(Enrollment::getStatus, "SUBMITTED");
+        // 默认展示全部审批相关记录（含已通过/已拒绝），审批后记录不再从列表消失
+        else w.in(Enrollment::getStatus, List.of("SUBMITTED", "APPROVING", "APPROVED", "REJECTED"));
         if (activityId != null) w.eq(Enrollment::getActivityId, activityId);
         w.orderByDesc(Enrollment::getCreateTime);
         Page<Enrollment> p = enrollmentMapper.selectPage(new Page<>(page, size), w);
@@ -46,12 +48,35 @@ public class ApprovalService {
     public PageResult<ApprovalVO> getPendingListForSchool(Long collegeId, Long activityId, String status, int page, int size) {
         LambdaQueryWrapper<Enrollment> w = new LambdaQueryWrapper<>();
         if (status != null && !status.isBlank()) w.eq(Enrollment::getStatus, status);
-        else w.eq(Enrollment::getStatus, "APPROVING");
+        // 默认展示到达校级及之后的记录（含已通过/已拒绝）
+        else w.in(Enrollment::getStatus, List.of("APPROVING", "APPROVED", "REJECTED"));
         if (activityId != null) w.eq(Enrollment::getActivityId, activityId);
         if (collegeId != null) w.eq(Enrollment::getCollegeId, collegeId);
         w.orderByDesc(Enrollment::getCreateTime);
         Page<Enrollment> p = enrollmentMapper.selectPage(new Page<>(page, size), w);
         return PageResult.of(p.getRecords().stream().map(this::toVO).toList(), p.getTotal(), page, size);
+    }
+
+    /**
+     * 审批统计（不含已撤回）：collegeId 为空时统计全校
+     */
+    public ApprovalStatsVO getStats(Long collegeId, Long activityId) {
+        long submitted = countByStatus(collegeId, activityId, "SUBMITTED");
+        long approving = countByStatus(collegeId, activityId, "APPROVING");
+        long approved = countByStatus(collegeId, activityId, "APPROVED");
+        long rejected = countByStatus(collegeId, activityId, "REJECTED");
+        long total = submitted + approving + approved + rejected;
+        int approvalRate = total > 0 ? Math.round(approved * 100f / total) : 0;
+        return new ApprovalStatsVO(submitted, approving, approved, rejected, total, approvalRate);
+    }
+
+    private long countByStatus(Long collegeId, Long activityId, String status) {
+        LambdaQueryWrapper<Enrollment> w = new LambdaQueryWrapper<>();
+        if (collegeId != null) w.eq(Enrollment::getCollegeId, collegeId);
+        if (activityId != null) w.eq(Enrollment::getActivityId, activityId);
+        w.eq(Enrollment::getStatus, status);
+        Long count = enrollmentMapper.selectCount(w);
+        return count != null ? count : 0;
     }
 
     @Transactional

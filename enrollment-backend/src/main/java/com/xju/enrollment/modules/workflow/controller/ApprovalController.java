@@ -5,6 +5,7 @@ import com.xju.enrollment.common.BusinessException;
 import com.xju.enrollment.common.PageResult;
 import com.xju.enrollment.entity.User;
 import com.xju.enrollment.modules.workflow.dto.ApprovalRequest;
+import com.xju.enrollment.modules.workflow.dto.ApprovalStatsVO;
 import com.xju.enrollment.modules.workflow.dto.ApprovalVO;
 import com.xju.enrollment.modules.workflow.dto.BatchApprovalRequest;
 import com.xju.enrollment.modules.workflow.service.ApprovalService;
@@ -56,6 +57,31 @@ public class ApprovalController {
         PageResult<ApprovalVO> result = approvalService.getPendingListForSchool(
                 collegeId, activityId, status, page, size);
         return ApiResponse.ok(result);
+    }
+
+    @GetMapping("/stats/college")
+    public ApiResponse<ApprovalStatsVO> statsForCollege(@RequestParam(required = false) Long activityId) {
+        Long userId = getCurrentUserIdAsLong();
+        User user = userService.getById(userId);
+        if (!"COLLEGE_ADMIN".equals(user.getRole())) {
+            throw new BusinessException(403, "仅学院管理员可访问");
+        }
+        if (user.getCollegeId() == null) {
+            throw new BusinessException("未关联学院");
+        }
+        return ApiResponse.ok(approvalService.getStats(user.getCollegeId(), activityId));
+    }
+
+    @GetMapping("/stats/school")
+    public ApiResponse<ApprovalStatsVO> statsForSchool(
+            @RequestParam(required = false) Long collegeId,
+            @RequestParam(required = false) Long activityId) {
+        Long userId = getCurrentUserIdAsLong();
+        User user = userService.getById(userId);
+        if (!"SCHOOL_ADMIN".equals(user.getRole())) {
+            throw new BusinessException(403, "仅校级管理员可访问");
+        }
+        return ApiResponse.ok(approvalService.getStats(collegeId, activityId));
     }
 
     @PostMapping("/approve")

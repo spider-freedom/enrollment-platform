@@ -56,18 +56,35 @@ public class EnrollmentService {
             throw new BusinessException("报名已截止");
         }
 
-        // Validate user hasn't already enrolled
-        Long count = enrollmentMapper.selectCount(
+        // Validate user hasn't already enrolled (withdrawn enrollments can be re-submitted)
+        Enrollment existed = enrollmentMapper.selectOne(
                 new LambdaQueryWrapper<Enrollment>()
                         .eq(Enrollment::getUserId, userId)
                         .eq(Enrollment::getActivityId, req.activityId())
         );
-        if (count > 0) {
+        if (existed != null && !STATUS_WITHDRAWN.equals(existed.getStatus())) {
             throw new BusinessException("您已报名该活动，请勿重复报名");
         }
 
         // Fetch user info via UserService (auto-fills college, name, role)
         User user = userService.getById(userId);
+
+        if (existed != null) {
+            // Re-submit a withdrawn enrollment (table has unique key on user_id + activity_id)
+            existed.setTargetSchool(req.targetSchool());
+            existed.setCollegeId(user.getCollegeId());
+            existed.setCollegeName(user.getCollegeName());
+            existed.setStatus(STATUS_SUBMITTED);
+            existed.setCurrentNode("college_review");
+            existed.setSubmittedAt(LocalDateTime.now());
+            existed.setApprovedAt(null);
+            existed.setRejectReason(null);
+            if (req.intro() != null || req.contact() != null) {
+                existed.setFormData(buildFormDataJson(req.intro(), req.contact()));
+            }
+            enrollmentMapper.updateById(existed);
+            return toVO(existed, activity.getTitle(), user.getName(), user.getRole());
+        }
 
         // Build enrollment entity
         Enrollment enrollment = new Enrollment();

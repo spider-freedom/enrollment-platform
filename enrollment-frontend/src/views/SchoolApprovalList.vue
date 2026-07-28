@@ -483,7 +483,11 @@ function handleSizeChange(size: number) {
 }
 
 function handleExport() {
-  downloadFile('/enrollment/export?status=' + (filters.status || ''), '报名数据导出.xlsx')
+  const params = new URLSearchParams()
+  if (filters.activityId) params.append('activityId', String(filters.activityId))
+  if (filters.college) params.append('collegeId', String(filters.college))
+  if (filters.status) params.append('status', filters.status)
+  downloadFile('/enrollment/export?' + params.toString(), '报名数据导出.xlsx')
 }
 
 function handleSelectionChange(rows: Enrollment[]) {

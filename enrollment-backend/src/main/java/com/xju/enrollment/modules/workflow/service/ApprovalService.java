@@ -159,7 +159,8 @@ public class ApprovalService {
         User u = userMapper.selectById(e.getUserId());
         Activity a = activityMapper.selectById(e.getActivityId());
         return new ApprovalVO(
-            e.getId(), u != null ? u.getName() : "未知", u != null ? u.getRole() : "",
+            e.getId(), e.getActivityId(),
+            u != null ? u.getName() : "未知", u != null ? u.getRole() : "",
             a != null ? a.getTitle() : "", e.getTargetSchool(),
             u != null && u.getGpa() != null ? u.getGpa() : 0.0,
             e.getCollegeName(), e.getStatus(), "APPROVING".equals(e.getStatus()),

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record ApprovalVO(
         Long enrollmentId,
+        Long activityId,
         String applicantName,
         String applicantRole,
         String activityTitle,

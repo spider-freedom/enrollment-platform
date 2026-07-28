@@ -545,9 +545,26 @@ async function loadActivities() {
   } catch {}
 }
 
+// 从审批列表数据中提取活动选项（补充listCollege接口可能漏掉的校级活动）
+async function enrichActivityOptionsFromList() {
+  try {
+    const res = await approvalApi.listCollege({ page:1, size:500 })
+    const data = res?.data || res
+    const list = data?.list || data?.records || []
+    const seen = new Map(activityOptions.value.map((a:any) => [a.label, a.value]))
+    for (const row of list) {
+      if (row.activityTitle && !seen.has(row.activityTitle)) {
+        activityOptions.value.push({ label: row.activityTitle, value: row.activityId })
+        seen.set(row.activityTitle, row.activityId)
+      }
+    }
+  } catch {}
+}
+
 onMounted(() => {
   loadActivities()
   fetchData()
+  enrichActivityOptionsFromList()
 })
 </script>
 

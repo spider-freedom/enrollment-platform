@@ -27,6 +27,7 @@ public class ApprovalController {
     public ApiResponse<PageResult<ApprovalVO>> getPendingListForCollege(
             @RequestParam(required = false) Long activityId,
             @RequestParam(required = false) String status,
+            @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
         Long userId = getCurrentUserIdAsLong();
@@ -38,7 +39,7 @@ public class ApprovalController {
             throw new BusinessException(403, "仅学院管理员可访问");
         }
         PageResult<ApprovalVO> result = approvalService.getPendingListForCollege(
-                user.getCollegeId(), activityId, status, page, size);
+                user.getCollegeId(), activityId, status, keyword, page, size);
         return ApiResponse.ok(result);
     }
 

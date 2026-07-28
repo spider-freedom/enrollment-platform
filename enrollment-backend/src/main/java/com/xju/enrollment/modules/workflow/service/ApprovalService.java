@@ -33,13 +33,27 @@ public class ApprovalService {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    public PageResult<ApprovalVO> getPendingListForCollege(Long collegeId, Long activityId, String status, int page, int size) {
+    public PageResult<ApprovalVO> getPendingListForCollege(Long collegeId, Long activityId, String status, String keyword, int page, int size) {
         LambdaQueryWrapper<Enrollment> w = new LambdaQueryWrapper<>();
         w.eq(Enrollment::getCollegeId, collegeId);
         if (status != null && !status.isBlank()) w.eq(Enrollment::getStatus, status);
         // 默认展示全部审批相关记录（含已通过/已拒绝），审批后记录不再从列表消失
         else w.in(Enrollment::getStatus, List.of("SUBMITTED", "APPROVING", "APPROVED", "REJECTED"));
         if (activityId != null) w.eq(Enrollment::getActivityId, activityId);
+        // 关键字搜索：匹配申请人姓名或招生学校
+        if (keyword != null && !keyword.isBlank()) {
+            // 先查匹配关键字的学生/教师 user ID
+            List<Long> matchedUserIds = userMapper.selectList(
+                new LambdaQueryWrapper<User>()
+                    .select(User::getId)
+                    .like(User::getName, keyword)
+            ).stream().map(User::getId).toList();
+            w.and(w2 -> w2
+                .like(Enrollment::getTargetSchool, keyword)
+                .or()
+                .in(!matchedUserIds.isEmpty(), Enrollment::getUserId, matchedUserIds)
+            );
+        }
         w.orderByDesc(Enrollment::getCreateTime);
         Page<Enrollment> p = enrollmentMapper.selectPage(new Page<>(page, size), w);
         return PageResult.of(p.getRecords().stream().map(this::toVO).toList(), p.getTotal(), page, size);
